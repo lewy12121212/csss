@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { setUserSession } from '../utils/Common';
+import { setUserSession } from '../../utils/Common';
 
-function Login(props) {
+function LoginPanel(props) {
   const [loading, setLoading] = useState(false);
   const username = useFormInput('');
   const password = useFormInput('');
@@ -15,7 +15,7 @@ function Login(props) {
     axios.post('http://localhost:4000/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      props.history.push('/dashboard');
+      props.history.push('/Dashboard');
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
@@ -25,13 +25,13 @@ function Login(props) {
 
   return (
     <div>
-      Login<br /><br />
+      Zaloguj się do panelu użytkownika<br /><br />
       <div>
-        Username<br />
+        Login<br />
         <input type="text" {...username} autoComplete="new-password" />
       </div>
       <div style={{ marginTop: 10 }}>
-        Password<br />
+        Hasło<br />
         <input type="password" {...password} autoComplete="new-password" />
       </div>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
@@ -52,4 +52,4 @@ const useFormInput = initialValue => {
   }
 }
 
-export default Login;
+export default LoginPanel;

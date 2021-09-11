@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch, Route, NavLink } from 'react-router-dom';
+import { BrowserRouter, Switch } from 'react-router-dom';
 import axios from 'axios';
 
-import Login from './users_panels/Login';
+//import Login from './users_panels/Login';
+//import Home from './users_panels/Home';
+import LoginPanel from './users_panels/login_panel/LoginPanel'
 import Dashboard from './users_panels/Dashboard';
-import Home from './users_panels/Home';
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -34,21 +35,15 @@ function App() {
   }
 
   return (
-    <div className="App">
+    <div className="app">
       <BrowserRouter>
-        <div>
-          <div className="header">
-            <NavLink exact activeClassName="active" to="/">Home</NavLink>
-            <NavLink activeClassName="active" to="/login">Login</NavLink><small>(Access without token only)</small>
-            <NavLink activeClassName="active" to="/dashboard">Dashboard</NavLink><small>(Access with token only)</small>
-          </div>
-          <div className="content">
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <PublicRoute path="/login" component={Login} />
-              <PrivateRoute path="/dashboard" component={Dashboard} />
-            </Switch>
-          </div>
+        <div className="content">
+          {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
+          <Switch>
+            <PublicRoute exact path="/" component={LoginPanel} />
+            <PublicRoute path="/LoginPanel" component={LoginPanel} />
+            <PrivateRoute path="/Dashboard" component={Dashboard} />
+          </Switch>
         </div>
       </BrowserRouter>
     </div>

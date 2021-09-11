@@ -59,7 +59,7 @@ app.post('/users/signin', function (req, res) {
   const pwd = req.body.password;
 
   // return 400 status if username/password is not exist
-  if (!user || !pwd) {
+  if (!user || !pwd) { // jeśli puste
     return res.status(400).json({
       error: true,
       message: "Username or Password required."
@@ -67,7 +67,7 @@ app.post('/users/signin', function (req, res) {
   }
 
   // return 401 status if the credential is not match.
-  if (user !== userData.username || pwd !== userData.password) {
+  if (user !== userData.username || pwd !== userData.password) { // jeśli błędne
     return res.status(401).json({
       error: true,
       message: "Username or Password is Wrong."
