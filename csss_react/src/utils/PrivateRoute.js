@@ -3,7 +3,7 @@ import { Route, Redirect } from 'react-router-dom';
 import { getToken, getUser } from './Common';
 
 // handle the private routes
-function PrivateRoute({ componentClient: ComponentClient, componentDashboard: ComponentDashboard , ...rest }) {
+function PrivateRoute({ componentClient: ComponentClient, componentUsers: componentUsers , ...rest }) {
 
   const token = getToken()
   const userData = getUser()
@@ -15,7 +15,7 @@ function PrivateRoute({ componentClient: ComponentClient, componentDashboard: Co
       render={(props) => {
         if(getToken() && userData.type === "user") {
           console.log("private route user")
-          return <ComponentDashboard {...props} />
+          return <componentUsers {...props} />
         } else if(getToken() && userData.type === "client"){
           console.log("private route client")
           return <ComponentClient {...props} />
