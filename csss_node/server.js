@@ -15,7 +15,8 @@ const userData = {
   password: "zaq1",
   name: "lewy",
   username: "lewy",
-  isAdmin: true
+  isAdmin: true,
+  type: "client"
 };
 
 // enable CORS

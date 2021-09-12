@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 //import axios from 'axios';
 //import { setUserSession } from '../../utils/Common';
 
-function ClientPanel(props) {
+function ClientLoginPanel(props) {
   const [loading, setLoading] = useState(false);
   const clientId = useFormInput('');
   const [error, setError] = useState(null);
@@ -14,7 +14,7 @@ function ClientPanel(props) {
 
   return (
     <div>
-      Id klienta<br /><br />
+      Id klienta<br />
       <div>
         <input type="text" {...clientId} autoComplete="new-password" />
       </div>
@@ -36,4 +36,4 @@ const useFormInput = initialValue => {
   }
 }
 
-export default ClientPanel;
+export default ClientLoginPanel;

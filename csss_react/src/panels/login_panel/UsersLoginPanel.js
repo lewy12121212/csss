@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/Common';
 
-function LoginPanel(props) {
+function UsersLoginPanel(props) {
   const [loading, setLoading] = useState(false);
   const username = useFormInput('');
   const password = useFormInput('');
@@ -52,4 +52,4 @@ const useFormInput = initialValue => {
   }
 }
 
-export default LoginPanel;
+export default UsersLoginPanel;
