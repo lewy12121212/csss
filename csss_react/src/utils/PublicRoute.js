@@ -9,6 +9,7 @@ function PublicRoute({ component: Component, ...rest }) {
   const userData = getUser()
   console.log("PublicRoute: private: " + token + "user: " + JSON.stringify(userData));
 
+  //też należy sprawdzić który panel!!!
   return (
     <Route
       {...rest}

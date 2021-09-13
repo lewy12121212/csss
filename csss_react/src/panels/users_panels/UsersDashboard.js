@@ -13,7 +13,7 @@ function UsersDashboard(props) {
 
   return (
     <div>
-      Witaj! {user.name}!<br /><br />
+      Witaj! {user.Name}!<br /><br />
       <input type="button" onClick={handleLogout} value="Logout" />
     </div>
   );
