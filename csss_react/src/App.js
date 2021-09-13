@@ -6,7 +6,7 @@ import axios from 'axios';
 //import Home from './users_panels/Home';
 import LoginPanel from './panels/login_panel/LoginPanel'
 import UsersDashboard from './panels/users_panels/UsersDashboard';
-import ClientPanel from './panels/client_panel/ClientDashboard'
+import ClientDashboard from './panels/client_panel/ClientDashboard'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -43,7 +43,7 @@ function App() {
           <Switch>
             <PublicRoute exact path="/" component={LoginPanel} />
             <PublicRoute path="/LoginPanel" component={LoginPanel} />
-            <PrivateRoute path="/Dashboard" componentClient={ClientPanel} componentUsers={UsersDashboard}/>
+            <PrivateRoute path="/UsersDashboard" componentClient={ClientDashboard} componentUsers={UsersDashboard}/>
           </Switch>
         </div>
       </BrowserRouter>

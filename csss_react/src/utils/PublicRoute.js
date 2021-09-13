@@ -7,12 +7,12 @@ function PublicRoute({ component: Component, ...rest }) {
 
   const token = getToken()
   const userData = getUser()
-  console.log("private: " + token + "user: " + JSON.stringify(userData));
+  console.log("PublicRoute: private: " + token + "user: " + JSON.stringify(userData));
 
   return (
     <Route
       {...rest}
-      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/Dashboard' }} />}
+      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/UsersDashboard' }} />}
     />
   )
 }

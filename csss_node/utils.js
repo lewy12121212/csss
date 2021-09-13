@@ -8,10 +8,11 @@ function generateToken(user) {
     if (!user) return null;
 
     var u = {
-        userId: user.userId,
-        name: user.name,
-        username: user.username,
-        isAdmin: user.isAdmin
+        Id: user.Id,
+        Name: user.Name,
+        Surname: user.Surname,
+        Login: user.Login,
+        Type: user.Type
     };
 
     return jwt.sign(u, process.env.JWT_SECRET, {
@@ -21,18 +22,29 @@ function generateToken(user) {
 
 // return basic user details
 function getCleanUser(user) {
+    console.log("getCleanUser: ", user.Id)
     if (!user) return null;
-
+    
     return {
-        userId: user.userId,
-        name: user.name,
-        username: user.username,
-        isAdmin: user.isAdmin,
-        type: user.type
+        Id: user.Id,
+        Name: user.Name,
+        Surname: user.Surname,
+        Login: user.Login,
+        Type: user.Type
     };
+}
+
+function parseQueryResult(result){
+    let data = Object.keys(result).forEach(function (key) {
+        var row = result[key];
+        console.log("Login: " + row.Login + " Pass: " + row.Pass)
+        return row;
+    });
+    console.log("Data Login: " + data.Login + " Pass: " + data.Pass)
 }
 
 module.exports = {
     generateToken,
-    getCleanUser
+    getCleanUser,
+    parseQueryResult,
 }

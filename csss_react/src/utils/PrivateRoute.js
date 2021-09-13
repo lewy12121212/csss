@@ -3,22 +3,22 @@ import { Route, Redirect } from 'react-router-dom';
 import { getToken, getUser } from './Common';
 
 // handle the private routes
-function PrivateRoute({ componentClient: ComponentClient, componentUsers: componentUsers , ...rest }) {
+function PrivateRoute({ ComponentClient: componentClient, ComponentUsers: componentUsers , ...rest }) {
 
   const token = getToken()
   const userData = getUser()
-  console.log("private: " + token + "user: " + userData.type);
+  console.log("private: " + token + "user: " + userData.Type);
 
   return (
     <Route
       {...rest}
       render={(props) => {
-        if(getToken() && userData.type === "user") {
+        if(getToken() && userData.Type === "admin") {
           console.log("private route user")
           return <componentUsers {...props} />
-        } else if(getToken() && userData.type === "client"){
+        } else if(getToken() && userData.Type === "client"){
           console.log("private route client")
-          return <ComponentClient {...props} />
+          return <componentClient {...props} />
         } else {
           return <Redirect to={{ pathname: '/LoginPanel', state: { from: props.location } }} />
         }
