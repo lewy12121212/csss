@@ -17,18 +17,12 @@ const db = mysql.createPool({
   password: '',
   database: 'DB_csss'
 });
-
 //const db = mysql.createPool({
 //  host: '192.168.1.16',
 //  user: 'csss-admin',
 //  password: 'csss.admin.2000',
 //  database: 'DB_csss'
 //});
-
-app.get('/dbConnect', (req, res) => {
-  if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Welcome to the Node.js Tutorial! - ' + req.user.name);
-});
 
 // enable CORS
 app.use(cors());
@@ -37,15 +31,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
 app.use(bodyParser.json());
 
-//mysql tester connection
-app.get('/dbTest', (req, res) => { 
-  const sqlShowTables = "SHOW TABLES"
-  db.query(sqlShowTables, (err, result) => {
-      console.log(result)
-      res.send(result)
-  })
-});
-//mysql tester connection end
+//extention files
+require('./usersLogin')(app, db, utils);
+
 
 app.use((req, res, next) => {
   var token = req.headers['authorization'];
@@ -65,44 +53,22 @@ app.use((req, res, next) => {
   });
 });
 
-// request handlers
 app.get('/', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
   res.send('Welcome to the Node.js Tutorial! - ' + req.user.name);
 });
 
-// validate the user credentials
-app.post('/users/signin', (req, res) => {
-  const user = req.body.username;
-  const pwd = req.body.password;
-
-  if (!user || !pwd) { //if empty
-    return res.status(400).json({
-      error: true,
-      message: "Username or Password required."
-    });
-  }
-
-  const sqlQuery = "SELECT * FROM DB_users WHERE Login like (?) AND Pass like (?)"
-    
-  db.query(sqlQuery, [user, pwd], (err, result) => {
-    if(result.length > 1){
-      return res.status(401).json({
-        error: true,
-        message: "Many users with the same login."
-      });
-    } else if(result.length == 0){
-      return res.status(401).json({
-        error: true,
-        message: "No user with this data."
-      });
-    } else {
-      let userData = result[0]
-      const token = utils.generateToken(userData);
-      const userObj = utils.getCleanUser(userData);
-      return res.status(200).json({ user: userObj, token }); 
-    }
+app.get('/dbTest', (req, res) => { 
+  const sqlShowTables = "SHOW TABLES"
+  db.query(sqlShowTables, (err, result) => {
+      console.log(result)
+      res.send(result)
   })
+});
+
+app.get('/dbConnect', (req, res) => {
+  if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
+  res.send('Welcome to the Node.js Tutorial! - ' + req.user.name);
 });
 
 // verify the token and return it if it's valid
@@ -123,8 +89,11 @@ app.get('/verifyToken', (req, res) => {
     });
 
     const sqlQuery = "SELECT * FROM DB_users WHERE Id like (?)"
-    
     db.query(sqlQuery, [user.Id], (err, result) => {
+      if (err) return res.status(401).json({
+        error: true,
+        message: "Invalid database connection."
+      });
       // return 401 status if the userId does not match.
       if (user.Id !== result[0].Id) {
         return res.status(401).json({
