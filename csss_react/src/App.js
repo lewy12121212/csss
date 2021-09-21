@@ -5,15 +5,15 @@ import axios from 'axios';
 //import Login from './users_panels/Login';
 //import Home from './users_panels/Home';
 //import LoginPanel from './panels/login_panel/LoginPanel'
-import UsersDashboard from './panels/users_panels/UsersDashboard'
-import ClientsDashboard from './panels/client_panel/ClientDashboard'
+import EmployeeDashboard from './panels/employee_panels/EmployeeDashboard'
+import ClientDashboard from './panels/client_panel/ClientDashboard'
 import Home from './Home'
 import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
-import UsersLoginPanel from './panels/login_panel/UsersLoginPanel'
+import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
-import { getToken, removeUserSession, setUserSession } from './utils/Common';
+import { getUser, getToken, removeUserSession, setUserSession } from './utils/Common';
 
 function App() {
 
@@ -25,6 +25,7 @@ function App() {
       return;
     }
 
+    //uogólnić verifyToken -> wyłuskać typ użytkownika, i uzależnić od niego zapytanie do odpowiedniej tabeli!
     axios.get(`http://localhost:4000/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
@@ -45,10 +46,12 @@ function App() {
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
             <PublicRoute exact path="/" component={Home} />
+            {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} />
-            <PublicRoute path="/UsersLoginPanel" component={UsersLoginPanel} />
-            <PrivateRoute path="/UsersDashboard" component={UsersDashboard} />
-            <PrivateRoute path="/ClientsDashboard" component={ClientsDashboard} />
+            <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} />
+            {/* Private components */}
+            <PrivateRoute path="/ClientDashboard" component={ClientDashboard} />
+            <PrivateRoute path="/EmployeeDashboard" component={EmployeeDashboard} />
           </Switch>
         </div>
       </BrowserRouter>

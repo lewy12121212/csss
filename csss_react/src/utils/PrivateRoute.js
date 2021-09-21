@@ -7,14 +7,14 @@ function PrivateRoute({ component: Component, ...rest }) {
 
   const token = getToken()
   const userData = getUser()
-  console.log("private: " + token + "user: " + userData.Type);
 
+  //type of user!
   return (
     <Route
       {...rest}
       render={(props) => {
         if(getToken()) {
-          console.log("private route user")
+          console.log("private route: " + token + "user: " + userData.Type);
           return <Component {...props} />
         } else {
           return <Redirect to={{ pathname: '/', state: { from: props.location } }} />

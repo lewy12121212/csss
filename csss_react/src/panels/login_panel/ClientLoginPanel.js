@@ -15,10 +15,10 @@ function ClientLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://localhost:4000/clients/signin', { email: email.value, repairId: repairId.value }).then(response => {
+    axios.post('http://localhost:4000/client/signin', { email: email.value, repairId: repairId.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      props.history.push('/ClientsDashboard');
+      props.history.push('/ClientDashboard');
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);

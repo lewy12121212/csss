@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/Common';
 
-function UsersLoginPanel(props) {
+function EmployeeLoginPanel(props) {
   const [loading, setLoading] = useState(false);
   const username = useFormInput('');
   const password = useFormInput('');
@@ -16,10 +16,10 @@ function UsersLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://localhost:4000/users/signin', { username: username.value, password: password.value }).then(response => {
+    axios.post('http://localhost:4000/employee/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      props.history.push('/UsersDashboard');
+      props.history.push('/EmployeeDashboard');
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
@@ -57,4 +57,4 @@ const useFormInput = initialValue => {
   }
 }
 
-export default UsersLoginPanel;
+export default EmployeeLoginPanel;

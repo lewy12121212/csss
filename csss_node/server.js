@@ -32,8 +32,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //extention files
-require('./usersLogin')(app, db, utils);
-require('./clientsLogin')(app, db, utils);
+require('./employeeLogin')(app, db, utils, jwt);
+require('./clientLogin')(app, db, utils, jwt);
 
 
 app.use((req, res, next) => {
@@ -56,7 +56,7 @@ app.use((req, res, next) => {
 
 app.get('/', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Welcome to the Node.js Tutorial! - ' + req.user.name);
+  res.send('Welcome to the Node.js' + req.user.name);
 });
 
 app.get('/dbTest', (req, res) => { 
@@ -69,10 +69,9 @@ app.get('/dbTest', (req, res) => {
 
 app.get('/dbConnect', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Welcome to the Node.js Tutorial! - ' + req.user.name);
+  res.send('Welcome to the Node.js - database connect' + req.user.name);
 });
 
-// verify the token and return it if it's valid
 app.get('/verifyToken', (req, res) => {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token;
@@ -89,7 +88,10 @@ app.get('/verifyToken', (req, res) => {
       message: "Invalid token."
     });
 
+    console.log("veryfi token user: ", user.name, user.email, user.password, user.Id)
+
     const sqlQuery = "SELECT * FROM DB_users WHERE Id like (?)"
+
     db.query(sqlQuery, [user.Id], (err, result) => {
       if (err) return res.status(401).json({
         error: true,
@@ -112,3 +114,4 @@ app.get('/verifyToken', (req, res) => {
 app.listen(port, () => {
   console.log('Server started on: ' + port);
 });
+

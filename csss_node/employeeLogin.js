@@ -1,13 +1,13 @@
-module.exports = (app, db, utils) => {
+module.exports = (app, db, utils, jwt) => {
 
-  app.get('/usersLoginRouteTest', (req, res) => {
+  app.get('/employee/LoginRouteTest', (req, res) => {
     res.status(200).json({
       success: true, 
-      message: 'Users login route file works correctly'
+      message: 'Employee login route file works correctly'
     });
   })
   // validate the user credentials
-  app.post('/users/signin', (req, res) => {
+  app.post('/employee/signin', (req, res) => {
     const user = req.body.username;
     const pwd = req.body.password;
 

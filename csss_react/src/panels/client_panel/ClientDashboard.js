@@ -2,7 +2,7 @@
 import React from 'react';
 import { getUser, removeUserSession } from '../../utils/Common';
 
-function Dashboard(props) {
+function ClientDashboard(props) {
   const user = getUser();
 
   // handle click event of logout button
@@ -19,4 +19,4 @@ function Dashboard(props) {
   );
 }
 
-export default Dashboard;
+export default ClientDashboard;

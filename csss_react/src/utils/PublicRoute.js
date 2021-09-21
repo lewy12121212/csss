@@ -7,13 +7,13 @@ function PublicRoute({ component: Component, ...rest }) {
 
   const token = getToken()
   const userData = getUser()
-  console.log("PublicRoute: private: " + token + "user: " + JSON.stringify(userData));
-
+  //console.log("PublicRoute: private: " + token + "user: " + JSON.stringify(userData));
+  
   //też należy sprawdzić który panel!!!
   return (
     <Route
       {...rest}
-      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/UsersDashboard' }} />}
+      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/' }} />}
     />
   )
 }
