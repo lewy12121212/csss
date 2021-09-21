@@ -33,6 +33,7 @@ app.use(bodyParser.json());
 
 //extention files
 require('./usersLogin')(app, db, utils);
+require('./clientsLogin')(app, db, utils);
 
 
 app.use((req, res, next) => {

@@ -8,6 +8,10 @@ function UsersLoginPanel(props) {
   const password = useFormInput('');
   const [error, setError] = useState(null);
 
+  const handleHomeBack = () => {
+    props.history.push("/");
+  }
+
   // handle button click of login form
   const handleLogin = () => {
     setError(null);
@@ -36,6 +40,7 @@ function UsersLoginPanel(props) {
       </div>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
       <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+      <input type="button" value="Back" onClick={handleHomeBack} />
     </div>
   );
 }

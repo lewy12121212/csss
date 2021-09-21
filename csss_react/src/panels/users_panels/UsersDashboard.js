@@ -8,12 +8,12 @@ function UsersDashboard(props) {
   // handle click event of logout button
   const handleLogout = () => {
     removeUserSession();
-    props.history.push('/LoginPanel');
+    props.history.push('/');
   }
 
   return (
     <div>
-      Witaj! {user.Name}!<br /><br />
+      Witaj użytkowniku! {user.Name}!<br /><br />
       <input type="button" onClick={handleLogout} value="Logout" />
     </div>
   );

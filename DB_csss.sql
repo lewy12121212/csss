@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.0
+-- version 5.0.2
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 13, 2021 at 11:05 AM
--- Server version: 10.3.29-MariaDB-0+deb10u1
--- PHP Version: 7.3.29-1~deb10u1
+-- Czas generowania: 21 Wrz 2021, 19:36
+-- Wersja serwera: 10.4.14-MariaDB
+-- Wersja PHP: 7.4.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -18,13 +18,32 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `DB_csss`
+-- Baza danych: `DB_csss`
 --
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `DB_users`
+-- Struktura tabeli dla tabeli `DB_clients`
+--
+
+CREATE TABLE `DB_clients` (
+  `Id` int(11) NOT NULL,
+  `Mail` varchar(50) DEFAULT NULL,
+  `RepairId` mediumtext DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+--
+-- Zrzut danych tabeli `DB_clients`
+--
+
+INSERT INTO `DB_clients` (`Id`, `Mail`, `RepairId`) VALUES
+(1, 'z', 'z');
+
+-- --------------------------------------------------------
+
+--
+-- Struktura tabeli dla tabeli `DB_users`
 --
 
 CREATE TABLE `DB_users` (
@@ -37,11 +56,24 @@ CREATE TABLE `DB_users` (
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
--- Indexes for dumped tables
+-- Zrzut danych tabeli `DB_users`
+--
+
+INSERT INTO `DB_users` (`Id`, `Name`, `Surname`, `Login`, `Pass`, `Type`) VALUES
+(1, 'Eryk', 'Lewandowski', 'Lewy', 'zaq1', 'admin');
+
+--
+-- Indeksy dla zrzutów tabel
 --
 
 --
--- Indexes for table `DB_users`
+-- Indeksy dla tabeli `DB_clients`
+--
+ALTER TABLE `DB_clients`
+  ADD PRIMARY KEY (`Id`);
+
+--
+-- Indeksy dla tabeli `DB_users`
 --
 ALTER TABLE `DB_users`
   ADD PRIMARY KEY (`Id`);
@@ -51,10 +83,16 @@ ALTER TABLE `DB_users`
 --
 
 --
--- AUTO_INCREMENT for table `DB_users`
+-- AUTO_INCREMENT dla tabeli `DB_clients`
+--
+ALTER TABLE `DB_clients`
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+
+--
+-- AUTO_INCREMENT dla tabeli `DB_users`
 --
 ALTER TABLE `DB_users`
-  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `Id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

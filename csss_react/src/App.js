@@ -4,9 +4,12 @@ import axios from 'axios';
 
 //import Login from './users_panels/Login';
 //import Home from './users_panels/Home';
-import LoginPanel from './panels/login_panel/LoginPanel'
-import UsersDashboard from './panels/users_panels/UsersDashboard';
-import ClientDashboard from './panels/client_panel/ClientDashboard'
+//import LoginPanel from './panels/login_panel/LoginPanel'
+import UsersDashboard from './panels/users_panels/UsersDashboard'
+import ClientsDashboard from './panels/client_panel/ClientDashboard'
+import Home from './Home'
+import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
+import UsersLoginPanel from './panels/login_panel/UsersLoginPanel'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -41,9 +44,11 @@ function App() {
         <div className="content">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
-            <PublicRoute exact path="/" component={LoginPanel} />
-            <PublicRoute path="/LoginPanel" component={LoginPanel} />
-            <PrivateRoute path="/UsersDashboard" componentClient={ClientDashboard} componentUsers={UsersDashboard}/>
+            <PublicRoute exact path="/" component={Home} />
+            <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} />
+            <PublicRoute path="/UsersLoginPanel" component={UsersLoginPanel} />
+            <PrivateRoute path="/UsersDashboard" component={UsersDashboard} />
+            <PrivateRoute path="/ClientsDashboard" component={ClientsDashboard} />
           </Switch>
         </div>
       </BrowserRouter>
