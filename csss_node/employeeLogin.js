@@ -1,4 +1,4 @@
-module.exports = (app, db, utils, jwt) => {
+module.exports = (app, db, employeeUtils) => {
 
   app.get('/employee/LoginRouteTest', (req, res) => {
     res.status(200).json({
@@ -18,7 +18,7 @@ module.exports = (app, db, utils, jwt) => {
       });
     }
 
-    const sqlQuery = "SELECT * FROM DB_users WHERE Login like (?) AND Pass like (?)"
+    const sqlQuery = "SELECT * FROM DB_employees WHERE Login like (?) AND Pass like (?)"
 
     db.query(sqlQuery, [user, pwd], (err, result) => {
       if (err) return res.status(401).json({
@@ -38,8 +38,8 @@ module.exports = (app, db, utils, jwt) => {
         });
       } else {
         let userData = result[0]
-        const token = utils.generateToken(userData);
-        const userObj = utils.getCleanUser(userData);
+        const token = employeeUtils.generateToken(userData);
+        const userObj = employeeUtils.getCleanUser(userData);
         return res.status(200).json({ user: userObj, token }); 
       }
     })

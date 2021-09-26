@@ -4,7 +4,9 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const jwt = require('jsonwebtoken');
-const utils = require('./utils');
+const employeeUtils = require('./employeeUtils');
+const clientUtils = require('./clientUtils');
+
 
 const app = express();
 const port = process.env.PORT || 4000;
@@ -32,8 +34,8 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
 //extention files
-require('./employeeLogin')(app, db, utils, jwt);
-require('./clientLogin')(app, db, utils, jwt);
+require('./employeeLogin')(app, db, employeeUtils);
+require('./clientLogin')(app, db, clientUtils);
 
 
 app.use((req, res, next) => {
@@ -88,26 +90,49 @@ app.get('/verifyToken', (req, res) => {
       message: "Invalid token."
     });
 
-    console.log("veryfi token user: ", user.name, user.email, user.password, user.Id)
+    if(user.Type === undefined){
+      const sqlQuery = "SELECT * FROM DB_clients WHERE Id like (?)"
 
-    const sqlQuery = "SELECT * FROM DB_users WHERE Id like (?)"
-
-    db.query(sqlQuery, [user.Id], (err, result) => {
-      if (err) return res.status(401).json({
-        error: true,
-        message: "Invalid database connection."
-      });
-      // return 401 status if the userId does not match.
-      if (user.Id !== result[0].Id) {
-        return res.status(401).json({
+      db.query(sqlQuery, [user.Id], (err, result) => {
+        if (err) return res.status(401).json({
           error: true,
-          message: "Invalid user."
+          message: "Invalid database connection."
         });
-      }
-      // get basic user details
-      var userObj = utils.getCleanUser(result[0]);
-      return res.json({ user: userObj, token });
-    })
+        // return 401 status if the userId does not match.
+        if (user.Id !== result[0].Id) {
+          return res.status(401).json({
+            error: true,
+            message: "Invalid user."
+          });
+        }
+        // get basic user details
+        var userObj = clientUtils.getCleanUser(result[0]);
+        return res.json({ user: userObj, token });
+      })
+
+    } else {
+      const sqlQuery = "SELECT * FROM DB_employees WHERE Id like (?)"
+
+      db.query(sqlQuery, [user.Id], (err, result) => {
+        if (err) return res.status(401).json({
+          error: true,
+          message: "Invalid database connection."
+        });
+        // return 401 status if the userId does not match.
+        if (user.Id !== result[0].Id) {
+          return res.status(401).json({
+            error: true,
+            message: "Invalid user."
+          });
+        }
+        // get basic user details
+        var userObj = employeeUtils.getCleanUser(result[0]);
+        return res.json({ user: userObj, token });
+      })
+    }
+    //console.log("verify token user: ", user.Type, user.Login, user.Pass, user.Id)
+
+    
   });
 });
 

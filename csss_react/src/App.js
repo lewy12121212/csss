@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Switch } from 'react-router-dom';
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
 //import Login from './users_panels/Login';
@@ -13,7 +13,7 @@ import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
-import { getUser, getToken, removeUserSession, setUserSession } from './utils/Common';
+import { getToken, removeUserSession, setUserSession } from './utils/Common';
 
 function App() {
 
@@ -45,13 +45,15 @@ function App() {
         <div className="content">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
-            <PublicRoute exact path="/" component={Home} />
             {/* Public login components */}
-            <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} />
-            <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} />
+            <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
+            <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
             {/* Private components */}
-            <PrivateRoute path="/ClientDashboard" component={ClientDashboard} />
-            <PrivateRoute path="/EmployeeDashboard" component={EmployeeDashboard} />
+            <PrivateRoute path="/ClientDashboard" component={ClientDashboard} panelType="Client" />
+            <PrivateRoute path="/EmployeeDashboard" component={EmployeeDashboard} panelType="Employee" />
+            {/* Main route*/}
+            <PublicRoute exact path="/" component={Home} />
+            <Redirect to="/" />
           </Switch>
         </div>
       </BrowserRouter>

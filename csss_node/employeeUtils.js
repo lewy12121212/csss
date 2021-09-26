@@ -22,7 +22,6 @@ function generateToken(user) {
 
 // return basic user details
 function getCleanUser(user) {
-    console.log("getCleanUser: ", user.Id)
     if (!user) return null;
     
     return {
@@ -34,17 +33,7 @@ function getCleanUser(user) {
     };
 }
 
-function parseQueryResult(result){
-    let data = Object.keys(result).forEach(function (key) {
-        var row = result[key];
-        console.log("Login: " + row.Login + " Pass: " + row.Pass)
-        return row;
-    });
-    console.log("Data Login: " + data.Login + " Pass: " + data.Pass)
-}
-
 module.exports = {
     generateToken,
     getCleanUser,
-    parseQueryResult,
 }
