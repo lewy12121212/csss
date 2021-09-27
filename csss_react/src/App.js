@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
+//styles
+//import Background from "./img/mountains.jpg";
+
 //import Login from './users_panels/Login';
 //import Home from './users_panels/Home';
 //import LoginPanel from './panels/login_panel/LoginPanel'
@@ -26,7 +29,7 @@ function App() {
     }
 
     //uogólnić verifyToken -> wyłuskać typ użytkownika, i uzależnić od niego zapytanie do odpowiedniej tabeli!
-    axios.get(`http://localhost:4000/verifyToken?token=${token}`).then(response => {
+    axios.get(`http://192.168.1.5:4000/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {
@@ -40,9 +43,9 @@ function App() {
   }
 
   return (
-    <div className="app">
+    <div className="app align-items-center">
       <BrowserRouter>
-        <div className="content">
+        <div className="content box">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
             {/* Public login components */}

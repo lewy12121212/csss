@@ -1,6 +1,10 @@
 import React, {Component} from 'react';
 import { withRouter } from "react-router-dom";
 
+//styles
+import './index.scss';
+import './home.scss';
+
 class Search extends Component{
 
   handleClickUser = () => {
@@ -12,10 +16,19 @@ class Search extends Component{
   };
   render() {
     return (
-      <div>
-        <button onClick={this.handleClickUser} type="button">Employee</button>
-        <button onClick={this.handleClickClient} type="button">Client</button>
+      <div className="vertical-center">
+        <div className="container col-12">
+          <div className="row d-flex justify-content-center button-row">
+            <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center button-col">
+              <button id="employee-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickUser}>Jestem pracownikiem</button>
+            </div>
+            <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center button-col">  
+              <button id="client-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickClient}>Jestem klientem</button>
+            </div>
+          </div>
+        </div>
       </div>
+
     );
   }
 }

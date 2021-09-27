@@ -13,15 +13,7 @@ function PublicRoute({ component: Component, panelType: PanelType, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(props) => {
-        if(token && PanelType === "Client" && userData.Type === undefined) {
-          return <Component {...props} />
-        } else if(token && PanelType === "Employee" && userData.Type !== undefined) {
-          return <Component {...props} />
-        } else {
-          return <Redirect to={{ pathname: '/' }} />
-        }
-      }}
+      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/' }} />}
     />
   )
 }
