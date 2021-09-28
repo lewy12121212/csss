@@ -3,6 +3,10 @@ import axios from 'axios';
 import { setUserSession } from '../../utils/Common';
 
 import { dbAddress } from '../../dbCon';
+//styles
+import '../../index.scss';
+import './client.scss';
+import './login.scss';
 
 function ClientLoginPanel(props) {
   const [loading, setLoading] = useState(false);
@@ -28,18 +32,42 @@ function ClientLoginPanel(props) {
     });
   }
 
-  return (
-    <div>
-      Klient<br />
-      <div>
-        Mail: <input type="text" {...email} autoComplete="new-password" />
-        Id naprawy: <input type="text" {...repairId} autoComplete="new-password" />
+  return(
+    <div className="container col-xl-6 col-lg-8 col-md-10 col-12">
+      <div className="row d-flex justify-content-center mt-5">
+        <div id="client-title-panel" className="col-10 col-lg-7 d-flex justify-content-center text-center global-title">
+          ZALOGUJ SIĘ DO PANELU KLIENTA
+        </div>
+        <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
+          <div className="form-group field col-10">
+            <input type="input" className="form-field" placeholder="email..." {...email} name="email" id='email' required />
+            <label for="email" className="form-label">Email</label>
+          </div>
+          <div className="form-group field col-10">
+            <input type="text" className="form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
+            <label for="repairId" className="form-label">Id naprawy</label>
+          </div>
+          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+
+          <button className="global-btn local-client-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
+          <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
+        </div>
       </div>
-      {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-      <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
-      <input type="button" value="Back" onClick={handleHomeBack} />
     </div>
   );
+
+  //return (
+  //  <div>
+  //    Klient<br />
+  //    <div>
+  //      Mail: <input type="text" {...email} autoComplete="new-password" />
+  //      Id naprawy: <input type="text" {...repairId} autoComplete="new-password" />
+  //    </div>
+  //    {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+  //    <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+  //    <input type="button" value="Back" onClick={handleHomeBack} />
+  //  </div>
+  //);
 }
 
 const useFormInput = initialValue => {

@@ -2,13 +2,17 @@
 
 //id
 #employee-button{
-  background-color: $buttonOne;
+  background-color: $buttonTwo;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
   font-weight: bold;
   font-size: 20px;
 }
 
 #client-button{
-  background-color: $buttonTwo;
+  background-color: $additionalOne;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
   font-weight: bold;
   font-size: 20px;
 }

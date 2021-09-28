@@ -20,10 +20,10 @@ class Search extends Component{
         <div className="container col-12">
           <div className="row d-flex justify-content-center button-row">
             <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center button-col">
-              <button id="employee-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickUser}>Jestem pracownikiem</button>
+              <button id="employee-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickUser}>Jestem <br />pracownikiem</button>
             </div>
             <div className="col-12 col-md-6 col-lg-4 d-flex justify-content-center button-col">  
-              <button id="client-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickClient}>Jestem klientem</button>
+              <button id="client-button" className="btn btn-secondary col-8 button-square" onClick={this.handleClickClient}>Jestem  <br />klientem</button>
             </div>
           </div>
         </div>

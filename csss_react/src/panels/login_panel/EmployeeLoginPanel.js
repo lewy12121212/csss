@@ -5,7 +5,8 @@ import { setUserSession } from '../../utils/Common';
 import { dbAddress } from '../../dbCon';
 //styles
 import '../../index.scss';
-import './employee.scss'
+import './employee.scss';
+import './login.scss';
 
 function EmployeeLoginPanel(props) {
   const [loading, setLoading] = useState(false);
@@ -28,27 +29,31 @@ function EmployeeLoginPanel(props) {
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Coś poszło nie tak :(");
+      else setError("Coś poszło nie tak...");
     });
   }
 
   return (
-    <div className="container col-6">
-      <div className="row d-flex justify-content-center">
-        <div id="title-panel" className="col-10 col-lg-7 d-flex justify-content-center">
-          ZALOGUJ SIĘ DO PANELU
+    <div className="container col-xl-6 col-lg-8 col-md-10 col-12">
+      <div className="row d-flex justify-content-center mt-5">
+        <div id="employee-title-panel" className="col-10 col-lg-7 d-flex justify-content-center text-center global-title">
+          ZALOGUJ SIĘ DO PANELU PRACOWNIKA
         </div>
-        <div id="content-panel" className="col-10 col-lg-7 d-flex flex-column align-items-center">
-          <input className="input-text" type="text" placeholder="Login..." {...username} autoComplete="new-password" /><br />
-          <input className="input-text" type="password" placeholder="Hasło..." {...password} autoComplete="new-password" />
-          
+        <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
+          <div className="form-group field col-10">
+            <input type="input" className="form-field" placeholder="Login..." {...username} autoComplete="new-password" name="Login" id='Login' required />
+            <label for="Login" className="form-label">Login</label>
+          </div>
+          <div className="form-group field col-10">
+            <input type="password" className="form-field" placeholder="Haslo..." {...password} autoComplete="new-password" name="password" id='password' required />
+            <label for="password" className="form-label">Hasło</label>
+          </div>
           {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-          
-          <input type="button" value={loading ? 'Ładowanie...' : 'Zaloguj'} onClick={handleLogin} disabled={loading} /><br />
-          <input type="button" value="Cofnij" onClick={handleHomeBack} />
+
+          <button className="global-btn local-employee-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
+          <button className="global-btn local-employee-btn" onClick={handleHomeBack}>Wróć</button>
         </div>
       </div>
-
     </div>
   );
 }

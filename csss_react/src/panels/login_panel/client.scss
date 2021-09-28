@@ -1,0 +1,9 @@
+@import "../../index.scss";
+
+.local-client-btn{
+	background: $additionalOne;
+}
+
+#client-title-panel::before{
+  background-color: $additionalOne;
+}
