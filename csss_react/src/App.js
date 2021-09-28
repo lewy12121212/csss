@@ -2,12 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Switch, Redirect } from 'react-router-dom';
 import axios from 'axios';
 
-//styles
-//import Background from "./img/mountains.jpg";
+import { dbAddress } from './dbCon';
 
-//import Login from './users_panels/Login';
-//import Home from './users_panels/Home';
-//import LoginPanel from './panels/login_panel/LoginPanel'
 import EmployeeDashboard from './panels/employee_panels/EmployeeDashboard'
 import ClientDashboard from './panels/client_panel/ClientDashboard'
 import Home from './Home'
@@ -29,7 +25,7 @@ function App() {
     }
 
     //uogólnić verifyToken -> wyłuskać typ użytkownika, i uzależnić od niego zapytanie do odpowiedniej tabeli!
-    axios.get(`http://192.168.1.5:4000/verifyToken?token=${token}`).then(response => {
+    axios.get(`http://${dbAddress}:4000/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {

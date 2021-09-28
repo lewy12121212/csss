@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/Common';
 
+import { dbAddress } from '../../dbCon';
+
 function ClientLoginPanel(props) {
   const [loading, setLoading] = useState(false);
   const repairId = useFormInput('');
@@ -15,7 +17,7 @@ function ClientLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://192.168.1.5:4000/client/signin', { email: email.value, repairId: repairId.value }).then(response => {
+    axios.post(`http://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/ClientDashboard');

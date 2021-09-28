@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { setUserSession } from '../../utils/Common';
 
+import { dbAddress } from '../../dbCon';
 //styles
 import '../../index.scss';
 import './employee.scss'
@@ -20,7 +21,7 @@ function EmployeeLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://192.168.1.5:4000/employee/signin', { username: username.value, password: password.value }).then(response => {
+    axios.post(`http://${dbAddress}:4000/employee/signin`, { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/EmployeeDashboard');
