@@ -39,13 +39,13 @@ function ClientLoginPanel(props) {
           ZALOGUJ SIĘ DO PANELU KLIENTA
         </div>
         <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
-          <div className="form-group field col-10">
-            <input type="input" className="form-field" placeholder="email..." {...email} name="email" id='email' required />
-            <label for="email" className="form-label">Email</label>
+          <div className="client-form-group field col-10">
+            <input type="input" className="client-form-field" placeholder="email..." {...email} name="email" id='email' required />
+            <label for="email" className="client-form-label">Email</label>
           </div>
-          <div className="form-group field col-10">
-            <input type="text" className="form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
-            <label for="repairId" className="form-label">Id naprawy</label>
+          <div className="client-form-group field col-10">
+            <input type="text" className="client-form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
+            <label for="repairId" className="client-form-label">Id naprawy</label>
           </div>
           {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
 

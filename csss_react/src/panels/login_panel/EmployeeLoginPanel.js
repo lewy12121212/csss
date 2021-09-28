@@ -40,13 +40,13 @@ function EmployeeLoginPanel(props) {
           ZALOGUJ SIĘ DO PANELU PRACOWNIKA
         </div>
         <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
-          <div className="form-group field col-10">
-            <input type="input" className="form-field" placeholder="Login..." {...username} autoComplete="new-password" name="Login" id='Login' required />
-            <label for="Login" className="form-label">Login</label>
+          <div className="employee-form-group field col-10">
+            <input type="input" className="employee-form-field" placeholder="Login..." {...username} autoComplete="new-password" name="Login" id='Login' required />
+            <label for="Login" className="employee-form-label">Login</label>
           </div>
-          <div className="form-group field col-10">
-            <input type="password" className="form-field" placeholder="Haslo..." {...password} autoComplete="new-password" name="password" id='password' required />
-            <label for="password" className="form-label">Hasło</label>
+          <div className="employee-form-group field col-10">
+            <input type="password" className="employee-form-field" placeholder="Haslo..." {...password} autoComplete="new-password" name="password" id='password' required />
+            <label for="password" className="employee-form-label">Hasło</label>
           </div>
           {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
 
