@@ -12,8 +12,8 @@ function ClientDashboard(props) {
   }
 
   return (
-    <div>
-      Witaj kliencie! {user.name}!<br /><br />
+    <div style={{ color: 'white' }}>
+      Witaj w panelu zarządzania naprawą numer: {user.RepairId}<br /><br />
       <input type="button" onClick={handleLogout} value="Logout" />
     </div>
   );

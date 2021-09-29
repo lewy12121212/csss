@@ -19,8 +19,8 @@ function EmployeeDashboard(props) {
   }
 
   return (
-    <div>
-      Witaj użytkowniku! {user.Name}!<br /><br />
+    <div style={{ color: 'white' }}>
+      Witaj użytkowniku {user.Name}!<br /><br />
 
       <Route path="/EmployeeDashboard/admin" component={AdminPanel} />
       <Route path="/EmployeeDashboard/manager" component={ManagerPanel} />
