@@ -1,6 +1,6 @@
 module.exports = (app, db, employeeUtils) => {
 
-  app.get('/employee/LoginRouteTest', (req, res) => {
+  app.get('/employee/loginRouteTest', (req, res) => {
     res.status(200).json({
       success: true, 
       message: 'Employee login route file works correctly'
@@ -44,4 +44,10 @@ module.exports = (app, db, employeeUtils) => {
       }
     })
   });
+
+  app.post('/employee/faceRecognition', (req,res) => {
+    const picture = req.body.pic;
+    //cdn 
+  });
+
 }

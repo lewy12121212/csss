@@ -1,6 +1,6 @@
 module.exports = (app, db, clientUtils) => {
 
-  app.get('/client/LoginRouteTest', (req, res) => {
+  app.get('/client/loginRouteTest', (req, res) => {
     res.status(200).json({
       success: true, 
       message: 'Client login route file works correctly'
