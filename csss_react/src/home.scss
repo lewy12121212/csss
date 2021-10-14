@@ -1,0 +1,50 @@
+@import './index.scss';
+
+//id
+#employee-button{
+  background-color: $blue;
+  text-transform: uppercase;
+  letter-spacing: 0.1rem;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#client-button{
+  background-color: $lightBlue;
+  text-transform: uppercase;
+  letter-spacing: 0.2rem;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+//class
+.vertical-center{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-top: 8%;
+}
+
+.button-col{
+  padding: 5%;
+}
+
+.button-square{
+  aspect-ratio: 1/1;
+  border: 0px;
+
+  :hover > &{
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  }
+}
+
+
+//media
+@media (max-width: 768px) {
+  //class
+  .button-square{
+    word-wrap: break-word;
+  }
+}

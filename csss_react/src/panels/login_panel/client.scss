@@ -1,0 +1,70 @@
+@import "../../index.scss";
+
+.local-client-btn{
+	background: $lightBlue;
+}
+
+#client-title-panel::before{
+  background-color: $lightBlue;
+}
+
+//active input text
+.client-form-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 50%;
+}
+
+.client-form-field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent;
+  transition: border-color 0.5s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .client-form-label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+  }
+}
+
+.client-form-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.5s;
+  font-size: 1rem;
+  color: $gray;
+}
+
+.client-form-field:focus {
+  ~ .client-form-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: $mint;
+    font-weight:700;    
+  }
+  padding-bottom: 6px;  
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $mint, $darkBlue);
+  border-image-slice: 1;
+}
+/* reset input */
+.client-form-field{
+  &:required,&:invalid { box-shadow:none; }
+}

@@ -1,0 +1,78 @@
+@import "../../index.scss";
+
+.local-employee-btn{
+	background: $blue;
+}
+
+#employee-title-panel::before{
+  background-color: $blue;
+}
+
+//active input text
+.employee-form-group {
+  position: relative;
+  padding: 15px 0 0;
+  margin-top: 10px;
+  width: 50%;
+}
+
+.employee-form-field {
+  font-family: inherit;
+  width: 100%;
+  border: 0;
+  border-bottom: 2px solid $gray;
+  outline: 0;
+  font-size: 1.3rem;
+  color: $white;
+  padding: 7px 0;
+  background: transparent !important;
+  transition: border-color 0.5s;
+
+  &::placeholder {
+    color: transparent;
+  }
+
+  &:placeholder-shown ~ .employee-form-label {
+    font-size: 1.3rem;
+    cursor: text;
+    top: 20px;
+  }
+}
+
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+  transition: background-color 5000000s ease-in-out 0s;
+  -webkit-text-fill-color: $white !important;
+}
+
+.employee-form-label {
+  position: absolute;
+  top: 0;
+  display: block;
+  transition: 0.5s;
+  font-size: 1rem;
+  color: $gray;
+}
+
+.employee-form-field:focus {
+  ~ .employee-form-label {
+    position: absolute;
+    top: 0;
+    display: block;
+    transition: 0.2s;
+    font-size: 1rem;
+    color: $blue;
+    font-weight:700;
+  }
+  padding-bottom: 6px;  
+  font-weight: 700;
+  border-width: 3px;
+  border-image: linear-gradient(to right, $blue, $darkBlue);
+  border-image-slice: 1;
+}
+/* reset input */
+.employee-form-field{
+  &:required,&:invalid { box-shadow:none; }
+}
