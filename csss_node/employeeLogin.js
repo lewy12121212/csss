@@ -1,5 +1,7 @@
 module.exports = (app, db, employeeUtils) => {
 
+  const cloud = require('./faceDetection')
+
   app.get('/employee/loginRouteTest', (req, res) => {
     res.status(200).json({
       success: true, 
@@ -46,8 +48,13 @@ module.exports = (app, db, employeeUtils) => {
   });
 
   app.post('/employee/faceRecognition', (req,res) => {
-    const picture = req.body.pic;
-    //cdn 
+    const picture = req.body.image;
+    cloud.uploads(picture)
+    console.log('test');
+    return res.status(401).json({
+      error: true,
+      message: "No user with this data."
+    });
   });
 
 }

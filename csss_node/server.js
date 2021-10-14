@@ -29,9 +29,13 @@ const db = mysql.createPool({
 // enable CORS
 app.use(cors());
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+
+//payload size
+app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
 //extention files
 require('./employeeLogin')(app, db, employeeUtils);
