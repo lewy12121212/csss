@@ -13,6 +13,7 @@ import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './utils/Common';
+import QrGenerator from './qr_generator/QrGenerator';
 
 function App() {
 
@@ -44,6 +45,7 @@ function App() {
         <div className="content box">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
+            <PublicRoute path="/Qr" component={QrGenerator} panelType="QR" />
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
