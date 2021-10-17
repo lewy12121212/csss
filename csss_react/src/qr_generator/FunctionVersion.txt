@@ -1,0 +1,105 @@
+import React, { createRef, useState } from 'react';
+import * as QRCode from 'easyqrcodejs';
+
+function QrGenerator(props){
+
+  const [qrcode, setQrcode] = useState(null);
+  const [options, setOption] = useState("");
+
+  const handleChange = e => {
+    setOption({
+      text: e.target.value,
+      width: 200,
+      height: 200,
+      colorDark: "#FFFFFF",
+      colorLight: "#000000"
+    })
+  }
+
+  const handleOption = () => {
+    setQrcode(new QRCode(qrcode, options))
+    //console.log("qr" + qrcode)
+  }
+  //const options = {
+  //  text: "https://github.com/ushelp/EasyQRCodeJS"
+  //}
+  
+  /*
+ 
+ // useEffect(() => {
+    qrcode.current = QRCode( React.createRef().current, options);
+  //});
+  //const prevValue = qrcode.current;
+*/
+  
+  //const qrcode = QRCode( React.createRef().current, options);
+  return ( 
+    <div className = "App">
+      <input type="text" onChange={handleChange} />
+      <input type="button" value="Generuj QR code" onClick={handleOption} />
+      <div>{qrcode}</div> 
+    </div>
+  );
+}
+
+
+export default QrGenerator;
+
+/// <div ref={create}></div>
+//class QrGenerator extends React.Component {
+//
+//  constructor(props) {
+//      super(props);
+//      this.qrcode = React.createRef();
+//      this.options = {
+//        text: "",
+//        width: 200,
+//        height: 200,
+//        colorDark: "#FFFFFF",
+//        colorLight: "#000000",
+//      };
+//  }
+//
+//  handleChange = e => {
+//    this.options = {
+//      text: e.target.value,
+//      width: 200,
+//      height: 200,
+//      colorDark: "#FFFFFF",
+//      colorLight: "#000000",
+//    };
+//    //this.setState({ 
+//    //  ...this.state,
+//    //  options: {
+//    //    text: e.target.value,
+//    //  }
+//    //})
+//  }
+//
+//  handleOption = () => {
+//    new QRCode(this.qrcode.current, options)
+//    //console.log("qr" + qrcode)
+//  }
+//
+//  //componentDidMount() {
+//  //    // Options
+//  //    var options = {
+//  //        text: "https://github.com/ushelp/EasyQRCodeJS"
+//  //    }
+//  //    // Create new QRCode Object
+//  //    new QRCode( this.qrcode.current, options);
+//  //}
+//
+//
+//  render() {
+//    return ( 
+//    <div className = "Qrcode">
+//      <input type="text" onChange={handleChange} />
+//      <input type="button" value="Generuj QR code" onClick={handleOption} />
+//      <div ref={this.qrcode}></div> 
+//    </div>
+//    );
+//  }
+//}
+
+//export default QrGenerator;
