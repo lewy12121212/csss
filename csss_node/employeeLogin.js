@@ -47,10 +47,14 @@ module.exports = (app, db, employeeUtils) => {
     })
   });
 
-  app.post('/employee/faceRecognition', (req,res) => {
+  app.post('/employee/faceRegistration', (req,res) => {
     const picture = req.body.image;
-    cloud.uploads(picture)
-    console.log('test');
+
+    for(let i = 0; i<10; i++)
+    {
+      cloud.uploads(picture[i], req.body.login, i)
+    }
+
     return res.status(401).json({
       error: true,
       message: "No user with this data."

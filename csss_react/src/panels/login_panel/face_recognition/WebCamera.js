@@ -2,38 +2,48 @@ import React, {useState} from "react";
 import Webcam from "react-webcam";
 import axios from 'axios';
 import { dbAddress } from '../../../dbCon';
-import { setUserSession } from '../../../utils/Common';
 
-  const videoConstraints = {
-    width: 1280,
-    height: 720,
-    facingMode: "user"
-  };
+
+const videoConstraints = {
+  width: 1280,
+  height: 720,
+  facingMode: "user"
+};
 //const WebCamera = () => <Webcam />;
 function WebCamera(props) {
 
-
   const webcamRef = React.useRef(null);
-
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [login, setLogin] = useState("")
 
+  const handleInputChange = e => {
+    setLogin(e.target.value)
+  }
+  
   const handleLogin = () => {
-      const imageSrc = webcamRef.current.getScreenshot();
-      setError(null);
-      setLoading(true);
-      axios.post(`http://${dbAddress}:4000/employee/faceRecognition`, { image: imageSrc }).then(response => {
-      setLoading(false);
-      setUserSession(response.data.token, response.data.user);
-      props.history.push('/EmployeeDashboard');
-      }).catch(error => {
+    setLoading(true);
+    const table_of_img = []
+    
+    let i = 0;
+    var time = setInterval(() => {      
+      if(i === 10){
+        clearInterval(time);
+        setError(null);      
+        axios.post(`http://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
         setLoading(false);
-        if (error.response.status === 401) setError(error.response.data.message);
-        else setError("Coś poszło nie tak...");
-      });
-      //console.log(imageSrc);
-
-    }
+        alert("Zarejestrowano poprawnie."); //pamiętać wyrzucić!!!
+        }).catch(error => {
+          setLoading(false);
+          if (error.response.status === 401) setError(error.response.data.message);
+          else setError("Coś poszło nie tak...");
+        });
+      }
+  
+      table_of_img[i] = webcamRef.current.getScreenshot();
+      i++;
+    }, 1000)
+  }
 
   return (
     <div>
@@ -47,9 +57,10 @@ function WebCamera(props) {
         width={1280}
         videoConstraints={videoConstraints}
       />
-      
-      <button onClick={handleLogin}>Capture photo</button>
+      <input type="text" onChange={handleInputChange}/>
+      <button onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zarejestruj'}</button>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+
     </div>
   );
 };

@@ -34,7 +34,7 @@ app.use(cors());
 //app.use(bodyParser.json());
 
 //payload size
-app.use(bodyParser.json({limit: '1mb'}));
+app.use(bodyParser.json({limit: '3mb'}));
 app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
 
 //extention files

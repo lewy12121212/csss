@@ -9,10 +9,10 @@ cloudinary.config({
   secure: true
 });
 
-exports.uploads = (file) =>{
+exports.uploads = (file, login, name) =>{
   cloudinary.v2.uploader.upload(file, { 
-    folder: "csss/", 
-    public_id: "my_name",
+    folder: "csss/".concat(login), 
+    public_id: name,
     access_mode: "authenticated"
   }, function(error, result) {console.log(result, error); })
 }
