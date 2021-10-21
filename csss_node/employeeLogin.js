@@ -1,6 +1,8 @@
 module.exports = (app, db, employeeUtils) => {
 
   const cloud = require('./cloudinaryConfig')
+  const detection = require('./faceDetection')
+
 
   app.get('/employee/loginRouteTest', (req, res) => {
     res.status(200).json({
@@ -59,6 +61,14 @@ module.exports = (app, db, employeeUtils) => {
       error: true,
       message: "No user with this data."
     });
+  });
+
+  app.post('/employee/faceLogin', (req,res) => {
+    const picture = req.body.image;
+
+
+    if (detection.detecting(picture)) return res.status(200); 
+
   });
 
 }
