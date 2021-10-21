@@ -10,7 +10,7 @@ const videoConstraints = {
   facingMode: "user"
 };
 //const WebCamera = () => <Webcam />;
-function WebCamera(props) {
+function FaceRegistration(props) {
 
   const webcamRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
@@ -65,4 +65,4 @@ function WebCamera(props) {
   );
 };
 
-export default WebCamera;
+export default FaceRegistration;

@@ -1,6 +1,6 @@
 module.exports = (app, db, employeeUtils) => {
 
-  const cloud = require('./faceDetection')
+  const cloud = require('./cloudinaryConfig')
 
   app.get('/employee/loginRouteTest', (req, res) => {
     res.status(200).json({
