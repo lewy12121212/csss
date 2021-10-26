@@ -63,11 +63,14 @@ module.exports = (app, db, employeeUtils) => {
     });
   });
 
-  app.post('/employee/faceLogin', (req,res) => {
+  app.post('/employee/faceLogin', async (req,res) => {
     const picture = req.body.image;
-
-
-    if (detection.detecting(picture)) return res.status(200); 
+    //console.log(await detection.detecting(picture))
+      if (await detection.detecting(picture)) return res.status(200); 
+      else return res.status(401).json({
+        error: true,
+        message: "No user with this data."
+      });
 
   });
 

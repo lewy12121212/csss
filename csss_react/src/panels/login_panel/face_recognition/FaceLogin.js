@@ -28,6 +28,7 @@ function FaceLogin (props) {
     const image = webcamRef.current.getScreenshot();
 
     setLoading(true);
+    console.log("error")
     axios.post(`http://${dbAddress}:4000/employee/faceLogin`, {image: image }).then(response => {
         setLoading(false);
         alert("Zalogowano!"); //pamiętać wyrzucić!!!

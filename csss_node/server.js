@@ -34,8 +34,8 @@ app.use(cors());
 //app.use(bodyParser.json());
 
 //payload size
-app.use(bodyParser.json({limit: '3mb'}));
-app.use(bodyParser.urlencoded({limit: '1mb', extended: true}));
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 
 //extention files
 require('./employeeLogin')(app, db, employeeUtils);

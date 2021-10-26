@@ -12,8 +12,8 @@ cloudinary.config({
 exports.uploads = (file, login, name) =>{
   cloudinary.v2.uploader.upload(file, { 
     folder: "csss/".concat(login), 
-    public_id: name,
-    access_mode: "authenticated"
+    public_id: name
+    //access_mode: "authenticated"
   }, function(error, result) {console.log(result, error); })
 }
 
