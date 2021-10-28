@@ -13,18 +13,19 @@ const port = process.env.PORT || 4000;
 
 const mysql = require("mysql");
 
-const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
-  database: 'DB_csss'
-});
 //const db = mysql.createPool({
-//  host: '192.168.1.16',
-//  user: 'csss-admin',
-//  password: 'csss.admin.2000',
+//  host: 'localhost',
+//  user: 'root',
+//  password: '',
 //  database: 'DB_csss'
 //});
+const db = mysql.createPool({
+  host: 'dysk.sytes.net',
+  user: 'csss_admin',
+  password: 'csss.2000.!@',
+  port: '8888',
+  database: 'DB_csss'
+});
 
 // enable CORS
 app.use(cors());

@@ -1,19 +1,24 @@
 import React from 'react';
 import { Route, Redirect } from 'react-router-dom';
-import { getToken } from './Common';
+import { getToken, getUser } from './Common';
 
-// handle the public routes
 function PublicRoute({ component: Component, panelType: PanelType, ...rest }) {
 
-  //const token = getToken()
-  //const userData = getUser()
-  //console.log("PublicRoute: private: " + token + "user: " + JSON.stringify(userData));
-  
-  //też należy sprawdzić który panel!!!
+  const token = getToken()
+  const userData = getUser()
+
   return (
     <Route
       {...rest}
-      render={(props) => !getToken() ? <Component {...props} /> : <Redirect to={{ pathname: '/' }} />}
+      render={(props) => {
+        if(token && userData.Type !== undefined){
+          return <Redirect to={{ pathname: `/EmployeeDashboard/${userData.Type}` }} />
+        } else if(token && userData.Type === undefined){
+          return <Redirect to={{ pathname: `/ClientDashboard` }} />
+        } else {
+          return <Component {...props} />
+        }
+      }}
     />
   )
 }
