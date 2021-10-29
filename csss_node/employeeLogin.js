@@ -1,3 +1,5 @@
+const faceDetection = require('./faceDetection');
+
 module.exports = (app, db, employeeUtils) => {
 
   const cloud = require('./cloudinaryConfig')
@@ -49,28 +51,56 @@ module.exports = (app, db, employeeUtils) => {
     })
   });
 
-  app.post('/employee/faceRegistration', (req,res) => {
+  app.post('/employee/faceRegistration', async (req,res) => {
     const picture = req.body.image;
+    const login = req.body.login;
+    
+    //getting employee's id from DB
+    let id
+    const sqlQuery1 = "SELECT Id FROM DB_employees WHERE Login like (?)"
 
+    let results = await new Promise((resolve, reject) => db.query(sqlQuery1, [login], (err, result) => {
+      if (err) reject(err)
+      else {
+        resolve(result)
+        }
+      })
+    );
+
+    id = results[0].Id;
+   
+    //inserting img to faceRecognition
+    const sqlQuery2 = "INSERT INTO DB_employees_img (login_id, img) VALUES (?,?)"
+    
     for(let i = 0; i<10; i++)
     {
-      cloud.uploads(picture[i], req.body.login, i)
-    }
-
-    return res.status(401).json({
-      error: true,
-      message: "No user with this data."
+      db.query(sqlQuery2, [id, picture[i]], (err, result) => {
+        if (err) return res.status(401).json({
+          error: true,
+          message: "Invalid database connection."
+        });
     });
-  });
+  }
+
+    detection.modifyModel();
+    return res.status(200).json({
+      message: "Added face to db."
+    });
+    
+});
 
   app.post('/employee/faceLogin', async (req,res) => {
     const picture = req.body.image;
-    //console.log(await detection.detecting(picture))
-      if (await detection.detecting(picture)) return res.status(200); 
-      else return res.status(401).json({
+    const face = await detection.detecting(picture)
+    console.log(face.label === 'lukasz')
+      if (face.label === 'lukasz'){
+        console.log(face.label === 'lukasz')
+        res.status(200).end(face.label); 
+      } 
+      else res.status(401).json({
         error: true,
         message: "No user with this data."
-      });
+      }).end();
 
   });
 

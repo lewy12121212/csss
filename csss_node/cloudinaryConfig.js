@@ -9,8 +9,8 @@ cloudinary.config({
   secure: true
 });
 
-exports.uploads = (file, login, name) =>{
-  cloudinary.v2.uploader.upload(file, { 
+exports.uploads = async (file, login, name) =>{
+  await cloudinary.v2.uploader.upload(file, { 
     folder: "csss/".concat(login), 
     public_id: name
     //access_mode: "authenticated"

@@ -1,1 +1,1 @@
-export let dbAddress = "192.168.10.11"
+export let dbAddress = "127.0.0.1"
