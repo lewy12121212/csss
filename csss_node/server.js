@@ -20,6 +20,8 @@ const db = mysql.createPool({
   port: '8888',
   database: 'DB_csss'
 });
+exports.db = db;
+
 //const db = mysql.createPool({
 //  host: '192.168.1.16',
 //  user: 'csss-admin',

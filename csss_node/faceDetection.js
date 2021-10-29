@@ -1,9 +1,12 @@
+
 const express = require('express');
 const faceapi = require('face-api.js');
 const fetch = require('node-fetch');
 const path = require('path')
 const { promises: fs } = require('fs')
 const canvas = require("canvas");
+
+const db = require('./server.js')
 const { loadImage, Canvas, Image, ImageData } = canvas; 
 
 global.Blob = require('blob');
@@ -46,35 +49,50 @@ async function detecting(img) {
 }
 
 
-function loadLabeledImages() {
-  
-  const labels = [
-    'lukasz',
-    'eryk'
-  ];
+async function loadLabeledImages() {
+
+  await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
+  await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
+  await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
+
+  const labels = arguments[0];
+ 
   return Promise.all(
     
     labels.map(async (label) => {
       const descriptions = [];
-      await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
-      await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
-      await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
       
-      let detections
-      for (let i = 0; i < 2; i++) {
-        console.log(label);
-        const img = await loadImage(
-          `https://res.cloudinary.com/dvz618eta/image/upload/v1634930122/csss/${label}/${i}.jpg`
-        );
+      const sqlQuery = `SELECT img FROM DB_employees_img WHERE login_id LIKE ${label}`
+      let images = await new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
+        if (err) reject(err)
+        else {
+          resolve(result)
+          }
+        })
+      );
 
-        detections = await faceapi
-          .detectSingleFace(img)
-          .withFaceLandmarks()
-          .withFaceDescriptor();
-        descriptions.push(detections.descriptor);
+      if(images)
+      {
+        
+        let detections
+
+        for (let i = 0; i < 3; i++) {
+          console.log(label.login_id);
+          const img = await loadImage(
+            images[i].img
+          );
+  
+          detections = await faceapi
+            .detectSingleFace(img)
+            .withFaceLandmarks()
+            .withFaceDescriptor();
+          descriptions.push(detections.descriptor);
+        }
+  
+        return new faceapi.LabeledFaceDescriptors(label, descriptions);
       }
-
-      return new faceapi.LabeledFaceDescriptors(label, descriptions);
+      
+      return; 
     })
   );
 }
@@ -82,7 +100,8 @@ function loadLabeledImages() {
 
 async function modifyModel(){
 
-  const labeledFaceDescriptors = await loadLabeledImages();
+  //console.log(arguments[0])
+  const labeledFaceDescriptors = await loadLabeledImages(arguments[0]);
   var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
   console.log(labeledFaceDescriptorsJson);
   
@@ -92,8 +111,5 @@ async function modifyModel(){
   })
   return 
 }
-
-module.exports = {
-  detecting, 
-  modifyModel
-}
+  
+module.exports(detecting, modifyModel);

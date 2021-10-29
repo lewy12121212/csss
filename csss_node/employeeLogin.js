@@ -1,4 +1,3 @@
-const faceDetection = require('./faceDetection');
 
 module.exports = (app, db, employeeUtils) => {
 
@@ -72,17 +71,27 @@ module.exports = (app, db, employeeUtils) => {
     //inserting img to faceRecognition
     const sqlQuery2 = "INSERT INTO DB_employees_img (login_id, img) VALUES (?,?)"
     
-    for(let i = 0; i<10; i++)
+    for(let i = 0; i<3; i++)
     {
       db.query(sqlQuery2, [id, picture[i]], (err, result) => {
         if (err) return res.status(401).json({
           error: true,
           message: "Invalid database connection."
         });
-    });
-  }
+      });
+    }
 
-    detection.modifyModel();
+    const sqlQuery3 = "SELECT Id FROM DB_employees"
+    let results_img = await new Promise((resolve, reject) => db.query(sqlQuery3, (err, result) => {
+      if (err) reject(err)
+      else {
+        resolve(result)
+        }
+      })
+    );
+    
+    //console.log(results_img)
+    detection.modifyModel(results_img);
     return res.status(200).json({
       message: "Added face to db."
     });

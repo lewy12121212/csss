@@ -27,7 +27,7 @@ function FaceRegistration(props) {
     
     let i = 0;
     var time = setInterval(() => {      
-      if(i === 10){
+      if(i === 3){
         clearInterval(time);
         setError(null);      
         axios.post(`http://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
