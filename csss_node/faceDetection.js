@@ -26,7 +26,6 @@ async function detecting(img) {
   //var jsonObj = JSON.parse(fromFile)
   //const labelki = jsonObj.map( x=>faceapi.LabeledFaceDescriptors.fromJSON(x) );
   const labesFaceRecog = await modifyModel()
-  console.log("labesLogin0" + labesFaceRecog)
   const faceMatcher = new faceapi.FaceMatcher(
     labesFaceRecog,
     0.4
@@ -34,15 +33,10 @@ async function detecting(img) {
 
   let image = await loadImage(img);
 
-  console.log("labesLogin" + labesFaceRecog)
-
   const singleResult = await faceapi
     .detectSingleFace(image)
     .withFaceLandmarks()
     .withFaceDescriptor()
-  //console.log(singleResult)
-
-  console.log("labesLogin2" + labesFaceRecog)
 
   if (singleResult) {
     let bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
@@ -58,7 +52,7 @@ async function detecting(img) {
 async function sqlSelectAllImg(){
 
   console.log("sqlSelectAllImg")
-  const sqlQuery = `SELECT login_id, img FROM DB_employees_img`
+  const sqlQuery = `SELECT LoginId, Img FROM DB_employees_img`
   return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
     console.log("result sqlSelectAllImg: " + result + "err: " + err)
     if (err) reject(err)
@@ -67,39 +61,17 @@ async function sqlSelectAllImg(){
   );
 }
 
-async function sqlSelectUserIndex(){
-
-  console.log("sqlSelectUserIndex")
-  const sqlQuery = `SELECT login_id FROM DB_employees_img GROUP BY login_id`
-  return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
-    //console.log("result sqlSelectAllImg: " + result + "err: " + err)
-    if (err) reject(err)
-    else resolve(result)
-    })
-  );
-}
-
-//function sqlSelectLabels(login){
-//  const sqlQuery = `SELECT img FROM DB_employees_img WHERE login_id LIKE ${login}`
-//  return new Promise((resolve, reject) => db.db.query(sqlQuery, [login], (err, result) => {
-//    console.log("result sqlSelectAllImg: " + result + "err: " + err)
-//    if (err) reject(err)
-//    else resolve(result)
-//    })
-//  );
-//}
-
 const transformArray = (arr = []) => {
   const res = [];
   const map = {};
   let i, j, curr;
   for (i = 0, j = arr.length; i < j; i++) {
     curr = arr[i];
-    if (!(curr.login_id in map)) {
-        map[curr.login_id] = {login_id: curr.login_id, img: []};
-        res.push(map[curr.login_id]);
+    if (!(curr.LoginId in map)) {
+        map[curr.LoginId] = {LoginId: curr.LoginId, Img: []};
+        res.push(map[curr.LoginId]);
     };
-    map[curr.login_id].img.push(curr.img);
+    map[curr.LoginId].Img.push(curr.Img);
   };
   return res;
 };
@@ -108,7 +80,6 @@ async function loadLabeledImages() {
 
   const sqlAll = await sqlSelectAllImg()
   const sqlUserIndex = transformArray(sqlAll)
-  var image = new Image();
 
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
@@ -116,12 +87,12 @@ async function loadLabeledImages() {
 
   return Promise.all(
     sqlUserIndex.map(async label => {
-      console.log(label.login_id + " : " + label.img.length)
+      console.log(label.LoginId + " : " + label.Img.length)
       const descriptions = [] //desktryptor sztuczej
       var detections
 
-      for (let i = 0; i < label.img.length; i++) {
-        const img = await canvas.loadImage(label.img[i])
+      for (let i = 0; i < label.Img.length; i++) {
+        const img = await canvas.loadImage(label.Img[i])
 
         detections = await faceapi
           .detectSingleFace(img)
@@ -134,7 +105,7 @@ async function loadLabeledImages() {
         //descriptions.push(detections)
       }
       console.log("END ONE");
-      return new faceapi.LabeledFaceDescriptors(label.login_id.toString(), descriptions);
+      return new faceapi.LabeledFaceDescriptors(label.LoginId.toString(), descriptions);
     })
   )
 }

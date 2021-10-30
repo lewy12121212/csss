@@ -59,7 +59,7 @@ module.exports = (app, db, employeeUtils) => {
   }
 
   function sqlInsertImg(id, picture){
-    const sqlQuery2 = "INSERT INTO DB_employees_img (login_id, img) VALUES (?,?)"
+    const sqlQuery2 = "INSERT INTO DB_employees_img (LoginId, Img) VALUES (?,?)"
     
     return new Promise ((resolve, reject) => {
       for(let i = 0; i<3; i++)
