@@ -19,35 +19,40 @@ faceapi.env.monkeyPatch({ Canvas, Image, ImageData, fetch })
 
 async function detecting(img) {
 
-
-  var fromFile = await fs.readFile('./faceModel/model.txt', "utf-8")
-
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
 
-  var jsonObj = JSON.parse(fromFile)
-  const labelki = jsonObj.map( x=>faceapi.LabeledFaceDescriptors.fromJSON(x) );
+  //var jsonObj = JSON.parse(fromFile)
+  //const labelki = jsonObj.map( x=>faceapi.LabeledFaceDescriptors.fromJSON(x) );
+  const labesFaceRecog = await modifyModel()
+  console.log("labesLogin0" + labesFaceRecog)
   const faceMatcher = new faceapi.FaceMatcher(
-    labelki,
-    0.5
+    labesFaceRecog,
+    0.4
   );
-  let image;
-  image = await loadImage(img);
-  console.log(labelki)
+
+  let image = await loadImage(img);
+
+  console.log("labesLogin" + labesFaceRecog)
+
   const singleResult = await faceapi
-  .detectSingleFace(image)
-  .withFaceLandmarks()
-  .withFaceDescriptor()
+    .detectSingleFace(image)
+    .withFaceLandmarks()
+    .withFaceDescriptor()
   //console.log(singleResult)
-  
-  let bestMatch
+
+  console.log("labesLogin2" + labesFaceRecog)
+
   if (singleResult) {
-    bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
+    let bestMatch = faceMatcher.findBestMatch(singleResult.descriptor)
     console.log(bestMatch.toString());
+    return bestMatch
+  } else {
+    return false
   }
 
-  return bestMatch
+  
 }
 
 async function sqlSelectAllImg(){
@@ -116,16 +121,17 @@ async function loadLabeledImages() {
       var detections
 
       for (let i = 0; i < label.img.length; i++) {
-        const img = await loadImage(label.img[i])
+        const img = await canvas.loadImage(label.img[i])
 
         detections = await faceapi
           .detectSingleFace(img)
           .withFaceLandmarks()
           .withFaceDescriptor();
-        console.log("detections: " + faceapi.LabeledFaceDescriptors.toString(detections));
+        //console.log("detections: " + faceapi.LabeledFaceDescriptors.toString(detections));
         //JSON.stringify(detections) 
         //descriptions.push(Array.prototype.slice.call(detections.descriptor))
-        descriptions.push(new Float32Array(faceapi.LabeledFaceDescriptors.toString(detections)));
+        descriptions.push(new Float32Array(detections.descriptor));
+        //descriptions.push(detections)
       }
       console.log("END ONE");
       return new faceapi.LabeledFaceDescriptors(label.login_id.toString(), descriptions);
@@ -144,47 +150,25 @@ function writeModelFile(labeledFaceDescriptors){
 }
 
 function modifyModel(res){
-  //return new Promise((resolve, reject) => {
-  //  console.log("detection - ModifyModel!!!!!!!!!!!!!!!!!!!!!!!!")
-  //  resolve(true)
-  //})
 
   return new Promise(async (resolve, reject) => {
     const labeledFaceDescriptors = await loadLabeledImages()
     console.log(labeledFaceDescriptors);
-    console.log("END");
-    //var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
-    var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
-    console.log(labeledFaceDescriptorsJson);
-    
-    fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptorsJson,  null, 2), error => {
-      if (error) {
-        console.error(error);
-        reject(error);
+
+    fs.writeFile('./faceModel/model.json', JSON.stringify(labeledFaceDescriptors), 'utf8', error => {
+      if (err) {
+        console.log(`Error writing file: ${err}`);
+      } else {
+        console.log(`File is written successfully!`);
       }
     })
-    resolve(true);
-    //console.log("detection - ModifyModel")
-    //loadLabeledImages(arguments[0])
-    //.then((res) => {
-    //  let labeledFaceDescriptors = res
-    //  console.log("detection - ModifyModel - resolve")
-    //  writeModelFile(labeledFaceDescriptors)
-    //    .then((res) => {
-    //      resolve(true)
-    //    })
-    //    .catch((err) => {
-    //      console.log("writeModelFile - crashed")
-    //      reject(false)
-    //    })
-//
-    //})
-    //.catch((err) => {
-    //  console.log("loadLabeledImages - crashed")
-    //  reject(false)
-    //})
+    //resolve(true)
 
+    console.log("modifyModel - end function");
+    //var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
+    resolve(labeledFaceDescriptors);
   })
+
 }
   
 module.exports = {

@@ -104,21 +104,11 @@ module.exports = (app, db, employeeUtils) => {
             sqlModifyModel()
               .then((res) => {
                 //console.log("sqlModifyModel - resolve" + res)
-                
-                //detection.modifyModel()
-                detection.modifyModel(res)
-                  .then((res) => {
-                    return resSql.status(200).json({
-                      error: false,
-                      message: "Added face to db."
-                    });
-                  })
-                  .catch((err) => {
-                    return resSql.status(401).json({
-                      error: true,
-                      message: "detection.modifyModel - crashed",
-                    });
-                  })
+                return resSql.status(200).json({
+                  error: false,
+                  message: "Added face to db."
+                });
+
               })
               .catch((err) => {
                 return resSql.status(401).json({
@@ -142,30 +132,29 @@ module.exports = (app, db, employeeUtils) => {
           message: "Invalid user data."
         });
       });
-
-
-
-
-    
-    //console.log(results_img)
-    
-
-    
 });
 
   app.post('/employee/faceLogin', async (req,res) => {
     const picture = req.body.image;
     const face = await detection.detecting(picture)
-    console.log(face.label === 'lukasz')
-      if (face.label === 'lukasz'){
-        console.log(face.label === 'lukasz')
-        res.status(200).end(face.label); 
+    
+    console.log(face + " label: " + face.label)
+      if (face.label !== "unknown") {
+        // w celu zalogowania użytkownika
+        // 1. wykonać zapytanie sql do bazy danych użytkowników (where id like face.label)
+        // 2. result z bazy przekazać do generate token
+        // 3. token zwrócić analogicznie do logowania przy pomocy hasła
+
+
+        return res.status(200).json({
+          error: false,
+          message: "Face recognition succeed"
+        });
       } 
       else res.status(401).json({
         error: true,
-        message: "No user with this data."
-      }).end();
-
+        message: "Face recognition failed"
+      });
   });
 
 }
