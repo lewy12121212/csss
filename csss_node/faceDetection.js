@@ -155,13 +155,13 @@ function modifyModel(res){
     const labeledFaceDescriptors = await loadLabeledImages()
     console.log(labeledFaceDescriptors);
 
-    fs.writeFile('./faceModel/model.json', JSON.stringify(labeledFaceDescriptors), 'utf8', error => {
-      if (err) {
-        console.log(`Error writing file: ${err}`);
-      } else {
-        console.log(`File is written successfully!`);
-      }
-    })
+    //fs.writeFile('./faceModel/model.json', JSON.stringify(labeledFaceDescriptors), 'utf8', error => {
+    //  if (err) {
+    //    console.log(`Error writing file: ${err}`);
+    //  } else {
+    //    console.log(`File is written successfully!`);
+    //  }
+    //})
     //resolve(true)
 
     console.log("modifyModel - end function");
