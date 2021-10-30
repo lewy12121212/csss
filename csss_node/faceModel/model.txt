@@ -1,18 +1,33 @@
 [
   {
-    "label": "",
-    "descriptors": []
+    "label": "1",
+    "descriptors": [
+      [],
+      [],
+      []
+    ]
   },
   {
-    "label": "",
-    "descriptors": []
-  },
-  {
-    "label": "",
-    "descriptors": []
-  },
-  {
-    "label": "",
-    "descriptors": []
+    "label": "5",
+    "descriptors": [
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      [],
+      []
+    ]
   }
 ]

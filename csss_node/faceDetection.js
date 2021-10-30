@@ -1,12 +1,14 @@
-
-const express = require('express');
-const faceapi = require('face-api.js');
+require('@tensorflow/tfjs-node')
+//const express = require('express');
+//const faceapi = require('face-api.js');
+const faceapi = require('@vladmandic/face-api');
 const fetch = require('node-fetch');
 const path = require('path')
 const { promises: fs } = require('fs')
 const canvas = require("canvas");
 
-const db = require('./server.js')
+const db = require('./server.js');
+const { resolve } = require('path');
 const { loadImage, Canvas, Image, ImageData } = canvas; 
 
 global.Blob = require('blob');
@@ -48,68 +50,144 @@ async function detecting(img) {
   return bestMatch
 }
 
+async function sqlSelectAllImg(){
+
+  console.log("sqlSelectAllImg")
+  const sqlQuery = `SELECT login_id, img FROM DB_employees_img`
+  return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
+    console.log("result sqlSelectAllImg: " + result + "err: " + err)
+    if (err) reject(err)
+    else resolve(result)
+    })
+  );
+}
+
+async function sqlSelectUserIndex(){
+
+  console.log("sqlSelectUserIndex")
+  const sqlQuery = `SELECT login_id FROM DB_employees_img GROUP BY login_id`
+  return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
+    //console.log("result sqlSelectAllImg: " + result + "err: " + err)
+    if (err) reject(err)
+    else resolve(result)
+    })
+  );
+}
+
+//function sqlSelectLabels(login){
+//  const sqlQuery = `SELECT img FROM DB_employees_img WHERE login_id LIKE ${login}`
+//  return new Promise((resolve, reject) => db.db.query(sqlQuery, [login], (err, result) => {
+//    console.log("result sqlSelectAllImg: " + result + "err: " + err)
+//    if (err) reject(err)
+//    else resolve(result)
+//    })
+//  );
+//}
+
+const transformArray = (arr = []) => {
+  const res = [];
+  const map = {};
+  let i, j, curr;
+  for (i = 0, j = arr.length; i < j; i++) {
+    curr = arr[i];
+    if (!(curr.login_id in map)) {
+        map[curr.login_id] = {login_id: curr.login_id, img: []};
+        res.push(map[curr.login_id]);
+    };
+    map[curr.login_id].img.push(curr.img);
+  };
+  return res;
+};
 
 async function loadLabeledImages() {
+
+  const sqlAll = await sqlSelectAllImg()
+  const sqlUserIndex = transformArray(sqlAll)
+  var image = new Image();
 
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
 
-  const labels = arguments[0];
- 
   return Promise.all(
-    
-    labels.map(async (label) => {
-      const descriptions = [];
-      
-      const sqlQuery = `SELECT img FROM DB_employees_img WHERE login_id LIKE ${label}`
-      let images = await new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
-        if (err) reject(err)
-        else {
-          resolve(result)
-          }
-        })
-      );
+    sqlUserIndex.map(async label => {
+      console.log(label.login_id + " : " + label.img.length)
+      const descriptions = [] //desktryptor sztuczej
+      var detections
 
-      if(images)
-      {
-        
-        let detections
+      for (let i = 0; i < label.img.length; i++) {
+        const img = await loadImage(label.img[i])
 
-        for (let i = 0; i < 3; i++) {
-          console.log(label.login_id);
-          const img = await loadImage(
-            images[i].img
-          );
-  
-          detections = await faceapi
-            .detectSingleFace(img)
-            .withFaceLandmarks()
-            .withFaceDescriptor();
-          descriptions.push(detections.descriptor);
-        }
-  
-        return new faceapi.LabeledFaceDescriptors(label, descriptions);
+        detections = await faceapi
+          .detectSingleFace(img)
+          .withFaceLandmarks()
+          .withFaceDescriptor();
+        console.log("detections: " + faceapi.LabeledFaceDescriptors.toString(detections));
+        //JSON.stringify(detections) 
+        //descriptions.push(Array.prototype.slice.call(detections.descriptor))
+        descriptions.push(new Float32Array(faceapi.LabeledFaceDescriptors.toString(detections)));
       }
-      
-      return; 
+      console.log("END ONE");
+      return new faceapi.LabeledFaceDescriptors(label.login_id.toString(), descriptions);
     })
-  );
+  )
 }
 
-
-async function modifyModel(){
-
-  //console.log(arguments[0])
-  const labeledFaceDescriptors = await loadLabeledImages(arguments[0]);
-  var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
-  console.log(labeledFaceDescriptorsJson);
-  
-  fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptorsJson,  null, 2), error => {
-    if (error) console.error(error);
-    return;
+function writeModelFile(labeledFaceDescriptors){
+  return new Promise((resolve, reject) => {
+    var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
+    fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptorsJson,  null, 2), error => {
+      if (error) reject(err);
+    })
+    resolve(true)
   })
-  return 
+}
+
+function modifyModel(res){
+  //return new Promise((resolve, reject) => {
+  //  console.log("detection - ModifyModel!!!!!!!!!!!!!!!!!!!!!!!!")
+  //  resolve(true)
+  //})
+
+  return new Promise(async (resolve, reject) => {
+    const labeledFaceDescriptors = await loadLabeledImages()
+    console.log(labeledFaceDescriptors);
+    console.log("END");
+    //var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
+    var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
+    console.log(labeledFaceDescriptorsJson);
+    
+    fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptorsJson,  null, 2), error => {
+      if (error) {
+        console.error(error);
+        reject(error);
+      }
+    })
+    resolve(true);
+    //console.log("detection - ModifyModel")
+    //loadLabeledImages(arguments[0])
+    //.then((res) => {
+    //  let labeledFaceDescriptors = res
+    //  console.log("detection - ModifyModel - resolve")
+    //  writeModelFile(labeledFaceDescriptors)
+    //    .then((res) => {
+    //      resolve(true)
+    //    })
+    //    .catch((err) => {
+    //      console.log("writeModelFile - crashed")
+    //      reject(false)
+    //    })
+//
+    //})
+    //.catch((err) => {
+    //  console.log("loadLabeledImages - crashed")
+    //  reject(false)
+    //})
+
+  })
 }
   
-module.exports(detecting, modifyModel);
+module.exports = {
+  detecting, 
+  modifyModel
+};

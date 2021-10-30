@@ -31,12 +31,13 @@ function FaceRegistration(props) {
         clearInterval(time);
         setError(null);      
         axios.post(`http://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
-        setLoading(false);
-        alert("Zarejestrowano poprawnie."); //pamiętać wyrzucić!!!
+          setLoading(false);
+          alert("Zarejestrowano poprawnie."); //pamiętać wyrzucić!!!
         }).catch(error => {
           setLoading(false);
-          if (error.response.status === 401) setError(error.response.data.message);
-          else setError("Coś poszło nie tak...");
+          setError(error.response.data.message);
+          //if (error.response.status === 401) 
+          //else setError("Coś poszło nie tak...");
         });
       }
   

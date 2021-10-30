@@ -1,9 +1,7 @@
+const cloud = require('./cloudinaryConfig')
+const detection = require('./faceDetection')
 
 module.exports = (app, db, employeeUtils) => {
-
-  const cloud = require('./cloudinaryConfig')
-  const detection = require('./faceDetection')
-
 
   app.get('/employee/loginRouteTest', (req, res) => {
     res.status(200).json({
@@ -50,51 +48,108 @@ module.exports = (app, db, employeeUtils) => {
     })
   });
 
-  app.post('/employee/faceRegistration', async (req,res) => {
+  function sqlUserSelect(login){
+    const sqlQuery1 = "SELECT Id FROM DB_employees WHERE Login like (?)"
+
+    return new Promise((resolve, reject) => db.query(sqlQuery1, [login], (err, result) => {
+      if (err) reject(err)
+      else resolve(result)
+      })
+    );
+  }
+
+  function sqlInsertImg(id, picture){
+    const sqlQuery2 = "INSERT INTO DB_employees_img (login_id, img) VALUES (?,?)"
+    
+    return new Promise ((resolve, reject) => {
+      for(let i = 0; i<3; i++)
+      {
+        db.query(sqlQuery2, [id, picture[i]], (err, result) => {
+          if (err) reject(err)
+        });
+      }
+      resolve(true)
+    })
+  }
+
+  function sqlModifyModel(){
+    const sqlQuery3 = "SELECT Id FROM DB_employees"
+
+    return new Promise((resolve, reject) => db.query(sqlQuery3, (err, result) => {
+      if (err) reject(err)
+      else resolve(result)
+    })
+    );
+      //detection.modifyModel(results_img);
+      //resolve(results_img)
+  }
+
+  app.post('/employee/faceRegistration', (req, resSql) => {
     const picture = req.body.image;
     const login = req.body.login;
     
     //getting employee's id from DB
     let id
-    const sqlQuery1 = "SELECT Id FROM DB_employees WHERE Login like (?)"
-
-    let results = await new Promise((resolve, reject) => db.query(sqlQuery1, [login], (err, result) => {
-      if (err) reject(err)
-      else {
-        resolve(result)
-        }
-      })
-    );
-
-    id = results[0].Id;
-   
-    //inserting img to faceRecognition
-    const sqlQuery2 = "INSERT INTO DB_employees_img (login_id, img) VALUES (?,?)"
     
-    for(let i = 0; i<3; i++)
-    {
-      db.query(sqlQuery2, [id, picture[i]], (err, result) => {
-        if (err) return res.status(401).json({
+    sqlUserSelect(login)
+      .then((res) => {
+
+        id = res[0].Id;
+        console.log("sqlUserSelect - resolve")
+
+        sqlInsertImg(id, picture)
+          .then((res) => {
+            console.log("sqlInsertImg - resolve")
+
+            sqlModifyModel()
+              .then((res) => {
+                //console.log("sqlModifyModel - resolve" + res)
+                
+                //detection.modifyModel()
+                detection.modifyModel(res)
+                  .then((res) => {
+                    return resSql.status(200).json({
+                      error: false,
+                      message: "Added face to db."
+                    });
+                  })
+                  .catch((err) => {
+                    return resSql.status(401).json({
+                      error: true,
+                      message: "detection.modifyModel - crashed",
+                    });
+                  })
+              })
+              .catch((err) => {
+                return resSql.status(401).json({
+                  error: true,
+                  message: "Select users to model - error."
+                });
+              })
+
+          })
+          .catch((err) => {
+            return resSql.status(401).json({
+              error: true,
+              message: "Insert img error."
+            });
+          })
+
+      })
+      .catch((err) => {
+        return resSql.status(401).json({
           error: true,
-          message: "Invalid database connection."
+          message: "Invalid user data."
         });
       });
-    }
 
-    const sqlQuery3 = "SELECT Id FROM DB_employees"
-    let results_img = await new Promise((resolve, reject) => db.query(sqlQuery3, (err, result) => {
-      if (err) reject(err)
-      else {
-        resolve(result)
-        }
-      })
-    );
+
+
+
     
     //console.log(results_img)
-    detection.modifyModel(results_img);
-    return res.status(200).json({
-      message: "Added face to db."
-    });
+    
+
     
 });
 
