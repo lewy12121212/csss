@@ -1,23 +1,35 @@
 import React, { useState } from 'react';
 import { Route, NavLink } from 'react-router-dom';
-import Offcanvas from "react-bootstrap/Offcanvas";
+//import { OffCanvas, OffCanvasMenu, OffCanvasBody } from "react-offcanvas";
+//import Offcanvas from "react-bootstrap/Offcanvas";
+//import Button from "react-bootstrap/Button"
+//import {Container, Navbar} from "react-bootstrap"
 
 import Settings from './bookmarks/Settings'
 import UsersSettings from './bookmarks/UsersSettings'
 import History from './bookmarks/History';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
+import LeftMenu from '../LeftMenu'
+
 import './AdminPanel.scss'
 import '../../../index.scss';
 import '../EmployeePanels.scss';
-import closeImg from '../img/close_arrow.png'
+//import closeImg from '../img/close_arrow.png'
+//import menuImg from '../img/menu.png'
 
 function AdminPanel(props) {
   const user = getUser();
   const [show, setShow] = useState(false);
 
-  const handleClose = () => setShow(false);
-  const handleShow = () => setShow(true);
+  const MenuNavLink = [
+    { panelType: user.Type, bookmark: "Settings", description: "Ustawienia konta" },
+    { panelType: user.Type, bookmark: "UsersSettings", description: "Ustawienia kont użytkowników" },
+    { panelType: user.Type, bookmark: "History", description: "Historia zleceń" },
+  ];
+
+  //const handleClose = () => setShow(false);
+  //const handleShow = () => setShow(true);
 
   const handleLogout = () => {
     removeUserSession();
@@ -36,27 +48,7 @@ function AdminPanel(props) {
       </div>
       <hr />
       <div className="container col-12">
-
-        <Offcanvas className="offcanvas col-5" show={show} onHide={handleClose}>
-          <Offcanvas.Header className="offcanvas-header">
-            <Offcanvas.Title>Menu</Offcanvas.Title>
-            <img src={closeImg} width="20px" alt="CloseMenu" onClick={handleClose}></img>
-          </Offcanvas.Header>
-          <Offcanvas.Body className="offcanvas-body container col">
-            <div className="offcanvas-info">
-              <h5>Panel administratora</h5>
-              <hr />
-              Użytkownik: <h3>{user.Name}</h3>
-              Typ konta: <h3>{user.Type}</h3>
-              <hr />
-            </div>
-
-            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={handleClose}>Ustawienia konta</NavLink><br />
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/UsersSettings" onClick={handleClose}>Ustawienia kont użytkowników</NavLink><br />
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
-          </Offcanvas.Body>
-        </Offcanvas>
-
+        <LeftMenu panelType="Administrator" userName={user.Name} userType={user.Type} MenuNavLink={MenuNavLink}  />
       </div>
       <div>
         <Route path="/EmployeeDashboard/Admin/Settings" component={Settings} />

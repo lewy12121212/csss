@@ -1,0 +1,100 @@
+@import "../../../index.scss";
+
+a:link, a:visited {
+  //background-color: $blue;
+  color: white;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  //border-left: 5px $blue solid;
+  text-align: left;
+}
+
+a:hover, a:active {
+  background-color: $lightBlue;
+  color: black !important;
+  //border-left: 5px $blue solid;
+  text-align: left;
+}
+
+button{
+  //background-color: none;
+  border-bottom: 10px $lightBlue solid;
+  //border-radius: 30px;
+  border: 0px;
+}
+
+hr{
+  padding: 0px;
+}
+
+h5{
+  padding-bottom: 5px;
+}
+
+h3{
+  padding-bottom: 5px;
+  //display: inline;
+  text-align: right;
+}
+
+.btn-upperMenu{
+  background-color: $blue !important;
+  border: none !important;
+  letter-spacing: 0.1rem;
+	color: #fff !important;
+	text-transform: uppercase;
+	text-decoration: none;
+	//background: $lightBlue;
+	border-radius: 15px !important;
+	display: inline-block;
+	border: none;
+	transition: all 0.4s ease 0s;
+  //width: auto !important;
+  opacity: 0.9;
+}
+
+.btn-upperMenu:hover{
+	text-shadow: 0px 0px 6px rgba(255, 255, 255, 1);
+	-webkit-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	-moz-box-shadow: 0px 5px 40px -10px rgba(0,0,0,0.57);
+	transition: all 0.4s ease 0s;
+  //width: auto !important;
+}
+
+.upperMenu{
+  align-items:justify;
+}
+
+.menuImg{
+  margin:1px;
+}
+
+.offcanvas-info{
+  padding: 15px;
+  color: white;
+  text-align: right;
+}
+
+.offcanvas{
+  min-width: 200px !important;
+  width: 300px !important;
+  border: 0px;
+}
+
+.offcanvas-body{
+  padding: 0px !important;
+  margin: 0px !important;
+  background-color: $navy !important;
+  border-left: 5px $blue solid;
+  text-align: left;
+}
+
+.offcanvas-header{
+  background-color: $navy;
+  color: white;
+  border-left: 5px $blue solid;
+}
+
+

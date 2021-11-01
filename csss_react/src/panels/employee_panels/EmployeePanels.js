@@ -1,1 +1,1 @@
-//zbiór wspólnych funkcji dla panali pracowników
+//zbiór wspólnych funkcji dla paneli pracowników
