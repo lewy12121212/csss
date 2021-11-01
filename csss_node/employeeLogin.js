@@ -139,7 +139,7 @@ module.exports = (app, db, employeeUtils) => {
     const face = await detection.detecting(picture)
     
     console.log(face + " label: " + face.label)
-      if (face.label !== "unknown") {
+      if (face.label !== "unknown" && face.label !== undefined) {
         // w celu zalogowania użytkownika
         // 1. wykonać zapytanie sql do bazy danych użytkowników (where id like face.label)
         // 2. result z bazy przekazać do generate token
@@ -148,6 +148,7 @@ module.exports = (app, db, employeeUtils) => {
 
         return res.status(200).json({
           error: false,
+          user: face.label,
           message: "Face recognition succeed"
         });
       } 
