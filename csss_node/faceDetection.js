@@ -15,17 +15,16 @@ global.Blob = require('blob');
 
 faceapi.env.monkeyPatch({ Canvas, Image, ImageData, fetch })
 
-
-
 async function detecting(img) {
 
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
 
-  //var jsonObj = JSON.parse(fromFile)
-  //const labelki = jsonObj.map( x=>faceapi.LabeledFaceDescriptors.fromJSON(x) );
-  const labesFaceRecog = await modifyModel()
+  const file = await fs.readFile('./faceModel/model.txt', "utf-8")
+
+  var jsonObj = JSON.parse(file)
+  const labesFaceRecog = jsonObj.map(x=>faceapi.LabeledFaceDescriptors.fromJSON(x));
   const faceMatcher = new faceapi.FaceMatcher(
     labesFaceRecog,
     0.4
@@ -49,9 +48,29 @@ async function detecting(img) {
   
 }
 
+//funckja do opóźnienia - jako argument przy wywołaniu wpisujemy ilośc milisekund
+//function sleep(milliseconds) {
+//  const date = Date.now();
+//  let currentDate = null;
+//  do {
+//    currentDate = Date.now();
+//  } while (currentDate - date < milliseconds);
+//}
+
 async function sqlSelectAllImg(){
 
   console.log("sqlSelectAllImg")
+
+  
+  //problem z opóźnieniem - rekody dodane do bazy nie są w pełni zczytywane pomimo 10s opóźnienia.
+  //na każde zdjęcie przypada ok 5s. Przy przetwarzaniu np 5zdjęć mamy aż 25 sekund - musi być inne rozwiązanie.
+  //według mnie zdjęcia do bazy trafiają dużo szybciej.
+  //aktualizacja modelu na podstawie danych z bazy powinna odbyć się "niezależnie" od endpoint (taki pomysł)
+  //problem opóźnienia może też wynikać w sposobie importu pliku z server.js
+  //w tym momencie występuje "pętla" server.js importuje employeelogin -> employeelogin importuje faceDetection -> faceDetection importuje server.js (tak być niepowinno)
+
+  //await sleep(10000);
+
   const sqlQuery = `SELECT LoginId, Img FROM DB_employees_img`
   return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
     console.log("result sqlSelectAllImg: " + result + "err: " + err)
@@ -88,7 +107,7 @@ async function loadLabeledImages() {
   return Promise.all(
     sqlUserIndex.map(async label => {
       console.log(label.LoginId + " : " + label.Img.length)
-      const descriptions = [] //desktryptor sztuczej
+      const descriptions = []
       var detections
 
       for (let i = 0; i < label.Img.length; i++) {
@@ -98,11 +117,8 @@ async function loadLabeledImages() {
           .detectSingleFace(img)
           .withFaceLandmarks()
           .withFaceDescriptor();
-        //console.log("detections: " + faceapi.LabeledFaceDescriptors.toString(detections));
-        //JSON.stringify(detections) 
-        //descriptions.push(Array.prototype.slice.call(detections.descriptor))
+
         descriptions.push(new Float32Array(detections.descriptor));
-        //descriptions.push(detections)
       }
       console.log("END ONE");
       return new faceapi.LabeledFaceDescriptors(label.LoginId.toString(), descriptions);
@@ -112,32 +128,31 @@ async function loadLabeledImages() {
 
 function writeModelFile(labeledFaceDescriptors){
   return new Promise((resolve, reject) => {
-    var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
-    fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptorsJson,  null, 2), error => {
-      if (error) reject(err);
+    fs.writeFile('./faceModel/model.txt', JSON.stringify(labeledFaceDescriptors), 'utf8', error => {
+      if (err) {
+        console.log(`Error writing file: ${err}`);
+        reject(err);
+      } else {
+        console.log(`File is written successfully!`);
+      }
     })
     resolve(true)
   })
 }
 
-function modifyModel(res){
+function modifyModel(){
 
   return new Promise(async (resolve, reject) => {
     const labeledFaceDescriptors = await loadLabeledImages()
     console.log(labeledFaceDescriptors);
-
-    //fs.writeFile('./faceModel/model.json', JSON.stringify(labeledFaceDescriptors), 'utf8', error => {
-    //  if (err) {
-    //    console.log(`Error writing file: ${err}`);
-    //  } else {
-    //    console.log(`File is written successfully!`);
-    //  }
-    //})
-    //resolve(true)
-
-    console.log("modifyModel - end function");
-    //var labeledFaceDescriptorsJson = labeledFaceDescriptors.map(x=>x.toJSON())
-    resolve(labeledFaceDescriptors);
+    
+    writeModelFile(labeledFaceDescriptors)
+      .then((res) => {
+        resolve(true)
+      })
+      .catch((err) => {
+        reject(err)
+      })
   })
 
 }

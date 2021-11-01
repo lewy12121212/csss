@@ -60,7 +60,6 @@ module.exports = (app, db, employeeUtils) => {
 
   function sqlInsertImg(id, picture){
     const sqlQuery2 = "INSERT INTO DB_employees_img (LoginId, Img) VALUES (?,?)"
-    
     return new Promise ((resolve, reject) => {
       for(let i = 0; i<3; i++)
       {
@@ -100,14 +99,23 @@ module.exports = (app, db, employeeUtils) => {
         sqlInsertImg(id, picture)
           .then((res) => {
             console.log("sqlInsertImg - resolve")
-
+            
             sqlModifyModel()
               .then((res) => {
                 //console.log("sqlModifyModel - resolve" + res)
-                return resSql.status(200).json({
-                  error: false,
-                  message: "Added face to db."
-                });
+                detection.modifyModel()
+                  .then((res) => {
+                    return resSql.status(200).json({
+                      error: false,
+                      message: "Added face to db."
+                    });
+                  })
+                  .catch((err) => {
+                    return resSql.status(401).json({
+                      error: true,
+                      message: "Update model error."
+                    });
+                  })
 
               })
               .catch((err) => {
@@ -144,8 +152,6 @@ module.exports = (app, db, employeeUtils) => {
         // 1. wykonać zapytanie sql do bazy danych użytkowników (where id like face.label)
         // 2. result z bazy przekazać do generate token
         // 3. token zwrócić analogicznie do logowania przy pomocy hasła
-
-
         return res.status(200).json({
           error: false,
           user: face.label,

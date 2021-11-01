@@ -15,6 +15,7 @@ function FaceRegistration(props) {
   const webcamRef = React.useRef(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [warning, setWarning] = useState(null);
   const [login, setLogin] = useState("")
 
   const handleInputChange = e => {
@@ -29,12 +30,14 @@ function FaceRegistration(props) {
     var time = setInterval(() => {      
       if(i === 3){
         clearInterval(time);
-        setError(null);      
+        setError(null);
+        setWarning("Twarz zarejestrowana - przetwarzanie...");    
         axios.post(`http://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
           setLoading(false);
-          alert("Zarejestrowano poprawnie."); //pamiętać wyrzucić!!!
+          setWarning("Twarz zarejestrowana poprawnie!");
         }).catch(error => {
           setLoading(false);
+          setWarning(null);
           setError(error.response.data.message);
           //if (error.response.status === 401) 
           //else setError("Coś poszło nie tak...");
@@ -61,6 +64,7 @@ function FaceRegistration(props) {
       <input type="text" onChange={handleInputChange}/>
       <button onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zarejestruj'}</button>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+      {warning && <><small style={{ color: 'green' }}>{warning}</small><br /></>}
 
     </div>
   );
