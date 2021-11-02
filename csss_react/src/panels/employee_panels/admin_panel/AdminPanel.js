@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Route, NavLink } from 'react-router-dom';
+import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 import Offcanvas from "react-bootstrap/Offcanvas";
 
 import Settings from './bookmarks/Settings'
@@ -50,19 +50,21 @@ function AdminPanel(props) {
               Typ konta: <h3>{user.Type}</h3>
               <hr />
             </div>
-
-            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={handleClose}>Ustawienia konta</NavLink><br />
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/UsersSettings" onClick={handleClose}>Ustawienia kont użytkowników</NavLink><br />
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
+            <div>
+              <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={handleClose}>Ustawienia konta</NavLink><br />
+              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/UsersSettings" onClick={handleClose}>Ustawienia kont użytkowników</NavLink><br />
+              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
+            </div>
           </Offcanvas.Body>
         </Offcanvas>
 
       </div>
-      <div>
-        <Route path="/EmployeeDashboard/Admin/Settings" component={Settings} />
-        <Route path="/EmployeeDashboard/Admin/UsersSettings" component={UsersSettings} />
-        <Route path="/EmployeeDashboard/Admin/History" component={History} />
-      </div>
+        <Switch>
+          <Route exact path="/EmployeeDashboard/Admin/Settings" component={Settings} />
+          <Route path="/EmployeeDashboard/Admin/UsersSettings" component={UsersSettings} />
+          <Route path="/EmployeeDashboard/Admin/History" component={History} />
+          <Redirect to="/EmployeeDashboard/Admin/Settings" />
+        </Switch>
     </div>
   );
 }

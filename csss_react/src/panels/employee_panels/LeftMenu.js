@@ -10,10 +10,10 @@ import './EmployeePanels.scss';
 import closeImg from './img/close_arrow.png'
 
 function LeftMenu(props) {
-  const [show, setShow] = useState(false);
 
+  const [show, setShow] = useState(false);
   const handleClose = () => setShow(false);
-  //const handleShow = () => setShow(true);
+  const handleShow = () => setShow(true);
 
   return (
     <Offcanvas className="offcanvas col-5" show={show} onHide={handleClose}>
@@ -21,7 +21,7 @@ function LeftMenu(props) {
         <Offcanvas.Title>Menu</Offcanvas.Title>
         <img src={closeImg} width="20px" onClick={handleClose}></img>
       </Offcanvas.Header>
-      <Offcanvas.Body className="offcanvas-body" className="container col">
+      <Offcanvas.Body className="offcanvas-body container col">
         <div className="offcanvas-info">
           <h5>{props.panelType}</h5>
           <hr />

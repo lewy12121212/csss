@@ -11,6 +11,7 @@ import History from './bookmarks/History';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
 import LeftMenu from '../LeftMenu'
+import handleShow from "../LeftMenu"
 
 import './AdminPanel.scss'
 import '../../../index.scss';
@@ -20,7 +21,7 @@ import '../EmployeePanels.scss';
 
 function AdminPanel(props) {
   const user = getUser();
-  const [show, setShow] = useState(false);
+  //const [show, setShow] = useState(false);
 
   const MenuNavLink = [
     { panelType: user.Type, bookmark: "Settings", description: "Ustawienia konta" },
@@ -41,7 +42,7 @@ function AdminPanel(props) {
       <div className="upperMenu container col-12">
         <div className="row">
           {/*<img src={menuImg} className="menuImg" onClick={handleShow} width="40px"></img>*/}
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2" value="Menu" onClick={handleShow} />
+          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2" value="Menu" onClick={LeftMenu.handleShow} />
           <div className="col-4 col-sm-8"></div>
           <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2" onClick={handleLogout} value="Wyloguj" />
         </div>
