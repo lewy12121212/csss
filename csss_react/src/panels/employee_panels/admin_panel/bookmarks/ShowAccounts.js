@@ -69,21 +69,44 @@ function ShowAccount(props) {
       }
 
       {editUser && 
-        <div className="container">
+        <div className="container col-10 col-md-8 col-lg-6">
           <button className="btn btn-primary" onClick={handleEditUser}>Wróć</button><br />
-          Informacje o użytkowniku:<br />
-          Imię: <input type="text" value={userData.Name} /><br />
-          Nazwisko: <input type="text" value={userData.Surname} /><br />
-          Mail: <input type="text" value={userData.Mail} /><br />
-          Type: <input type="text" value={userData.Type} /><br />
-          <button className="btn btn-success">Zatwierdź zmiany</button>
+          <h3>Informacje o użytkowniku:</h3>
+          <form>
+            <div className="form-group">
+              <label htmlFor="Name">Imię</label>
+              <input type="text" className="form-control" id="Name" name="Name" defaultValue={userData.Name} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Surname">Nazwisko</label>
+              <input type="text" className="form-control" id="Surname" name="Surname" defaultValue={userData.Surname} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Login">Login</label>
+              <input type="text" className="form-control" id="Login" name="Login" defaultValue={userData.Login} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Mail">Mail</label>
+              <input type="email" className="form-control" id="Mail" name="Mail" defaultValue={userData.Mail} />
+            </div>
+            <div className="form-group">
+              <label htmlFor="Type">Type</label>
+              <input type="email" className="form-control" id="Type" name="Type" defaultValue={userData.Type} />
+            </div>
+            <button className="btn btn-success">Zatwierdź zmiany</button>
+          </form>
+
           <hr />
-          Ustawienia konta:<br />
-          <input type="text" value={userData.Login}></input><br />
-          Zmień hasło:<br />
+          <h3>Zmień hasło:</h3>
           {/*TODO - komponent resetowania hasła + ustalenie polityki haseł*/}
-          Nowe hasło: <input type="password" /><br />
-          Powtórz hasło: <input type="password" /><br />
+          <div className="form-group">
+            <label htmlFor="newPassword">Nowe hasło</label>
+            <input type="password" className="form-control" id="newPassword" name="newPassword" />
+          </div>
+          <div className="form-group">
+            <label htmlFor="newSecPassword">Powtórz hasło</label>
+            <input type="password" className="form-control" id="newSecPassword" name="newSecPassword" />
+          </div>
           <button className="btn btn-warning">Zmień hasło</button>
         </div>
       }

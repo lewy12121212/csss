@@ -6,7 +6,7 @@ import './Bookmarks.scss'
 function AddEmployee(props) {
 
   return (
-    <div className="container col-6">
+    <div className="container col-10 col-md-8 col-lg-6">
       <h3>Dodaj pracownika:</h3>
       <form>
         <div className="form-group">
@@ -26,25 +26,25 @@ function AddEmployee(props) {
         </div>
         <hr />
         <div className="form-check">
-          <input className="form-check-input" type="radio" id="Admin" value="Admin" />
+          <input className="form-check-input" type="radio" id="Type" name="Type" value="Admin" />
           <label className="form-check-label" htmlFor="Admin">
             Administrator
           </label>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="radio" id="Service" value="Service" />
+          <input className="form-check-input" type="radio" id="Type" name="Type" value="Service" />
           <label className="form-check-label" htmlFor="Service">
             Serwisant
           </label>
         </div>
         <div className="form-check disabled">
-          <input className="form-check-input" type="radio" id="Menager" value="Menager" />
+          <input className="form-check-input" type="radio" id="Type" name="Type" value="Menager" />
           <label className="form-check-label" htmlFor="Menager">
             Menadżer
           </label>
         </div>
         <div className="form-check disabled">
-          <input className="form-check-input" type="radio" id="Coordinator" value="Coordinator" />
+          <input className="form-check-input" type="radio" id="Type" name="Type" value="Coordinator" />
           <label className="form-check-label" htmlFor="Coordinator">
             Koordynator
           </label>
