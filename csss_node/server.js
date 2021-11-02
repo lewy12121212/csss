@@ -38,6 +38,9 @@ app.use(bodyParser.json());
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
 
+//panels endpoints
+require('./PanelsEndPoints/AdminPanelEndPoints')(app, db, clientUtils);
+
 
 app.use((req, res, next) => {
   var token = req.headers['authorization'];

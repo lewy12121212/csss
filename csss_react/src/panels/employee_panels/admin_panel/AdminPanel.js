@@ -3,7 +3,8 @@ import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
 import Offcanvas from "react-bootstrap/Offcanvas";
 
 import Settings from './bookmarks/Settings'
-import UsersSettings from './bookmarks/UsersSettings'
+import AddEmployee from './bookmarks/AddEmployee'
+import ShowAccounts from './bookmarks/ShowAccounts'
 import History from './bookmarks/History';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
@@ -25,18 +26,16 @@ function AdminPanel(props) {
   }
 
   return (
-    <div className="" style={{ color: 'black', padding: '10px' }}>
+    <div className="container col-12" style={{ color: 'black', padding: '10px' }}>
       <div className="upperMenu container col-12">
         <div className="row">
-          {/*<img src={menuImg} className="menuImg" onClick={handleShow} width="40px"></img>*/}
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2" value="Menu" onClick={handleShow} />
-          <div className="col-4 col-sm-8"></div>
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2" onClick={handleLogout} value="Wyloguj" />
+          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2" value="Menu" onClick={handleShow} />
+          <div className="col-4 col-sm-8 col-lg-8"></div>
+          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2" onClick={handleLogout} value="Wyloguj" />
         </div>
       </div>
       <hr />
       <div className="container col-12">
-
         <Offcanvas className="offcanvas col-5" show={show} onHide={handleClose}>
           <Offcanvas.Header className="offcanvas-header">
             <Offcanvas.Title>Menu</Offcanvas.Title>
@@ -52,19 +51,23 @@ function AdminPanel(props) {
             </div>
             <div>
               <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={handleClose}>Ustawienia konta</NavLink><br />
-              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/UsersSettings" onClick={handleClose}>Ustawienia kont użytkowników</NavLink><br />
+              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/AddEmployee" onClick={handleClose}>Dodaj konto pracownika</NavLink><br />
+              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/ShowAccounts" onClick={handleClose}>Wyświetl konta pracowników</NavLink><br />
               <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
             </div>
           </Offcanvas.Body>
         </Offcanvas>
-
       </div>
+
+      <div className="container col-12" style={{padding: '0px'}}>
         <Switch>
-          <Route exact path="/EmployeeDashboard/Admin/Settings" component={Settings} />
-          <Route path="/EmployeeDashboard/Admin/UsersSettings" component={UsersSettings} />
+          <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} />} />
+          <Route path="/EmployeeDashboard/Admin/AddEmployee" component={AddEmployee} />
+          <Route path="/EmployeeDashboard/Admin/ShowAccounts" component={ShowAccounts} />
           <Route path="/EmployeeDashboard/Admin/History" component={History} />
           <Redirect to="/EmployeeDashboard/Admin/Settings" />
         </Switch>
+      </div>
     </div>
   );
 }
