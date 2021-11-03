@@ -12,6 +12,8 @@ import './AdminPanel.scss'
 import '../../../index.scss';
 import '../EmployeePanels.scss';
 import closeImg from '../img/close_arrow.png'
+//import menuImg from '../img/menu_dotted.png'
+//import logoutImg from '../img/logout1.png'
 
 function AdminPanel(props) {
   const user = getUser();
@@ -26,15 +28,16 @@ function AdminPanel(props) {
   }
 
   return (
-    <div className="container col-12" style={{ color: 'black', padding: '10px' }}>
-      <div className="upperMenu container col-12">
-        <div className="row">
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2" value="Menu" onClick={handleShow} />
-          <div className="col-4 col-sm-8 col-lg-8"></div>
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2" onClick={handleLogout} value="Wyloguj" />
-        </div>
+    <div className="col-12" style={{ color: 'black' }}>
+      <div className="upperMenu justify-content-between row">
+          {/*<img src={menuImg} alt="Menu" />
+          <img src={logoutImg} alt="Wyloguj" />*/}
+
+          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2 col-xl-1" value="Menu" onClick={handleShow} />
+          <div className="col-4 col-sm-8 col-lg-8 col-xl-10"></div>
+          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2 col-xl-1" onClick={handleLogout} value="Wyloguj" />
       </div>
-      <hr />
+      
       <div className="container col-12">
         <Offcanvas className="offcanvas col-5" show={show} onHide={handleClose}>
           <Offcanvas.Header className="offcanvas-header">

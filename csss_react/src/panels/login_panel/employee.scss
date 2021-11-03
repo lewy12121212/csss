@@ -39,10 +39,10 @@
   }
 }
 
-input:-webkit-autofill,
-input:-webkit-autofill:hover,
-input:-webkit-autofill:focus,
-input:-webkit-autofill:active {
+.employee-form-field:-webkit-autofill,
+.employee-form-field:-webkit-autofill:hover,
+.employee-form-field:-webkit-autofill:focus,
+.employee-form-field:-webkit-autofill:active {
   transition: background-color 5000000s ease-in-out 0s;
   -webkit-text-fill-color: $white !important;
 }

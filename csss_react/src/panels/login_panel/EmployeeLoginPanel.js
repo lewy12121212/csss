@@ -67,7 +67,7 @@ function EmployeeLoginPanel(props) {
             <input type="password" className="employee-form-field" placeholder="Haslo..."  {...password} autoComplete="new-password" name="password" id='password' required />
             <label htmlFor="password" className="employee-form-label">Hasło</label>
           </div>
-          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+          {error && <><small style={{ color: 'red' }}>{error}</small></>}<br />
 
           <button className="global-btn local-employee-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
           <button className="global-btn local-employee-btn" onClick={handleHomeBack}>Wróć</button>

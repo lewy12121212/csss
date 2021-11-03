@@ -26,25 +26,25 @@ function AddEmployee(props) {
         </div>
         <hr />
         <div className="form-check">
-          <input className="form-check-input" type="radio" id="Type" name="Type" value="Admin" />
+          <input className="form-check-input" type="radio" id="Admin" name="Type" value="Admin" />
           <label className="form-check-label" htmlFor="Admin">
             Administrator
           </label>
         </div>
         <div className="form-check">
-          <input className="form-check-input" type="radio" id="Type" name="Type" value="Service" />
+          <input className="form-check-input" type="radio" id="Service" name="Type" value="Service" />
           <label className="form-check-label" htmlFor="Service">
             Serwisant
           </label>
         </div>
         <div className="form-check disabled">
-          <input className="form-check-input" type="radio" id="Type" name="Type" value="Menager" />
+          <input className="form-check-input" type="radio" id="Manager" name="Type" value="Menager" />
           <label className="form-check-label" htmlFor="Menager">
             Menadżer
           </label>
         </div>
         <div className="form-check disabled">
-          <input className="form-check-input" type="radio" id="Type" name="Type" value="Coordinator" />
+          <input className="form-check-input" type="radio" id="Coordinator" name="Type" value="Coordinator" />
           <label className="form-check-label" htmlFor="Coordinator">
             Koordynator
           </label>

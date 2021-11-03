@@ -43,7 +43,7 @@ function ShowAccount(props) {
       {showTable && 
         <div>
           <button className="btn btn-warning" onClick={handleSetUsersTable}>Odświerz</button>
-          <table className="table table-striped">
+          <table className="table">
             <thead className="thead-dark">
               <tr>
                 <th scope="col">#</th>

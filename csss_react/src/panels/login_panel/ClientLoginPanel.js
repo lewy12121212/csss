@@ -28,7 +28,7 @@ function ClientLoginPanel(props) {
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Something went wrong. Please try again later.");
+      else setError("Coś poszło nie tak...");
     });
   }
 
@@ -47,7 +47,7 @@ function ClientLoginPanel(props) {
             <input type="text" className="client-form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
             <label htmlFor="repairId" className="client-form-label">Id naprawy</label>
           </div>
-          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+          {error && <><small style={{ color: 'red' }}>{error}</small></>}<br />
 
           <button className="global-btn local-client-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
           <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
