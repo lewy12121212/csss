@@ -36,6 +36,7 @@ app.use(bodyParser.json());
 //extention files
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
+require('./mailSender')(app);
 
 
 app.use((req, res, next) => {
