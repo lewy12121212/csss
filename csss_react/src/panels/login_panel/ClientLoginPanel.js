@@ -47,9 +47,9 @@ function ClientLoginPanel(props) {
             <input type="text" className="client-form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
             <label htmlFor="repairId" className="client-form-label">Id naprawy</label>
           </div>
-          {error && <><small style={{ color: 'red' }}>{error}</small></>}<br />
+          {error && <><small className="warningLoginError" style={{ color: 'red' }}>{error}</small></>}
 
-          <button className="global-btn local-client-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
+          <button className="global-btn local-client-btn loginButton" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button>
           <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
         </div>
       </div>
