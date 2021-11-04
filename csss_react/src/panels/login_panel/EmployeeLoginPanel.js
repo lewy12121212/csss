@@ -22,16 +22,35 @@ function EmployeeLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
+    console.log(username.value + " " + password.value)
+
     axios.post(`http://${dbAddress}:4000/employee/signin`, { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      props.history.push('/EmployeeDashboard');
+      props.history.push(`/EmployeeDashboard/${response.data.user.Type}`);
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
       else setError("Coś poszło nie tak...");
     });
   }
+
+  //login by enter - only callback work - not login, login by enter has empty input variable error :/
+  //useEffect(() => {
+  //  const listener = event => {
+  //    if (event.code === "Enter" || event.code === "NumpadEnter") {
+  //      console.log("Login...");
+  //      console.log(username.value + " " + password.value)
+  //      handleLogin()
+  //      event.preventDefault();
+  //      // callMyFunction();
+  //    }
+  //  };
+  //  document.addEventListener("keydown", listener);
+  //  return () => {
+  //    document.removeEventListener("keydown", listener);
+  //  };
+  //}, []);
 
   return (
     <div className="container col-xl-6 col-lg-8 col-md-10 col-12">
@@ -42,11 +61,11 @@ function EmployeeLoginPanel(props) {
         <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
           <div className="employee-form-group field col-10">
             <input type="input" className="employee-form-field" placeholder="Login..." {...username} autoComplete="new-password" name="Login" id='Login' required />
-            <label for="Login" className="employee-form-label">Login</label>
+            <label htmlFor="Login" className="employee-form-label">Login</label>
           </div>
           <div className="employee-form-group field col-10">
-            <input type="password" className="employee-form-field" placeholder="Haslo..." {...password} autoComplete="new-password" name="password" id='password' required />
-            <label for="password" className="employee-form-label">Hasło</label>
+            <input type="password" className="employee-form-field" placeholder="Haslo..."  {...password} autoComplete="new-password" name="password" id='password' required />
+            <label htmlFor="password" className="employee-form-label">Hasło</label>
           </div>
           {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
 

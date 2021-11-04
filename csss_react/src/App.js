@@ -4,7 +4,13 @@ import axios from 'axios';
 
 import { dbAddress } from './dbCon';
 
-import EmployeeDashboard from './panels/employee_panels/EmployeeDashboard'
+//import EmployeeDashboard from './panels/employee_panels/EmployeeDashboard'
+//employee_panels
+import AdminPanel from './panels/employee_panels/admin_panel/AdminPanel'
+import CoordinatorPanel from './panels/employee_panels/coordinator_panel/CoordinatorPanel'
+import ManagerPanel from './panels/employee_panels/manager_panel/ManagerPanel'
+import ServicePanel from './panels/employee_panels/service_panel/ServicePanel'
+
 import ClientDashboard from './panels/client_panel/ClientDashboard'
 import Home from './Home'
 import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
@@ -49,8 +55,11 @@ function App() {
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
             {/* Private components */}
             <PrivateRoute path="/ClientDashboard" component={ClientDashboard} panelType="Client" />
-            <PrivateRoute path="/EmployeeDashboard" component={EmployeeDashboard} panelType="Employee" />
-            {/* Main route*/}
+            <PrivateRoute path="/EmployeeDashboard/Admin" component={AdminPanel} panelType="Admin" />
+            <PrivateRoute path="/EmployeeDashboard/Coordinator" component={CoordinatorPanel} panelType="Coordinator" />
+            <PrivateRoute path="/EmployeeDashboard/Manager" component={ManagerPanel} panelType="Manager" />
+            <PrivateRoute path="/EmployeeDashboard/Service" component={ServicePanel} panelType="Service" />
+            {/* Main route */}
             <PublicRoute exact path="/" component={Home} />
             <Redirect to="/" />
           </Switch>
