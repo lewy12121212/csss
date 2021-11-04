@@ -24,7 +24,7 @@ function Settings(props) {
     setMail(userData.Mail)
     setPhone(userData.Phone)
 
-  }, [setUserData, setName, setSurname, setLogin, setMail])
+  }, [userData, setUserData, setName, setSurname, setLogin, setMail])
 
   function handleNameChange(e){
     setName(e.target.value) 
