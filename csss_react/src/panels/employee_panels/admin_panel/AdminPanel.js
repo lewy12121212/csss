@@ -29,13 +29,14 @@ function AdminPanel(props) {
 
   return (
     <div className="col-12" style={{ color: 'black' }}>
-      <div className="upperMenu justify-content-between row">
-          {/*<img src={menuImg} alt="Menu" />
-          <img src={logoutImg} alt="Wyloguj" />*/}
 
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2 col-xl-1" value="Menu" onClick={handleShow} />
-          <div className="col-4 col-sm-8 col-lg-8 col-xl-10"></div>
-          <input type="button" className="btn btn-primary btn-upperMenu col-4 col-sm-2 col-lg-2 col-xl-1" onClick={handleLogout} value="Wyloguj" />
+      <div className="flex-container sticky-top upperMenu">
+        <div className="flexLeft container">
+          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4"  onClick={handleShow} value="Menu" />
+        </div>
+        <div className="flexRight container">
+          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4" onClick={handleLogout} value="Wyloguj" />
+        </div>
       </div>
       
       <div className="container col-12">

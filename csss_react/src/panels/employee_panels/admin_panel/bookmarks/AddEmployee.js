@@ -6,7 +6,7 @@ import './Bookmarks.scss'
 function AddEmployee(props) {
 
   return (
-    <div className="container col-10 col-md-8 col-lg-6">
+    <div className="bookmarkBox container col-10 col-md-8 col-lg-6">
       <h3>Dodaj pracownika:</h3>
       <form>
         <div className="form-group">

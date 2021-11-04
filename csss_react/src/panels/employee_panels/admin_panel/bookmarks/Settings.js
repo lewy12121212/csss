@@ -58,7 +58,7 @@ function Settings(props) {
   }
 
   return (
-    <div className="container col-12 col-md-10 col-lg-8"style={{ color: 'black' }}>
+    <div className="bookmarkBox container col-12 col-md-10 col-lg-8" style={{ color: 'black' }}>
       <h3>Informacje o użytkowniku:</h3>
       
       <form className="justify-content-center">

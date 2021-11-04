@@ -69,7 +69,7 @@ function ShowAccount(props) {
       }
 
       {editUser && 
-        <div className="container col-10 col-md-8 col-lg-6">
+        <div className="bookmarkBox container col-10 col-md-8 col-lg-6">
           <button className="btn btn-primary" onClick={handleEditUser}>Wróć</button><br />
           <h3>Informacje o użytkowniku:</h3>
           <form>
