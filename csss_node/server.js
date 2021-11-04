@@ -37,6 +37,7 @@ app.use(bodyParser.json());
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
 require('./mailSender')(app);
+require('./smsSender')(app);
 
 
 app.use((req, res, next) => {
