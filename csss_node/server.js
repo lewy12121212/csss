@@ -14,9 +14,10 @@ const port = process.env.PORT || 4000;
 const mysql = require("mysql");
 
 const db = mysql.createPool({
-  host: 'localhost',
-  user: 'root',
-  password: '',
+  host: 'dysk.sytes.net',
+  user: 'csss_admin',
+  password: 'csss.2000.!@',
+  port: '8888',
   database: 'DB_csss'
 });
 //const db = mysql.createPool({
@@ -37,7 +38,6 @@ app.use(bodyParser.json());
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
 require('./mailSender')(app);
-require('./smsSender')(app);
 
 
 app.use((req, res, next) => {

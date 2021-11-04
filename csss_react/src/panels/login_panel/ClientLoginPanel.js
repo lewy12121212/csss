@@ -32,6 +32,8 @@ function ClientLoginPanel(props) {
     });
   }
 
+
+
   return(
     <div className="container col-xl-6 col-lg-8 col-md-10 col-12">
       <div className="row d-flex justify-content-center mt-5">
@@ -48,7 +50,7 @@ function ClientLoginPanel(props) {
             <label for="repairId" className="client-form-label">Id naprawy</label>
           </div>
           {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-
+          <a href='/ClientResetPassword'> Zapomniałem hasła </a>
           <button className="global-btn local-client-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
           <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
         </div>

@@ -13,6 +13,7 @@ import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './utils/Common';
+import ClientResetPassword from './panels/login_panel/ClientResetPassword';
 
 function App() {
 
@@ -46,6 +47,7 @@ function App() {
           <Switch>
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
+            <PublicRoute path="/ClientResetPassword" component={ClientResetPassword} panelType="Client" />
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
             {/* Private components */}
             <PrivateRoute path="/ClientDashboard" component={ClientDashboard} panelType="Client" />

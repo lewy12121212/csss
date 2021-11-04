@@ -1,15 +1,15 @@
-module.exports = (app) => {
 
-  var smsapi = require('smsapi');
-  const {SMSAPI} = smsapi;
-  const smsapi1 = new SMSAPI('biddTjxCIdUvyF2MvyK9Bj72ctgkHbNBGpW7AZvB');
+var smsapi = require('smsapi');
+const {SMSAPI} = smsapi;
+const smsapi1 = new SMSAPI('biddTjxCIdUvyF2MvyK9Bj72ctgkHbNBGpW7AZvB');
 
-  app.post('/sendSMS', (req,res) => {
-    console.log("hello")
-    
-    smsapi1.sms.sendSms('+48664273466', 'My second message from CSSS!');
+function sendSMS(text){
+  console.log(text)
+  let {to, message} = text
 
-    res.status(200).json({message: "ok"});
-  })
+  smsapi1.sms.sendSms(to= to, message= message, from = 'CSSS');
+}
 
+module.exports = {
+  sendSMS
 }
