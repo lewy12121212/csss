@@ -30,7 +30,7 @@
   font-size: 1.3rem;
   color: $white;
   padding: 7px 0;
-  background: transparent;
+  background: transparent !important;
   transition: border-color 0.5s;
 
   &::placeholder {
@@ -42,6 +42,14 @@
     cursor: text;
     top: 20px;
   }
+}
+
+.client-form-field:-webkit-autofill,
+.client-form-field:-webkit-autofill:hover,
+.client-form-field:-webkit-autofill:focus,
+.client-form-field:-webkit-autofill:active {
+  transition: background-color 5000000s ease-in-out 0s;
+  -webkit-text-fill-color: $white !important;
 }
 
 .client-form-label {
