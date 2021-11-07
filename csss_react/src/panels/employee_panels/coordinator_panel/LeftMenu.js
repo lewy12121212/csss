@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, } from 'react-router-dom';
 import Offcanvas from "react-bootstrap/Offcanvas";
 import closeImg from '../img/close_arrow.png'
 
@@ -14,18 +14,17 @@ function LeftMenu(props) {
         </Offcanvas.Header>
         <Offcanvas.Body className="offcanvas-body container col">
           <div className="offcanvas-info">
-            <h5>Panel administratora</h5>
+            <h5>Panel koordynatora</h5>
             <hr />
             Użytkownik: <h3>{props.user.Login}</h3>
             Typ konta: <h3>{props.user.Type}</h3>
             <hr />
           </div>
           <div>
-            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/AddEmployee" onClick={props.handleClose}>Dodaj konto pracownika</NavLink>
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/ShowAccounts" onClick={props.handleClose}>Wyświetl konta pracowników</NavLink>
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={props.handleClose}>Historia zleceń</NavLink>
-            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/Chat" onClick={props.handleClose}>Czat</NavLink>
+            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
+            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddOrder" onClick={props.handleClose}>Dodaj zlecenie</NavLink>
+            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddClient" onClick={props.handleClose}>Dodaj klienta</NavLink>
+            <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/Chat" onClick={props.handleClose}>Czat</NavLink>
           </div>
         </Offcanvas.Body>
       </Offcanvas>

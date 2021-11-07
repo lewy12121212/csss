@@ -1,5 +1,6 @@
-import React, { useState, useRef } from 'react';
-import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
+import React, { useState } from 'react';
+import { Route, Switch, Redirect } from 'react-router-dom';
+import { getUser, removeUserSession } from '../../../utils/Common';
 //import Offcanvas from "react-bootstrap/Offcanvas";
 
 import Settings from '../common/Settings'
@@ -7,7 +8,6 @@ import AddEmployee from './bookmarks/AddEmployee'
 import ShowAccounts from './bookmarks/ShowAccounts'
 import History from './bookmarks/History';
 import Chat from '../chat/Chat'
-import { getUser, removeUserSession } from '../../../utils/Common';
 
 import LeftMenu from './LeftMenu';
 
@@ -19,7 +19,6 @@ import '../../../index.scss';
 
 function AdminPanel(props) {
   const user = getUser();
-
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
