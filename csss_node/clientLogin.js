@@ -46,7 +46,7 @@ module.exports = (app, db, clientUtils) => {
     })
   });
 
-  app.post('/resetPassword', (req,res) => {
+  app.post('/client/ResetPassword', (req,res) => {
     const email = req.body.email;
 
     sqlClientSelect(email).then((phone) =>{
@@ -59,18 +59,34 @@ module.exports = (app, db, clientUtils) => {
         let text = {to: number, message: verifyCode + " to Twój kod weryfikacyjny", from: "CSSS"}
         let sender = require('./smsSender')
   
-        sender.sendSMS(text)
-  
+        //sender.sendSMS(text)
+        console.log(verifyCode)
         return res.status(200).json({verifyCode: verifyCode})
       }
       else return res.status(401).json({
         error: true,
-        message: "No user with this data."
+        message: "Brak klienta o podanym adresie email."
       });
     });
     
     
   });
+
+  app.post('/client/ChangePassword', (req,res) => {
+    const sqlQuery = "UPDATE DB_clients SET Password = (?) WHERE Mail LIKE (?)";
+    const email = req.body.email;
+    const password = req.body.password;
+
+    db.query(sqlQuery, [email, password], (error, results)=>{
+      
+      if(error)
+        return res.status(401).json({
+          error: true,
+          message: "Błąd bazy danych. Spróbuj ponownie później."
+        });
+      else return res.status(200).json({message:'Pomyślnie zmieniono hasło.'})
+    });
+  })
 
   function sqlClientSelect(email){
     const sqlQuery1 = "SELECT Phone FROM DB_clients WHERE Mail like (?)"
