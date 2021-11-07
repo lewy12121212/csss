@@ -18,6 +18,15 @@ function Settings(props) {
   const [ifChange, setIfChange] = useState(true)
   const [changeUserInfo, setChangeUserInfo] = useState(false)
 
+  //for password changer
+  //const [password, setPassword] = useState("")
+  //const [oldPassword, setOldPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [newRePassword, setNewRePassword] = useState("");
+  const [ifChangePassButton, setIfChangePassButton] = useState(true)
+  const [changePasswordWarning, setChangePasswordWarning] = useState(false)
+  const [changePasswordWarningMsg, setChangePasswordWarningMsg] = useState("")
+  
   useEffect(() => {
     console.log('Get users table...')
     setId(userData.Id)
@@ -26,6 +35,7 @@ function Settings(props) {
     setLogin(userData.Login)
     setMail(userData.Mail)
     setPhone(userData.Phone)
+    //setPassword(userData.Pass)
 
   }, [setId, userData, setUserData, setName, setSurname, setLogin, setMail])
 
@@ -33,10 +43,33 @@ function Settings(props) {
     axios.post(`http://${dbAddress}:4000/employee/admin/changeUserInfo`, { Id: id, Name: name, Surname: surname, Login: login, Mail: mail, Phone: phone}).then(response => {
       props.refreshUser()
     }).catch((error) => {
-      console.log(error.response.data.error)
+      alert(error.message.data.message)
+      console.log(error.response.data.message)
     });
   }
 
+  const handleChangePassword = () => {
+    axios.post(`http://${dbAddress}:4000/employee/admin/changeUserPassword`, { Id: id, newPassword: newPassword, newRePassword: newRePassword }).then(response => {
+      setChangePasswordWarning(false)
+      props.refreshUser()
+    }).catch((error) => {
+      console.log(error.response.data.message)
+      setChangePasswordWarningMsg(error.response.data.message)
+      setChangePasswordWarning(true)
+    });
+  }
+
+  function handleSetNewPassword(e){
+    setNewPassword(e.target.value)
+    setIfChangePassButton(false)
+  }
+
+  function handleSetNewRePassword(e){
+    setNewRePassword(e.target.value)
+    setIfChangePassButton(false)
+  }
+
+  //=============================
   function handleNameChange(e){
     setName(e.target.value) 
     setIfChange(false)
@@ -171,13 +204,18 @@ function Settings(props) {
       {/*TODO - komponent resetowania hasła + ustalenie polityki haseł*/}
       <div className="form-group">
         <label htmlFor="newPassword">Nowe hasło</label>
-        <input type="password" className="form-control col-12" id="newPassword" name="newPassword" />
+        <input type="password" className="form-control col-12" id="newPassword" name="newPassword" onChange={handleSetNewPassword}/>
       </div>
       <div className="form-group">
-        <label htmlFor="newSecPassword">Powtórz hasło</label>
-        <input type="password" className="form-control" id="newSecPassword" name="newSecPassword" />
+        <label htmlFor="newRePassword">Powtórz hasło</label>
+        <input type="password" className="form-control" id="newRePassword" name="newRePassword" onChange={handleSetNewRePassword}/>
       </div>
-      <button className="btn btn-warning col-12">Zmień hasło</button>
+      <button className="btn btn-warning col-12" onClick={handleChangePassword} disabled={ifChangePassButton}>Zmień hasło</button>
+      {changePasswordWarning && 
+        <div className="alert alert-danger mt-2 text-center" role="alert">
+          <p>{changePasswordWarningMsg}</p>
+        </div>
+      }
       <hr />
 
       <h3>Zarejestruj twarz</h3>

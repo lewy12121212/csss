@@ -33,15 +33,19 @@ function ShowAccount(props) {
     axios.get(`http://${dbAddress}:4000/employee/admin/getUsersTable`).then(response => {
       setUsersTable(response.data.data)
     }).catch((error) => {
-      console.log(error.response.data.error)
+      console.log(error.response.data.message)
     });
   }
 
+  const handleTypeChange = () => {
+
+  }
+
   return (
-    <div className="table-responseive" style={{ color: 'black' }}>
+    <div style={{ color: 'black' }}>
       
       {showTable && 
-        <div>
+        <div className="table-responseive" >
           <button className="btn btn-warning" onClick={handleSetUsersTable}>Odświerz</button>
           <table className="table">
             <thead className="thead-dark">
@@ -72,28 +76,51 @@ function ShowAccount(props) {
         <div className="bookmarkBox container col-10 col-md-8 col-lg-6">
           <button className="btn btn-primary" onClick={handleEditUser}>Wróć</button><br />
           <h3>Informacje o użytkowniku:</h3>
-          <form>
-            <div className="form-group">
-              <label htmlFor="Name">Imię</label>
-              <input type="text" className="form-control" id="Name" name="Name" defaultValue={userData.Name} />
+          <form className="justify-content-center">
+            <div className="row col-12 mx-auto">
+              <div className="form-group">
+                <label htmlFor="Name">Imię</label>
+                <input type="text" className="form-control" id="Name" name="Name" defaultValue={userData.Name} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Surname">Nazwisko</label>
+                <input type="text" className="form-control" id="Surname" name="Surname" defaultValue={userData.Surname} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Login">Login</label>
+                <input type="text" className="form-control" id="Login" name="Login" defaultValue={userData.Login} />
+              </div>
+              <div className="form-group">
+                <label htmlFor="Mail">Mail</label>
+                <input type="email" className="form-control" id="Mail" name="Mail" defaultValue={userData.Mail} />
+              </div>
+              <hr />
+              <div className="form-check">
+                <input className="form-check-input" type="radio" id="Admin" name="Type" value="Admin" onChange={handleTypeChange} />
+                <label className="form-check-label" htmlFor="Admin">
+                  Administrator
+                </label>
+              </div>
+              <div className="form-check">
+                <input className="form-check-input" type="radio" id="Service" name="Type" value="Service" onChange={handleTypeChange} />
+                <label className="form-check-label" htmlFor="Service">
+                  Serwisant
+                </label>
+              </div>
+              <div className="form-check disabled">
+                <input className="form-check-input" type="radio" id="Manager" name="Type" value="Manager" onChange={handleTypeChange} />
+                <label className="form-check-label" htmlFor="Menager">
+                  Menadżer
+                </label>
+              </div>
+              <div className="form-check disabled">
+                <input className="form-check-input" type="radio" id="Coordinator" name="Type" value="Coordinator" onChange={handleTypeChange} />
+                <label className="form-check-label" htmlFor="Coordinator">
+                  Koordynator
+                </label>
+              </div>
+              <button className="btn btn-success">Zatwierdź zmiany</button>
             </div>
-            <div className="form-group">
-              <label htmlFor="Surname">Nazwisko</label>
-              <input type="text" className="form-control" id="Surname" name="Surname" defaultValue={userData.Surname} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="Login">Login</label>
-              <input type="text" className="form-control" id="Login" name="Login" defaultValue={userData.Login} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="Mail">Mail</label>
-              <input type="email" className="form-control" id="Mail" name="Mail" defaultValue={userData.Mail} />
-            </div>
-            <div className="form-group">
-              <label htmlFor="Type">Type</label>
-              <input type="email" className="form-control" id="Type" name="Type" defaultValue={userData.Type} />
-            </div>
-            <button className="btn btn-success">Zatwierdź zmiany</button>
           </form>
 
           <hr />

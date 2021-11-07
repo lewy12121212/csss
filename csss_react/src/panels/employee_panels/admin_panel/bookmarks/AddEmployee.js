@@ -9,6 +9,7 @@ import './Bookmarks.scss'
 function AddEmployee(props) {
 
   const [errorInfo, setErrorInfo] = useState(false)
+  const [errorInfoMsg, setErrorInfoMsg] = useState("")
   const [name, setName] = useState("")
   const [surname, setSurname] = useState("")
   const [login, setLogin] = useState("")
@@ -30,6 +31,7 @@ function AddEmployee(props) {
       props.history.push("/EmployeeDashboard/Admin/ShowAccounts");
     }).catch((error) => {
       setErrorInfo(true)
+      setErrorInfoMsg(error.response.data.message)
       console.log(error.response.data.message)
 
     });
@@ -116,7 +118,7 @@ function AddEmployee(props) {
         </div>
         {errorInfo && 
         <div className="alert alert-danger mt-2 text-center" role="alert">
-          <p>Sprawdź poprawność wprowadzonych danych.</p>
+          <p>{errorInfoMsg}</p>
         </div>
         }
         <button type="button" className="btn btn-success" onClick={handleAddEmployee}>Dodaj pracownika</button>
