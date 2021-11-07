@@ -2,7 +2,6 @@ import React from 'react';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
 import '../../../index.scss';
-import '../EmployeePanels.scss';
 
 function ManagerPanel(props) {
   const user = getUser();

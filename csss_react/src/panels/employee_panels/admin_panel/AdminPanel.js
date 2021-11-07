@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Route, NavLink, Switch, Redirect } from 'react-router-dom';
-import Offcanvas from "react-bootstrap/Offcanvas";
+//import Offcanvas from "react-bootstrap/Offcanvas";
 
-import Settings from './bookmarks/Settings'
+import Settings from '../common/Settings'
 import AddEmployee from './bookmarks/AddEmployee'
 import ShowAccounts from './bookmarks/ShowAccounts'
 import History from './bookmarks/History';
 import Chat from '../chat/Chat'
 import { getUser, removeUserSession } from '../../../utils/Common';
 
-import './AdminPanel.scss'
+import LeftMenu from './LeftMenu';
+
+import './adminPanel.scss'
 import '../../../index.scss';
-import '../EmployeePanels.scss';
-import closeImg from '../img/close_arrow.png'
+//import closeImg from '../img/close_arrow.png'
 //import menuImg from '../img/menu_dotted.png'
 //import logoutImg from '../img/logout1.png'
 
 function AdminPanel(props) {
   const user = getUser();
+
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
@@ -45,38 +47,15 @@ function AdminPanel(props) {
         </div>
       </div>
       
-      <div className="container col-12">
-        <Offcanvas className="offcanvas col-5" show={show} onHide={handleClose}>
-          <Offcanvas.Header className="offcanvas-header">
-            <Offcanvas.Title>Menu</Offcanvas.Title>
-            <img src={closeImg} width="20px" alt="CloseMenu" onClick={handleClose}></img>
-          </Offcanvas.Header>
-          <Offcanvas.Body className="offcanvas-body container col">
-            <div className="offcanvas-info">
-              <h5>Panel administratora</h5>
-              <hr />
-              Użytkownik: <h3>{user.Name}</h3>
-              Typ konta: <h3>{user.Type}</h3>
-              <hr />
-            </div>
-            <div>
-              <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Admin/Settings" onClick={handleClose}>Ustawienia konta</NavLink><br />
-              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/AddEmployee" onClick={handleClose}>Dodaj konto pracownika</NavLink><br />
-              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/ShowAccounts" onClick={handleClose}>Wyświetl konta pracowników</NavLink><br />
-              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
-              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/Chat" onClick={handleClose}>Czat</NavLink>
-            </div>
-          </Offcanvas.Body>
-        </Offcanvas>
-      </div>
+      <LeftMenu user={user} handleClose={handleClose} show={show}/>
 
-      <div className="container col-12" style={{padding: '0px'}}>
+      <div className="container col-12">
         <Switch>
           <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
-          <Route path="/EmployeeDashboard/Admin/AddEmployee" component={AddEmployee} />
-          <Route path="/EmployeeDashboard/Admin/ShowAccounts" component={ShowAccounts} />
-          <Route path="/EmployeeDashboard/Admin/History" component={History} />
-          <Route path="/EmployeeDashboard/Admin/Chat" component={Chat} />
+          <Route path="/EmployeeDashboard/Admin/AddEmployee" render={() => <AddEmployee />} />
+          <Route path="/EmployeeDashboard/Admin/ShowAccounts" render={() => <ShowAccounts />} />
+          <Route path="/EmployeeDashboard/Admin/History" render={() => <History />} />
+          <Route path="/EmployeeDashboard/Admin/Chat" render={() => <Chat />} />
           <Redirect to="/EmployeeDashboard/Admin/Settings" />
         </Switch>
       </div>

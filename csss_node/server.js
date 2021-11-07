@@ -39,7 +39,8 @@ require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
 
 //panels endpoints
-require('./PanelsEndPoints/AdminPanelEndPoints')(app, db, clientUtils);
+require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
+require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
 
 
 app.use((req, res, next) => {

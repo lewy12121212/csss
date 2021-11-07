@@ -2,18 +2,16 @@ import React from 'react';
 //import { useState, useEffect } from 'react';
 //import axios from 'axios';
 //import { dbAddress } from '../../../../dbCon'
-//import { PassGenerator } from '../../../../utils/PassGenerator'
-//import 'bootstrap/dist/css/bootstrap.min.css';
 
-import './bookmarks.scss';
+import './common.scss';
 
-function AddEmployee(props) {
+function Settings(props) {
 
   return (
     <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
-      Dodaj pracownika
+      Ustawienia konta
     </div>
   );
 }
 
-export default AddEmployee;
+export default Settings;

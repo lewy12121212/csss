@@ -3,12 +3,11 @@ import React from 'react';
 
 import './chat.scss'
 import '../../../index.scss';
-import '../EmployeePanels.scss';
 
 function Chat(props) {
 
   return (
-    <div className="col-12" style={{ color: 'black' }}>
+    <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
       Witaj na czacie! - twoja wygoda jest dla nas najważniejsza.
     </div>
   );
