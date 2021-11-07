@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { dbAddress } from '../../../../dbCon'
 
 import '../AdminPanel.scss'
 import '../../../../index.scss';
@@ -7,6 +9,7 @@ import '../../EmployeePanels.scss';
 function Settings(props) {
 
   const [userData, setUserData] = useState(JSON.parse(props.userData))
+  const [id, setId] = useState("")
   const [name, setName] = useState("")
   const [surname, setSurname] = useState("")
   const [login, setLogin] = useState("")
@@ -18,13 +21,23 @@ function Settings(props) {
   useEffect(() => {
     console.log('Get users table...')
     //setUserData()
+    //handleRefreshUser()
+    setId(userData.Id)
     setName(userData.Name)
     setSurname(userData.Surname)
     setLogin(userData.Login)
     setMail(userData.Mail)
     setPhone(userData.Phone)
 
-  }, [userData, setUserData, setName, setSurname, setLogin, setMail])
+  }, [setId, userData, setUserData, setName, setSurname, setLogin, setMail])
+
+  const handleChangeUserData = () => {
+    axios.post(`http://${dbAddress}:4000/employee/admin/changeUserInfo`, { Id: id, Name: name, Surname: surname, Login: login, Mail: mail, Phone: phone}).then(response => {
+      props.refreshUser()
+    }).catch((error) => {
+      console.log(error.response.data.error)
+    });
+  }
 
   function handleNameChange(e){
     setName(e.target.value) 
@@ -50,11 +63,6 @@ function Settings(props) {
   function handleChangeData(){
     setChangeUserInfo(true)
     setIfChange(false)
-  }
-
-  function handleSendInfoChanges(){
-    console.log(userData)
-    setChangeUserInfo(false)
   }
 
   return (
@@ -155,7 +163,8 @@ function Settings(props) {
       {changeUserInfo && 
         <div className="alert alert-danger mt-2 text-center" role="alert">
           <p>Czy na pewno chcesz zmienić dane swojego konta?</p>
-          <input type="button" className="btn btn-danger col-12" onClick={handleSendInfoChanges} value="TAK"/>
+          <p>UWAGA! Zmiana danych użytkownika wymusi wylogowanie z systemu w celu wdożenia zmian.</p>
+          <input type="button" className="btn btn-danger col-12" onClick={handleChangeUserData} value="TAK"/>
         </div>
       }
       <hr />

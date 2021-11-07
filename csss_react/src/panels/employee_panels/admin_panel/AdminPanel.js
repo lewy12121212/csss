@@ -6,6 +6,7 @@ import Settings from './bookmarks/Settings'
 import AddEmployee from './bookmarks/AddEmployee'
 import ShowAccounts from './bookmarks/ShowAccounts'
 import History from './bookmarks/History';
+import Chat from '../chat/Chat'
 import { getUser, removeUserSession } from '../../../utils/Common';
 
 import './AdminPanel.scss'
@@ -21,6 +22,11 @@ function AdminPanel(props) {
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const handleRefreshUser = () =>{
+    alert('Dane zmieniono - nastąpi wylogowanie.')
+    handleLogout();
+  }
 
   const handleLogout = () => {
     removeUserSession();
@@ -58,6 +64,7 @@ function AdminPanel(props) {
               <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/AddEmployee" onClick={handleClose}>Dodaj konto pracownika</NavLink><br />
               <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/ShowAccounts" onClick={handleClose}>Wyświetl konta pracowników</NavLink><br />
               <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/History" onClick={handleClose}>Historia zleceń</NavLink>
+              <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Admin/Chat" onClick={handleClose}>Czat</NavLink>
             </div>
           </Offcanvas.Body>
         </Offcanvas>
@@ -65,10 +72,11 @@ function AdminPanel(props) {
 
       <div className="container col-12" style={{padding: '0px'}}>
         <Switch>
-          <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} />} />
+          <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
           <Route path="/EmployeeDashboard/Admin/AddEmployee" component={AddEmployee} />
           <Route path="/EmployeeDashboard/Admin/ShowAccounts" component={ShowAccounts} />
           <Route path="/EmployeeDashboard/Admin/History" component={History} />
+          <Route path="/EmployeeDashboard/Admin/Chat" component={Chat} />
           <Redirect to="/EmployeeDashboard/Admin/Settings" />
         </Switch>
       </div>
