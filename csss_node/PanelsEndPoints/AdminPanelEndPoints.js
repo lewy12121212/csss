@@ -28,8 +28,6 @@ module.exports = (app, db, employeeUtils) => {
     const mail = req.body.Mail;
     const phone = req.body.Phone;
 
-    console.log(id, name, surname, login, mail, phone)
-
     const sqlQuery = "UPDATE DB_employees SET Name = (?), Surname = (?), Login = (?), Mail = (?), Phone = (?) WHERE Id like (?)";
 
     db.query(sqlQuery, [name, surname, login, mail, phone, id], (err, result) => {
@@ -41,7 +39,34 @@ module.exports = (app, db, employeeUtils) => {
       } else {
         return res.status(200).json({ 
           error: false,
-          data: "True"
+          data: "Successfull change user info."
+        }); 
+      }
+    })
+  })
+
+  app.post('/employee/admin/addEmployee', (req, res) => {
+    //Name: name, Surname: surname, Login: login, Mail: mail, Phone: phone
+    const name = req.body.Name;
+    const surname = req.body.Surname;
+    const login = req.body.Login;
+    const pass = req.body.Pass;
+    const mail = req.body.Mail;
+    const phone = req.body.Phone;
+    const type = req.body.Type;
+
+    const sqlQuery = "INSERT INTO DB_employees (Name, Surname, Login, Pass, Mail, Phone, Type) VALUES (?,?,?,?,?,?,?)";
+
+    db.query(sqlQuery, [name, surname, login, pass, mail, phone, type], (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          message: "Error add user."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: "Succefull add user."
         }); 
       }
     })

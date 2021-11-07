@@ -20,8 +20,6 @@ function Settings(props) {
 
   useEffect(() => {
     console.log('Get users table...')
-    //setUserData()
-    //handleRefreshUser()
     setId(userData.Id)
     setName(userData.Name)
     setSurname(userData.Surname)
@@ -31,7 +29,7 @@ function Settings(props) {
 
   }, [setId, userData, setUserData, setName, setSurname, setLogin, setMail])
 
-  const handleChangeUserData = () => {
+  const handleChangeUserData = () => { //to send request
     axios.post(`http://${dbAddress}:4000/employee/admin/changeUserInfo`, { Id: id, Name: name, Surname: surname, Login: login, Mail: mail, Phone: phone}).then(response => {
       props.refreshUser()
     }).catch((error) => {
@@ -60,7 +58,7 @@ function Settings(props) {
     setIfChange(false)
   }
 
-  function handleChangeData(){
+  function handleChangeData(){ //to set up warning window
     setChangeUserInfo(true)
     setIfChange(false)
   }
