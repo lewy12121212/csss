@@ -31,7 +31,6 @@ function ManagerPanel(props) {
 
   return (
     <div className="col-12">
-
       <div className="flex-container sticky-top upperMenu">
         <div className="flexLeft container">
           <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4"  onClick={handleShow} value="Menu" />
