@@ -30,7 +30,7 @@ function ShowAccount(props) {
   }
 
   const handleSetUsersTable = () => {
-    axios.get(`http://${dbAddress}:4000/employee/panels/getUsersTable`).then(response => {
+    axios.get(`http://${dbAddress}:4000/employee/admin/getUsersTable`).then(response => {
       setUsersTable(response.data.data)
     }).catch((error) => {
       console.log(error.response.data.error)

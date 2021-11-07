@@ -1,6 +1,6 @@
 module.exports = (app, db, employeeUtils) => {
   
-  app.get('/employee/panels/getUsersTable', (req, res) => {
+  app.get('/employee/admin/getUsersTable', (req, res) => {
 
     const sqlQuery = "SELECT * FROM DB_employees";
 
@@ -11,12 +11,37 @@ module.exports = (app, db, employeeUtils) => {
           message: "Invalid database or table connection."
         }) 
       } else {
-        //result.map((Id, Name, Surname, Login, Type) => {
-        //  console.log(Id + ": " + Name + " " + Surname + " " + Login + " " + Type);
-        //})
         return res.status(200).json({ 
           error: false,
           data: result
+        }); 
+      }
+    })
+  })
+
+  app.post('/employee/admin/changeUserInfo', (req, res) => {
+    //Name: name, Surname: surname, Login: login, Mail: mail, Phone: phone
+    const id = req.body.Id;
+    const name = req.body.Name;
+    const surname = req.body.Surname;
+    const login = req.body.Login;
+    const mail = req.body.Mail;
+    const phone = req.body.Phone;
+
+    console.log(id, name, surname, login, mail, phone)
+
+    const sqlQuery = "UPDATE DB_employees SET Name = (?), Surname = (?), Login = (?), Mail = (?), Phone = (?) WHERE Id like (?)";
+
+    db.query(sqlQuery, [name, surname, login, mail, phone, id], (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          message: "Error change user info."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: "True"
         }); 
       }
     })
