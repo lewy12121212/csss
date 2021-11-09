@@ -40,7 +40,7 @@ function ClientResetPassword (props) {
   //    console.log(validCode.code);
   //    i--;
   //  }, 1000)
-//
+  //
   //}
 
   const handleReset = () => {
@@ -87,7 +87,11 @@ function ClientResetPassword (props) {
 
   const handleChangePassword = () => {
     console.log(repeatPassword)
-    if(password === repeatPassword.value)
+    if(password.length<7)
+    {
+      setError("Podane hasło jest zbyt krótkie.")
+    }
+    else if(password === repeatPassword.value)
     {
       axios.post(`http://${dbAddress}:4000/client/ChangePassword`, { email: email.value, password: password.value}).then(result => {
 
