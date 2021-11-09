@@ -1,7 +1,16 @@
 module.exports = (app) =>{
 
   var nodemailer = require('nodemailer');
-
+  var hbs = require('nodemailer-express-handlebars');
+  var options = {
+    viewEngine : {
+        extname: '.hbs', // handlebars extension
+        layoutsDir: 'mail_templates', // location of handlebars templates
+        partialsDir: 'mail_templates', // location of your subtemplates aka. header, footer etc
+    },
+    viewPath: 'mail_templates',
+    extName: '.hbs'
+    };
   const transporter = nodemailer.createTransport({
     port: 465,               // true for 465, false for other ports
     host: "smtp.gmail.com",
@@ -11,15 +20,18 @@ module.exports = (app) =>{
          },
     secure: true,
     });
-
+    transporter.use('compile', hbs(options));
+    
     app.post('/sendMail', (req,res) => {
 
-      const {to, subject, text} = req.body;
+      const {to } = req.body;
       const mailData = {from: 'csss.notification@gmail.com',  // sender address
       to: to,   // list of receivers
-      subject: subject,
-      text: text,
-      html: '<b>Hey there! </b> <br> This is our first message sent with Nodemailer<br/>'
+      subject: "Status naprawy Twojego urządzenia uległ zmianie.",
+      template: 'email',
+      context: {id: req.body.id,
+                status: req.body.status
+              }
       };
 
 
