@@ -10,6 +10,9 @@ import History from './bookmarks/History';
 import Chat from '../chat/Chat'
 
 import LeftMenu from './LeftMenu';
+import UpperMenu from '../common/UpperMenu'
+
+import infoAlert from '../../../alerts/InfoAlert'
 
 import './adminPanel.scss'
 import '../../../index.scss';
@@ -25,8 +28,12 @@ function AdminPanel(props) {
   const handleShow = () => setShow(true);
 
   const handleRefreshUser = () =>{
-    alert('Dane zmieniono - nastąpi wylogowanie.')
-    handleLogout();
+    //alert('Dane zmieniono - nastąpi wylogowanie.')
+    return(
+      <infoAlert />
+    )
+
+    //handleLogout();
   }
 
   const handleLogout = () => {
@@ -35,18 +42,9 @@ function AdminPanel(props) {
   }
 
   return (
-    <div className="col-12" style={{ color: 'black' }}>
-
-      <div className="flex-container sticky-top upperMenu">
-        <div className="flexLeft container">
-          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4"  onClick={handleShow} value="Menu" />
-        </div>
-        <div className="flexRight container">
-          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4" onClick={handleLogout} value="Wyloguj" />
-        </div>
-      </div>
-      
-      <LeftMenu user={user} handleClose={handleClose} show={show}/>
+    <div className="col-12">
+      <UpperMenu handleShow={handleShow} handleLogout={handleLogout} /> 
+      <LeftMenu user={user} handleClose={handleClose} show={show} />
 
       <div className="container col-12">
         <Switch>

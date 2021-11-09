@@ -3,6 +3,8 @@ import { NavLink } from 'react-router-dom';
 import Offcanvas from "react-bootstrap/Offcanvas";
 import closeImg from '../img/close_arrow.png'
 
+import '../common/leftMenu.scss'
+
 function LeftMenu(props) {
 
   return (

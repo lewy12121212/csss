@@ -3,11 +3,12 @@ import { Route, Switch, Redirect } from 'react-router-dom';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
 import Settings from '../common/Settings'
-
 import Chat from '../chat/Chat'
-import LeftMenu from './LeftMenu'
 import AddOrder from './bookmarks/AddOrder'
 import AddClient from './bookmarks/AddClient'
+
+import LeftMenu from './LeftMenu'
+import UpperMenu from '../common/UpperMenu'
 
 import '../../../index.scss';
 
@@ -29,17 +30,8 @@ function CoordinatorPanel(props) {
   }
 
   return (
-    <div className="col-12" style={{ color: 'black' }}>
-
-      <div className="flex-container sticky-top upperMenu">
-        <div className="flexLeft container">
-          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4"  onClick={handleShow} value="Menu" />
-        </div>
-        <div className="flexRight container">
-          <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4" onClick={handleLogout} value="Wyloguj" />
-        </div>
-      </div>
-      
+    <div className="col-12">
+      <UpperMenu handleShow={handleShow} handleLogout={handleLogout} /> 
       <LeftMenu user={user} handleClose={handleClose} show={show}/>
 
       <div className="container col-12">
