@@ -73,7 +73,7 @@ function ClientResetPassword (props) {
     console.log(parseInt(verifyCodeClient.value,10))
     console.log(d.getTime() - codeGetTime)
     //remeber time was get in ms
-    if(parseInt(verifyCodeClient.value,10) === validCode && (d.getTime() - codeGetTime)<20000)
+    if(parseInt(verifyCodeClient.value,10) === validCode && (d.getTime() - codeGetTime)<180000)
     {
       setSendCode(false);
       setVerifyCode(true);
