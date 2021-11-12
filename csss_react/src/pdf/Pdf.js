@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactToPrint from 'react-to-print';
-import TableComponent from './Facture';
-import './pdf.scss';
+import Facture from './Facture';
 import Form from './Form'
+import Order from "./Order";
+import './pdf.scss';
  
 class ExportPdfComponent extends React.Component {
      
@@ -10,7 +11,8 @@ class ExportPdfComponent extends React.Component {
       return (
         <div>
           <Form/>
-          <TableComponent ref={(response) => (this.componentRef = response)} />
+          <Facture ref={(response) => (this.componentRef = response)} />
+          <Order ref={(response) => (this.componentRef = response)} />
           
           <ReactToPrint
             content={() => this.componentRef}
