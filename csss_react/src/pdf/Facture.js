@@ -1,4 +1,6 @@
 import React from "react";
+import './pdf.scss';
+import Form from "./Form";
 
 class TableComponent extends React.Component {
   render() {
@@ -20,9 +22,9 @@ class TableComponent extends React.Component {
 
             <table>
               <tr className="table-active"><th >Dane klienta</th><th>Dane firmy</th></tr>
-              <tr><td>FIRMA</td><td>Center System Super Support</td></tr>
-              <tr><td>NIP</td><td>NIP</td></tr>
-              <tr><td>ULICA</td><td>ULICA</td></tr>
+              <tr><td>FIRMA</td><td>Computer Service Support System</td></tr>
+              <tr><td>NIP</td><td>123 123456 1</td></tr>
+              <tr><td>ULICA</td><td>Berdychowo</td></tr>
               <tr><td>MIASTO</td><td>Poznań</td></tr>
             </table>
 

@@ -1,77 +1,22 @@
-//.app-content {
-//  text-align: center;
-//  //background-color: white;
-//  min-height: 200vh;
-//  display: flex;
-//  flex-direction: column;
-//  align-items: center;
-//  justify-content: center;
-//  font-size: calc(10px + 2vmin);
-//  color: white;
-//}
-//  
-//.page-container {
-//  //margin: 1em;
-//}
-//  
-//.neat-style {
-//  color: rgb(255, 142, 166);
-//  font-weight: bold;
-//  text-decoration: underline;
-//}
-//  
-//.button-area button {
-//  margin-right: 10px;
-//}
-//  
-//.k-pdf-export {
-//  background-color: white;
-//}
-
-/*.table {
-  text-align: center;
-  //vertical-align: bottom;
-  background-color: white;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  //align-items: center;
-  justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: black;
-}
-*/
 #logo{
   max-width: 50px;
 }
 
-table, td, tr, th {
+table, tr {
   border:2px solid black !important;
   color: black;
   width: 100%;
   background-color: white;
-  //min-height: 100vh;
-  //display: flex;
+  text-align: center;
 }
 
-/*.container {
-  display: flex;
-  flex-direction: column;
-  flex-wrap: wrap;
-  flex-flow: column wrap;
-  justify-content: flex-end;
-  align-content: flex-end
-  //row-gap: 10px;
-}*/
-/*
-.container1 {
-  display: grid;
-  grid-template-columns: 
-  1fr 1fr
-  minmax(10px, 1fr) 3fr
-  repeat(5, 1fr)
-  50px auto 100px 1fr;
-  grid-template-rows: 
-  min-content 1fr min-content
-  100px 1fr max-content;
-}*/
+td, th {
+  border:2px solid black !important;
+  color: black;
+  //width: 100%;
+  background-color: white;
+  text-align: center;
+}
+ 
+
+//tr:nth-child(even) {background-color: #f2f2f2;}
