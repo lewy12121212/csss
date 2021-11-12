@@ -1,5 +1,7 @@
+const commonFunc = require('./commonFunc')
+
 module.exports = (app, db, employeeUtils) => {
-  
+
   app.post('/employee/common/changeInfo', (req, res) => {
     const id = req.body.UserData.Id;
     const name = req.body.UserData.Name;
@@ -9,7 +11,6 @@ module.exports = (app, db, employeeUtils) => {
     const phone = req.body.UserData.Phone;
 
     //console.log(id + name + surname + mail + login + phone)
-
     if(id === "" || name === "" || surname === "" || login === "" || mail === "" || phone === ""){
       return res.status(401).json({
         error: true,
@@ -17,6 +18,39 @@ module.exports = (app, db, employeeUtils) => {
         secondaryInfo: "Uzupełni wymagane dane."
       }) 
     } 
+
+    //regex
+    if(!commonFunc.validateNameSurname(name) || !commonFunc.validateNameSurname(surname)){
+      return res.status(401).json({
+        error: true,
+        mainInfo: "Imię lub nazwisko zawiera nieprawidłową składnie!",
+        secondaryInfo: "Sprawdź poprawność podanych informacji."
+      })
+    }
+
+    if(!commonFunc.validateLogin(login)){
+      return res.status(401).json({
+        error: true,
+        mainInfo: "Login zawiera nieprawidłową składnie!",
+        secondaryInfo: "Sprawdź poprawność podanych informacji."
+      })
+    }
+
+    if(!commonFunc.validateEmail(mail)){
+      return res.status(401).json({
+        error: true,
+        mainInfo: "Adres mailowy zawiera nieprawidłową składnie!",
+        secondaryInfo: "Sprawdź poprawność podanych informacji."
+      }) 
+    }
+
+    if(!commonFunc.validatePhone(phone)){
+      return res.status(401).json({
+        error: true,
+        mainInfo: "Numer telefonu zawiera nieprawidłową składnie!",
+        secondaryInfo: "Sprawdź poprawność podanych informacji."
+      }) 
+    }
 
     const sqlQuery = "UPDATE DB_employees SET Name = (?), Surname = (?), Login = (?), Mail = (?), Phone = (?) WHERE Id like (?)";
 

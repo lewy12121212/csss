@@ -19,7 +19,6 @@ function Settings(props) {
   function handleUserDataChange(e){
     setUserData({...userData, [e.target.name]: e.target.value}) 
     setShowDangerAlert(false)
-    //console.log(userData)
   }
 
   function closeAlert(){
@@ -38,8 +37,6 @@ function Settings(props) {
     }).catch((error) => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       setShowDangerAlert(true)
-      //alert(error.message.data.message)
-      //console.log(error.response.data.message)
     });
   }
 
@@ -70,7 +67,7 @@ function Settings(props) {
           </div>
         </div>
         <input type="button" className="btn btn-success col-12" onClick={handleCommitChanges} value="Zatwierdź zmiany" />
-      </form> 
+      </form>
       {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
       {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
     </div>
