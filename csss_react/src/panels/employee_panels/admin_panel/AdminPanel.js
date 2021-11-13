@@ -12,7 +12,7 @@ import Chat from '../chat/Chat'
 import LeftMenu from './LeftMenu';
 import UpperMenu from '../common/UpperMenu'
 
-import infoAlert from '../../../alerts/InfoAlert'
+//import infoAlert from '../../../alerts/InfoAlert'
 
 import './adminPanel.scss'
 import '../../../index.scss';
@@ -27,15 +27,6 @@ function AdminPanel(props) {
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const handleRefreshUser = () =>{
-    //alert('Dane zmieniono - nastąpi wylogowanie.')
-    return(
-      <infoAlert />
-    )
-
-    //handleLogout();
-  }
-
   const handleLogout = () => {
     removeUserSession();
     props.history.push('/');
@@ -46,9 +37,9 @@ function AdminPanel(props) {
       <UpperMenu handleShow={handleShow} handleLogout={handleLogout} /> 
       <LeftMenu user={user} handleClose={handleClose} show={show} />
 
-      <div className="container col-12">
+      <div className="col-12">
         <Switch>
-          <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
+          <Route exact path="/EmployeeDashboard/Admin/Settings" render={() => <Settings userData={JSON.stringify(user)} />} />
           <Route path="/EmployeeDashboard/Admin/AddEmployee" render={() => <AddEmployee />} />
           <Route path="/EmployeeDashboard/Admin/ShowAccounts" render={() => <ShowAccounts />} />
           <Route path="/EmployeeDashboard/Admin/History" render={() => <History />} />

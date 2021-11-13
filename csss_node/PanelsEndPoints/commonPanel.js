@@ -72,36 +72,44 @@ module.exports = (app, db, employeeUtils) => {
   })
 
   app.post('/employee/common/changePassword', (req, res) => {
-    const id = req.body.Id;
-    const newPassword = req.body.newPassword;
-    const newRePassword = req.body.newRePassword;
+    const id = req.body.Id
+    const newPassword = req.body.UserPass.NewPass
+    const newRePassword = req.body.UserPass.NewRePass
+
+    //console.log(newPassword + newRePassword)
 
     if(newPassword === "" || newRePassword === ""){
       return res.status(401).json({
         error: true,
-        message: "Hasło nie może być puste!"
-      }) 
-    } else if(newPassword !== newRePassword){
-      return res.status(401).json({
-        error: true,
-        message: "Hasła nie są takie same!"
-      }) 
-    } else {
-      const password = newPassword;
-      const sqlQuery = "UPDATE DB_employees SET Pass = (?) WHERE Id like (?)";
+        mainInfo: "Hasła nie mogą być puste!",
+        secondaryInfo: "Uzupełni wymagane dane."
+      })
+    }
 
-      db.query(sqlQuery, [password, id], (err, result) => {
+    if(newPassword === newRePassword) {
+      const password = newPassword;
+      const sqlQueryPassChange = "UPDATE DB_employees SET Pass = (?) WHERE Id like (?)";
+  
+      db.query(sqlQueryPassChange, [password, id], (err, result) => {
         if (err) {
           return res.status(401).json({
             error: true,
-            message: "Błąd zmiany hasła użytkownika."
+            mainInfo: "Hasło nie zostało zmienione.",
+            secondaryInfo: "Spróbuj ponownie później lub zgłoś problem administratorowi systemu."
           }) 
-        } else {
-          return res.status(200).json({ 
-            error: false,
-            message: "Poprawnie zmieniono hasło użytkownika."
-          }); 
         }
+        return res.status(200).json({ 
+          error: false,
+          mainInfo: "Poprawnie zmieniono hasło użytkownika.",
+          secondaryInfo: "Przy kolejnym logowaniu użyj nowego hasła."
+        }); 
+      })
+
+    } else {
+      return res.status(401).json({
+        error: true,
+        mainInfo: "Nowe hasła nie są takie same.",
+        secondaryInfo: "Sprawdź poprawność podanych danych."
       })
     }
   })
