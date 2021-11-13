@@ -1,6 +1,7 @@
 {
   "name": "csss_node",
   "version": "1.0.0",
+  "private": true,
   "description": "Computer Service Support System",
   "main": "index.js",
   "scripts": {
@@ -10,7 +11,15 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@cloudinary/url-gen": "^1.1.0",
+    "@tensorflow/tfjs": "^3.10.0",
+    "@tensorflow/tfjs-core": "^3.10.0",
+    "@tensorflow/tfjs-node": "^3.11.0",
+    "@vladmandic/face-api": "^1.5.7",
+    "blob": "^0.1.0",
     "body-parser": "^1.19.0",
+    "canvas": "^2.8.0",
+    "cloudinary": "^1.27.1",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",

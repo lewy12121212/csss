@@ -13,12 +13,6 @@ const port = process.env.PORT || 4000;
 
 const mysql = require("mysql");
 
-//const db = mysql.createPool({
-//  host: 'localhost',
-//  user: 'root',
-//  password: '',
-//  database: 'DB_csss'
-//});
 const db = mysql.createPool({
   host: 'dysk.sytes.net',
   user: 'csss_admin',
@@ -26,13 +20,19 @@ const db = mysql.createPool({
   port: '8888',
   database: 'DB_csss'
 });
+exports.db = db;
+
 
 // enable CORS
 app.use(cors());
 // parse application/x-www-form-urlencoded
-app.use(bodyParser.urlencoded({ extended: true }));
+//app.use(bodyParser.urlencoded({ extended: true }));
 // parse application/json
-app.use(bodyParser.json());
+//app.use(bodyParser.json());
+
+//payload size
+app.use(bodyParser.json({limit: '5mb'}));
+app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 
 //extention files
 require('./employeeLogin')(app, db, employeeUtils);

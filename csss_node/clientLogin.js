@@ -1,6 +1,6 @@
 module.exports = (app, db, clientUtils) => {
 
-  app.get('/client/LoginRouteTest', (req, res) => {
+  app.get('/client/loginRouteTest', (req, res) => {
     res.status(200).json({
       success: true, 
       message: 'Client login route file works correctly'
@@ -20,7 +20,7 @@ module.exports = (app, db, clientUtils) => {
 
     console.log("email: " + email + ", repairId: " + repairId + "\n");
 
-    const sqlQuery = "SELECT * FROM DB_clients WHERE Mail like (?) AND RepairId like (?)"
+    const sqlQuery = "SELECT * FROM DB_clients WHERE Mail like (?) AND Password like (?)"
 
     db.query(sqlQuery, [email, repairId], (err, result) => {
       if (err) return res.status(401).json({

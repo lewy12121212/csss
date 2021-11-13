@@ -15,6 +15,8 @@ import ClientDashboard from './panels/client_panel/ClientDashboard'
 import Home from './Home'
 import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
 import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
+import FaceRegistration from './panels/login_panel/face_recognition/FaceRegistration'
+import FaceLogin from './panels/login_panel/face_recognition/FaceLogin'
 
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
@@ -50,6 +52,10 @@ function App() {
         <div className="content box">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
+            {/* webCam for tests */}
+            <PublicRoute path="/FaceRegistration" component={FaceRegistration} panelType="EmployeeCam" />
+            <PublicRoute path="/FaceLogin" component={FaceLogin} panelType="EmployeeCam" />
+
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
