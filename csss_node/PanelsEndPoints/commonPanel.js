@@ -85,47 +85,75 @@ module.exports = (app, db, employeeUtils) => {
     })
   })
 
-  app.post('/employee/common/changePassword', (req, res) => {
+  app.post('/employee/common/passwordValidation', (req, res) => {
     const id = req.body.Id
+    const oldPassword = req.body.UserPass.OldPass
     const newPassword = req.body.UserPass.NewPass
     const newRePassword = req.body.UserPass.NewRePass
 
-    //console.log(newPassword + newRePassword)
+    const sqlQuery = "SELECT * FROM DB_employees WHERE Pass LIKE (?) AND Id LIKE (?)"
 
-    if(newPassword === "" || newRePassword === ""){
-      return res.status(401).json({
-        error: true,
-        mainInfo: "Hasła nie mogą być puste!",
-        secondaryInfo: "Uzupełni wymagane dane."
-      })
-    }
+    db.query(sqlQuery, [oldPassword, id], (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Obecne hasło nie jest poprawne!",
+          secondaryInfo: "Uzupełni dane poprawnie."
+        })
+      }
 
-    if(newPassword === newRePassword) {
-      const password = newPassword;
-      const sqlQueryPassChange = "UPDATE DB_employees SET Pass = (?) WHERE Id like (?)";
-  
-      db.query(sqlQueryPassChange, [password, id], (err, result) => {
-        if (err) {
-          return res.status(401).json({
-            error: true,
-            mainInfo: "Hasło nie zostało zmienione.",
-            secondaryInfo: "Spróbuj ponownie później lub zgłoś problem administratorowi systemu."
-          }) 
-        }
+      if(result.length == 0 || result.length > 1){
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Obecne hasło nie jest poprawne!",
+          secondaryInfo: "Uzupełni dane poprawnie, a w razie problemów skontaktuj się z administratorem."
+        })
+      } else if(oldPassword === "" || newPassword === "" || newRePassword === ""){
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Hasła nie mogą być puste!",
+          secondaryInfo: "Uzupełni wymagane dane."
+        })
+      } else if(newPassword !== newRePassword){
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Nowe hasła nie są takie same.",
+          secondaryInfo: "Sprawdź poprawność podanych danych."
+        })
+      } else {
         return res.status(200).json({ 
           error: false,
-          mainInfo: "Poprawnie zmieniono hasło użytkownika.",
-          secondaryInfo: "Przy kolejnym logowaniu użyj nowego hasła."
+          mainInfo: "Dane są poprawne.",
+          secondaryInfo: "Czy na pewno chcesz zmienić hasło do systemu?"
         }); 
-      })
+      }
+    })
 
-    } else {
-      return res.status(401).json({
-        error: true,
-        mainInfo: "Nowe hasła nie są takie same.",
-        secondaryInfo: "Sprawdź poprawność podanych danych."
-      })
-    }
+  })
+
+  app.post('/employee/common/changePassword', (req, res) => {
+    const id = req.body.Id
+    const newPassword = req.body.UserPass.NewPass
+    //const newRePassword = req.body.UserPass.NewRePass
+
+    const password = newPassword;
+    const sqlQueryPassChange = "UPDATE DB_employees SET Pass = (?) WHERE Id like (?)";
+  
+    db.query(sqlQueryPassChange, [password, id], (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Hasło nie zostało zmienione.",
+          secondaryInfo: "Spróbuj ponownie później lub zgłoś problem administratorowi systemu."
+        }) 
+      }
+      return res.status(200).json({ 
+        error: false,
+        mainInfo: "Poprawnie zmieniono hasło użytkownika.",
+        secondaryInfo: "Przy kolejnym logowaniu użyj nowego hasła."
+      }); 
+    })
+
   })
 
 }

@@ -7,16 +7,18 @@ import InfoAlert from '../../../alerts/InfoAlert'
 import WarningAlertSubmit from '../../../alerts/WarningAlertSubmit'
 import DangerAlert from '../../../alerts/DangerAlert'
 
+import PasswordStrengthBar from 'react-password-strength-bar';
+
 import './common.scss';
 
 function Settings(props) {
   const [userData, setUserData] = useState(JSON.parse(props.userData))
-  const [userPass, setUserPass] = useState({NewPass: "", NewRePass: ""})
+  const [userPass, setUserPass] = useState({OldPass: "", NewPass: "", NewRePass: ""})
 
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
   const [showWarningAlertSubmitData, setShowWarningAlertSubmitData] = useState(false)
-  //const [showWarningAlertSubmitPass, setShowWarningAlertSubmitPass] = useState(false)
+  const [showWarningAlertSubmitPass, setShowWarningAlertSubmitPass] = useState(false)
 
   const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
 
@@ -25,7 +27,7 @@ function Settings(props) {
     setShowDangerAlert(false)
     setShowInfoAlert(false)
     setShowWarningAlertSubmitData(false)
-    //setShowWarningAlertSubmitPass(false)
+    setShowWarningAlertSubmitPass(false)
   }
 
   function handleUserPassChange(e){
@@ -33,14 +35,14 @@ function Settings(props) {
     setShowDangerAlert(false)
     setShowInfoAlert(false)
     setShowWarningAlertSubmitData(false)
-    //setShowWarningAlertSubmitPass(false)
+    setShowWarningAlertSubmitPass(false)
   }
 
   function closeAlert(){
     setShowDangerAlert(false)
     setShowInfoAlert(false)
     setShowWarningAlertSubmitData(false)
-    //setShowWarningAlertSubmitPass(false)
+    setShowWarningAlertSubmitPass(false)
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
   }
 
@@ -54,6 +56,7 @@ function Settings(props) {
   //  setAlertMsg({MainInfo: "Hasło użytkownika zostanie zmienione.", SecondaryInfo: "Czy na pewno chcesz wprowadzić zmiany?"})
   //}
 
+  //FOR DATA USER
   const handleUserDataValidation = () => {
     console.log("Walidacja danych...")
     closeAlert()
@@ -78,13 +81,26 @@ function Settings(props) {
     });
   }
 
+  //FOR USER PASS
+  const handlePasswordValidation = () => {
+    console.log("Walidacja danych...")
+    closeAlert()
+    axios.post(`http://${dbAddress}:4000/employee/common/passwordValidation`, {UserPass: userPass, Id: userData.Id}).then(response => {
+      setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
+      setShowWarningAlertSubmitPass(true)
+    }).catch((error) => {
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
+    });
+  }
+
   const handleCommitPassChanges = () => {
     console.log("Zmiana hasła...")
     closeAlert()
     axios.post(`http://${dbAddress}:4000/employee/common/changePassword`, {UserPass: userPass, Id: userData.Id}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
-      setUserPass({NewPass: "", NewRePass: ""})
+      setUserPass({OldPass: "", NewPass: "", NewRePass: ""})
       
     }).catch((error) => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
@@ -98,7 +114,7 @@ function Settings(props) {
         {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
         {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
         {showWarningAlertSubmitData && <WarningAlertSubmit Content={alertMsg} Func={handleCommitChanges} CloseAlert={closeAlert}/>}
-        {/*showWarningAlertSubmitPass && <WarningAlertSubmit Content={alert} Func={handleCommitPassChanges} CloseAlert={closeAlert}/>*/}
+        {showWarningAlertSubmitPass && <WarningAlertSubmit Content={alertMsg} Func={handleCommitPassChanges} CloseAlert={closeAlert}/>}
 
         {/*For user settings*/}
         Ustawienia konta
@@ -134,14 +150,20 @@ function Settings(props) {
         Zmiana hasła
         <form className="justify-content-center">
           <div className="form-group">
+            <label htmlFor="OldPass">Obecne hasło</label>
+            <input type="password" className="form-control col-12" id="OldPass" name="OldPass" onChange={handleUserPassChange} value={userPass.OldPass}/>
+          </div>
+          <div className="form-group">
             <label htmlFor="NewPass">Nowe hasło</label>
             <input type="password" className="form-control col-12" id="NewPass" name="NewPass" onChange={handleUserPassChange} value={userPass.NewPass}/>
+            <PasswordStrengthBar password={userPass.NewPass} scoreWords={["słabe", "średnie", "dobre", "bardzo dobre", "silne"]} shortScoreWord={["Zbyt krótkie"]} minLength={6}/>
           </div>
           <div className="form-group">
             <label htmlFor="NewRePass">Powtórz hasło</label>
             <input type="password" className="form-control col-12" id="NewRePass" name="NewRePass" onChange={handleUserPassChange} value={userPass.NewRePass}/>
+            <PasswordStrengthBar password={userPass.NewRePass} scoreWords={["słabe", "średnie", "dobre", "bardzo dobre", "silne"]} shortScoreWord={["Zbyt krótkie"]} minLength={6}/>
           </div>
-          <input type="button" className="btn btn-warning col-12" onClick={handleCommitPassChanges} value="Zmień hasło" />
+          <input type="button" className="btn btn-warning col-12" onClick={handlePasswordValidation} value="Zmień hasło" />
         </form>
       </div>
       <hr />
