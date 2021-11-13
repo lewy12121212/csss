@@ -1,5 +1,8 @@
 const cloud = require('./cloudinaryConfig')
 const detection = require('./faceDetection')
+const faceapi = require('@vladmandic/face-api');
+const canvas = require("canvas");
+const path = require('path')
 
 module.exports = (app, db, employeeUtils) => {
 
@@ -58,6 +61,37 @@ module.exports = (app, db, employeeUtils) => {
     );
   }
 
+  function checkUserFace(table_of_img){
+    console.log("check user face table length: " + table_of_img.length )
+    
+    let i = 0;
+
+    return new Promise (async (resolve, reject) => {
+      var detections;
+      console.log("A tu może?")
+
+      await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
+      await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
+      await faceapi.nets.faceRecognitionNet.loadFromDisk(path.join(__dirname, 'models'))
+
+      for(let j=0; j<table_of_img.length; j++){
+        console.log("for")
+
+        const img = await canvas.loadImage(table_of_img[i])
+
+        detections = await faceapi
+        .detectSingleFace(img)
+        .withFaceLandmarks()
+        .withFaceDescriptor();
+
+        if(!detections) i++;
+
+      }
+      if(i >= 2) reject(false)
+      else resolve(true)
+    })
+  }
+
   function sqlInsertImg(id, picture){
     const sqlQuery2 = "INSERT INTO DB_employees_img (LoginId, Img) VALUES (?,?)"
     return new Promise ((resolve, reject) => {
@@ -69,18 +103,6 @@ module.exports = (app, db, employeeUtils) => {
       }
       resolve(true)
     })
-  }
-
-  function sqlModifyModel(){
-    const sqlQuery3 = "SELECT Id FROM DB_employees"
-
-    return new Promise((resolve, reject) => db.query(sqlQuery3, (err, result) => {
-      if (err) reject(err)
-      else resolve(result)
-    })
-    );
-      //detection.modifyModel(results_img);
-      //resolve(results_img)
   }
 
   app.post('/employee/faceRegistration', (req, resSql) => {
@@ -96,43 +118,33 @@ module.exports = (app, db, employeeUtils) => {
         id = res[0].Id;
         console.log("sqlUserSelect - resolve")
 
-        sqlInsertImg(id, picture)
+        checkUserFace(picture)
           .then((res) => {
-            console.log("sqlInsertImg - resolve")
-            
-            sqlModifyModel()
-              .then((res) => {
-                //console.log("sqlModifyModel - resolve" + res)
-                detection.modifyModel()
-                  .then((res) => {
-                    return resSql.status(200).json({
-                      error: false,
-                      message: "Added face to db."
-                    });
-                  })
-                  .catch((err) => {
-                    return resSql.status(401).json({
-                      error: true,
-                      message: "Update model error."
-                    });
-                  })
-
-              })
-              .catch((err) => {
-                return resSql.status(401).json({
-                  error: true,
-                  message: "Select users to model - error."
-                });
-              })
-
+          
+            sqlInsertImg(id, picture)
+            .then((res) => {
+              console.log("sqlInsertImg - resolve")
+    
+              return resSql.status(200).json({
+                error: false,
+                message: "Twarz poprawnie dodano do bazy."
+              });
+    
+            })
+            .catch((err) => {
+              return resSql.status(401).json({
+                error: true,
+                message: "Insert img error."
+              });
+            })
+          
           })
           .catch((err) => {
             return resSql.status(401).json({
               error: true,
-              message: "Insert img error."
+              message: "Na zdjęciach nie wykryto twarzy."
             });
           })
-
       })
       .catch((err) => {
         return resSql.status(401).json({
@@ -141,6 +153,24 @@ module.exports = (app, db, employeeUtils) => {
         });
       });
 });
+
+  app.post('/employee/modifyFaceModel', (req, resSql) => {          
+
+    detection.modifyModel()
+      .then((res) => {
+        return resSql.status(200).json({
+          error: false,
+          message: "Succeful modify model."
+        });
+      })
+      .catch((err) => {
+        return resSql.status(401).json({
+          error: true,
+          message: "Update model error."
+        });
+      })
+
+  })
 
   app.post('/employee/faceLogin', async (req,res) => {
     const picture = req.body.image;

@@ -7,9 +7,20 @@ const path = require('path')
 const { promises: fs } = require('fs')
 const canvas = require("canvas");
 
-const db = require('./server.js');
+//const db = require('./server.js');
 const { resolve } = require('path');
 const { loadImage, Canvas, Image, ImageData } = canvas; 
+
+
+const mysql = require("mysql");
+
+const db = mysql.createPool({
+  host: 'dysk.sytes.net',
+  user: 'csss_admin',
+  password: 'csss.2000.!@',
+  port: '8888',
+  database: 'DB_csss'
+});
 
 global.Blob = require('blob');
 
@@ -72,7 +83,15 @@ async function sqlSelectAllImg(){
   //await sleep(10000);
 
   const sqlQuery = `SELECT LoginId, Img FROM DB_employees_img`
-  return new Promise((resolve, reject) => db.db.query(sqlQuery, (err, result) => {
+
+  db.query(sqlQuery, (err, result) => {
+    console.log("result sqlSelectAllImg: " + result + "err: " + err)
+    //if (err) reject(err)
+    //else resolve(result)
+  })
+
+
+  return new Promise((resolve, reject) => db.query(sqlQuery, (err, result) => {
     console.log("result sqlSelectAllImg: " + result + "err: " + err)
     if (err) reject(err)
     else resolve(result)
@@ -99,6 +118,7 @@ async function loadLabeledImages() {
 
   const sqlAll = await sqlSelectAllImg()
   const sqlUserIndex = transformArray(sqlAll)
+  //let ifFaceDetect = true
 
   await faceapi.nets.ssdMobilenetv1.loadFromDisk(path.join(__dirname, 'models'))
   await faceapi.nets.faceLandmark68Net.loadFromDisk(path.join(__dirname, 'models'))
@@ -117,8 +137,10 @@ async function loadLabeledImages() {
           .detectSingleFace(img)
           .withFaceLandmarks()
           .withFaceDescriptor();
-
-        descriptions.push(new Float32Array(detections.descriptor));
+        console.log("DETECTIONS: " + detections);
+        if(detections){
+          descriptions.push(new Float32Array(detections.descriptor));
+        }
       }
       console.log("END ONE");
       return new faceapi.LabeledFaceDescriptors(label.LoginId.toString(), descriptions);
@@ -145,7 +167,7 @@ function modifyModel(){
   return new Promise(async (resolve, reject) => {
     const labeledFaceDescriptors = await loadLabeledImages()
     console.log(labeledFaceDescriptors);
-    
+  
     writeModelFile(labeledFaceDescriptors)
       .then((res) => {
         resolve(true)
