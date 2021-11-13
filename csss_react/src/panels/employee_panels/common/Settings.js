@@ -4,7 +4,7 @@ import axios from 'axios';
 import { dbAddress } from '../../../dbCon'
 
 import InfoAlert from '../../../alerts/InfoAlert'
-//import WarningAlertSubmit from '../../../alerts/WarningAlertSubmit'
+import WarningAlertSubmit from '../../../alerts/WarningAlertSubmit'
 import DangerAlert from '../../../alerts/DangerAlert'
 
 import './common.scss';
@@ -15,7 +15,7 @@ function Settings(props) {
 
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
-  //const [showWarningAlertSubmitData, setShowWarningAlertSubmitData] = useState(false)
+  const [showWarningAlertSubmitData, setShowWarningAlertSubmitData] = useState(false)
   //const [showWarningAlertSubmitPass, setShowWarningAlertSubmitPass] = useState(false)
 
   const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
@@ -24,7 +24,7 @@ function Settings(props) {
     setUserData({...userData, [e.target.name]: e.target.value}) 
     setShowDangerAlert(false)
     setShowInfoAlert(false)
-    //setShowWarningAlertSubmitData(false)
+    setShowWarningAlertSubmitData(false)
     //setShowWarningAlertSubmitPass(false)
   }
 
@@ -32,14 +32,14 @@ function Settings(props) {
     setUserPass({...userPass, [e.target.name]: e.target.value})
     setShowDangerAlert(false)
     setShowInfoAlert(false)
-    //setShowWarningAlertSubmitData(false)
+    setShowWarningAlertSubmitData(false)
     //setShowWarningAlertSubmitPass(false)
   }
 
   function closeAlert(){
     setShowDangerAlert(false)
     setShowInfoAlert(false)
-    //setShowWarningAlertSubmitData(false)
+    setShowWarningAlertSubmitData(false)
     //setShowWarningAlertSubmitPass(false)
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
   }
@@ -54,10 +54,22 @@ function Settings(props) {
   //  setAlertMsg({MainInfo: "Hasło użytkownika zostanie zmienione.", SecondaryInfo: "Czy na pewno chcesz wprowadzić zmiany?"})
   //}
 
+  const handleUserDataValidation = () => {
+    console.log("Walidacja danych...")
+    closeAlert()
+    axios.post(`http://${dbAddress}:4000/employee/common/userDataValidation`, {UserData: userData}).then(response => {
+      setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
+      setShowWarningAlertSubmitData(true)
+    }).catch((error) => {
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
+    });
+  }
+
   const handleCommitChanges = () => {
     console.log("Zmiana danych...")
     closeAlert()
-    axios.post(`http://${dbAddress}:4000/employee/common/changeInfo`, {UserData: userData}).then(response => {
+    axios.post(`http://${dbAddress}:4000/employee/common/changeUserData`, {UserData: userData}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
     }).catch((error) => {
@@ -85,7 +97,7 @@ function Settings(props) {
       <div className="bookmarkBox container col-12 col-md-10 col-lg-8 col-xl-6">
         {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
         {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
-        {/*showWarningAlertSubmitData && <WarningAlertSubmit Content={alert} Func={handleCommitChanges} CloseAlert={closeAlert}/>*/}
+        {showWarningAlertSubmitData && <WarningAlertSubmit Content={alertMsg} Func={handleCommitChanges} CloseAlert={closeAlert}/>}
         {/*showWarningAlertSubmitPass && <WarningAlertSubmit Content={alert} Func={handleCommitPassChanges} CloseAlert={closeAlert}/>*/}
 
         {/*For user settings*/}
@@ -113,7 +125,7 @@ function Settings(props) {
               <input type="tel" className="form-control" id="Phone" name="Phone" onChange={handleUserDataChange} defaultValue={userData.Phone} />
             </div>
           </div>
-          <input type="button" className="btn btn-success col-12" onClick={handleCommitChanges} value="Zatwierdź zmiany" />
+          <input type="button" className="btn btn-success col-12" onClick={handleUserDataValidation} value="Zatwierdź zmiany" />
         </form>
       </div>
       <hr />

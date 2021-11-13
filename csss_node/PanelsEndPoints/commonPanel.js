@@ -2,16 +2,15 @@ const commonFunc = require('./commonFunc')
 
 module.exports = (app, db, employeeUtils) => {
 
-  app.post('/employee/common/changeInfo', (req, res) => {
-    const id = req.body.UserData.Id;
+  app.post('/employee/common/userDataValidation', (req, res) => {
     const name = req.body.UserData.Name;
     const surname = req.body.UserData.Surname;
     const login = req.body.UserData.Login;
     const mail = req.body.UserData.Mail;
     const phone = req.body.UserData.Phone;
 
-    //console.log(id + name + surname + mail + login + phone)
-    if(id === "" || name === "" || surname === "" || login === "" || mail === "" || phone === ""){
+        //console.log(id + name + surname + mail + login + phone)
+    if(name === "" || surname === "" || login === "" || mail === "" || phone === ""){
       return res.status(401).json({
         error: true,
         mainInfo: "Dane nie mogą być puste!",
@@ -43,7 +42,7 @@ module.exports = (app, db, employeeUtils) => {
         secondaryInfo: "Sprawdź poprawność podanych informacji."
       }) 
     }
-
+    
     if(!commonFunc.validatePhone(phone)){
       return res.status(401).json({
         error: true,
@@ -51,6 +50,21 @@ module.exports = (app, db, employeeUtils) => {
         secondaryInfo: "Sprawdź poprawność podanych informacji."
       }) 
     }
+
+    return res.status(200).json({ 
+      error: false,
+      mainInfo: "Dane są poprawne.",
+      secondaryInfo: "Czy na pewno chcesz zmienić dane użytkownika?"
+    }); 
+  })
+
+  app.post('/employee/common/changeUserData', (req, res) => {
+    const id = req.body.UserData.Id;
+    const name = req.body.UserData.Name;
+    const surname = req.body.UserData.Surname;
+    const login = req.body.UserData.Login;
+    const mail = req.body.UserData.Mail;
+    const phone = req.body.UserData.Phone;
 
     const sqlQuery = "UPDATE DB_employees SET Name = (?), Surname = (?), Login = (?), Mail = (?), Phone = (?) WHERE Id like (?)";
 
