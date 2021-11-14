@@ -73,7 +73,7 @@ module.exports = (app, db, employeeUtils) => {
         return res.status(401).json({
           error: true,
           mainInfo: "Problem z aktualizacją danych!",
-          secondaryInfo: "Sprawdź poprawność wprowadzonych danych."
+          secondaryInfo: "Podany login już istnieje."
         }) 
       } else {
         return res.status(200).json({ 

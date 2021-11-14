@@ -7,6 +7,7 @@ import InfoAlert from '../../../alerts/InfoAlert'
 import WarningAlertSubmit from '../../../alerts/WarningAlertSubmit'
 import DangerAlert from '../../../alerts/DangerAlert'
 
+import FaceRegistration from '../../login_panel/face_recognition/FaceRegistration'
 import PasswordStrengthBar from 'react-password-strength-bar';
 
 import './common.scss';
@@ -14,6 +15,8 @@ import './common.scss';
 function Settings(props) {
   const [userData, setUserData] = useState(JSON.parse(props.userData))
   const [userPass, setUserPass] = useState({OldPass: "", NewPass: "", NewRePass: ""})
+
+  const [showFace, setShowFace] = useState(false)
 
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
@@ -45,7 +48,6 @@ function Settings(props) {
     setShowWarningAlertSubmitPass(false)
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
   }
-
   //const handleCommitChangesWarning = () => {
   //  setShowWarningAlertSubmitData(true)
   //  setAlertMsg({MainInfo: "Dane użytkownika zostaną zmienione.", SecondaryInfo: "Czy na pewno chcesz wprowadzić zmiany?"})
@@ -55,6 +57,13 @@ function Settings(props) {
   //  setShowWarningAlertSubmitPass(true)
   //  setAlertMsg({MainInfo: "Hasło użytkownika zostanie zmienione.", SecondaryInfo: "Czy na pewno chcesz wprowadzić zmiany?"})
   //}
+
+  //FOR FACE REGISTRATION
+  const handleFaceRegistration = () => {
+    setUserData(JSON.parse(props.userData))
+    if(showFace === false) setShowFace(true)
+    else setShowFace(false)
+  }
 
   //FOR DATA USER
   const handleUserDataValidation = () => {
@@ -110,12 +119,14 @@ function Settings(props) {
 
   return (
     <div className="col-12">
-      <div className="bookmarkBox container col-12 col-md-10 col-lg-8 col-xl-6">
-        {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
-        {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
-        {showWarningAlertSubmitData && <WarningAlertSubmit Content={alertMsg} Func={handleCommitChanges} CloseAlert={closeAlert}/>}
-        {showWarningAlertSubmitPass && <WarningAlertSubmit Content={alertMsg} Func={handleCommitPassChanges} CloseAlert={closeAlert}/>}
+      {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
+      {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
+      {showWarningAlertSubmitData && <WarningAlertSubmit Content={alertMsg} Func={handleCommitChanges} CloseAlert={closeAlert}/>}
+      {showWarningAlertSubmitPass && <WarningAlertSubmit Content={alertMsg} Func={handleCommitPassChanges} CloseAlert={closeAlert}/>}
 
+      {!showFace && 
+      <section>
+      <div className="bookmarkBox container col-12 col-md-10 col-lg-8 col-xl-6">
         {/*For user settings*/}
         Ustawienia konta
         <form className="justify-content-center">
@@ -170,8 +181,21 @@ function Settings(props) {
       {/*For face registration*/}
       <div className="bookmarkBox container col-12 col-md-10 col-lg-8 col-xl-6">
         Rejestracja twarzy
-        <input type="button" className="btn btn-danger col-12" value="Zarejestruj twarz" />
+        <input type="button" className="btn btn-danger col-12" onClick={handleFaceRegistration} value="Zarejestruj twarz" />
       </div>
+      </section>
+      }
+
+      {showFace && 
+        <div className="row d-flex justify-content-center flex-nowrap">
+          <div className="col-12 col-md-10 col-lg-8 col-xl-6 text-center">
+            <FaceRegistration login={userData.Login}/>
+            <input type="button" className="btn btn-warning col-8 col-md-6 col-lg-4 mt-3" onClick={handleFaceRegistration} value="Powrót" />
+          </div>
+        </div>
+
+      }
+      
     </div>
   );
 }

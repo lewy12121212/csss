@@ -37,7 +37,6 @@ function FaceLogin (props) {
         audio={false}
         mirrored={true}
         imageSmoothing={true}
-        
         ref={webcamRef}
         screenshotFormat="image/jpeg"
         width={400}

@@ -38,7 +38,7 @@ async function detecting(img) {
   const labesFaceRecog = jsonObj.map(x=>faceapi.LabeledFaceDescriptors.fromJSON(x));
   const faceMatcher = new faceapi.FaceMatcher(
     labesFaceRecog,
-    0.4
+    0.5
   );
 
   let image = await loadImage(img);
