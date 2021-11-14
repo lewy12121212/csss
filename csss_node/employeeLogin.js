@@ -182,11 +182,32 @@ module.exports = (app, db, employeeUtils) => {
         // 1. wykonać zapytanie sql do bazy danych użytkowników (where id like face.label)
         // 2. result z bazy przekazać do generate token
         // 3. token zwrócić analogicznie do logowania przy pomocy hasła
-        return res.status(200).json({
-          error: false,
-          user: face.label,
-          message: "Face recognition succeed"
-        });
+        //return res.status(200).json({
+        //  error: false,
+        //  user: face.label,
+        //  message: "Face recognition succeed"
+        //});
+
+        const sqlQuery = "SELECT * FROM DB_employees WHERE Id like (?)"
+
+        db.query(sqlQuery, [face.label], (err, result) => {
+          if (err) return res.status(401).json({
+            error: true,
+            message: "Problem z połączeniem z bazą."
+          });
+    
+          if(result.length > 1){
+            return res.status(401).json({
+              error: true,
+              message: "Wielu użytkowników o tych samych danych."
+            });
+          } else {
+            let userData = result[0]
+            const token = employeeUtils.generateToken(userData);
+            const userObj = employeeUtils.getCleanUser(userData);
+            return res.status(200).json({ user: userObj, token }); 
+          }
+        })
       } 
       else res.status(401).json({
         error: true,

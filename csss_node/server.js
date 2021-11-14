@@ -1,5 +1,12 @@
 require('dotenv').config();
 
+var fs = require('fs');
+//var http = require('http');
+var https = require('https');
+var privateKey  = fs.readFileSync('httpsCert/key.pem', 'utf8');
+var certificate = fs.readFileSync('httpsCert/cert.pem', 'utf8');
+//var credentials = {key: privateKey, cert: certificate};
+
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
@@ -7,9 +14,9 @@ const jwt = require('jsonwebtoken');
 const employeeUtils = require('./employeeUtils');
 const clientUtils = require('./clientUtils');
 
-
 const app = express();
 const port = process.env.PORT || 4000;
+const server = https.createServer({key: privateKey, cert: certificate }, app);
 
 const mysql = require("mysql");
 
@@ -22,13 +29,8 @@ const db = mysql.createPool({
 });
 exports.db = db;
 
-
 // enable CORS
 app.use(cors());
-// parse application/x-www-form-urlencoded
-//app.use(bodyParser.urlencoded({ extended: true }));
-// parse application/json
-//app.use(bodyParser.json());
 
 //payload size
 app.use(bodyParser.json({limit: '5mb'}));
@@ -142,7 +144,7 @@ app.get('/verifyToken', (req, res) => {
   });
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log('Server started on: ' + port);
 });
 

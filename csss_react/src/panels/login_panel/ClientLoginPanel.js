@@ -21,7 +21,7 @@ function ClientLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post(`http://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
+    axios.post(`https://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/ClientDashboard');
@@ -49,8 +49,8 @@ function ClientLoginPanel(props) {
           </div>
           {error && <><small className="warningLoginError" style={{ color: 'red' }}>{error}</small></>}
 
-          <button className="global-btn local-client-btn loginButton" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button>
-          <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
+          <button className="col-10 col-md-8 col-lg-8 global-btn local-client-btn loginButton" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button>
+          <button className="col-10 col-md-8 col-lg-8 global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
         </div>
       </div>
     </div>

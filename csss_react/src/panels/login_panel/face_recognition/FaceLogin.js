@@ -3,6 +3,8 @@ import Webcam from "react-webcam";
 import axios from 'axios';
 import { dbAddress } from '../../../dbCon';
 
+import '../login.scss'
+
 
 const videoConstraints = {
   width: 1280,
@@ -16,7 +18,7 @@ function FaceLogin (props) {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   //const [login, setLogin] = useState("")
-//
+  //
   //const handleInputChange = e => {
   //  setLogin(e.target.value)
   //}
@@ -24,37 +26,26 @@ function FaceLogin (props) {
 
   const handleLogin = () => {
     setError(null);
-
     const image = webcamRef.current.getScreenshot();
-
     setLoading(true);
-    console.log("error")
-    axios.post(`http://${dbAddress}:4000/employee/faceLogin`, {image: image }).then(response => {
-        setLoading(false);
-        alert("Zalogowano!" + response.data.user); //pamiętać wyrzucić!!!
-        }).catch(error => {
-          setLoading(false);
-          if (error.response.status === 401) setError(error.response.data.message);
-          else setError("Coś poszło nie tak...");
-        });
-
-
+    props.handleFaceLogin(image, setLoading, setError);
   }
+
   return (
-    <div>
-      <Webcam
+    <div className="col-12 mt-3 align-items-center text-center">
+      <Webcam className="col-12 webcamView"
         audio={false}
         mirrored={true}
         imageSmoothing={true}
-        height={720}
+        
         ref={webcamRef}
         screenshotFormat="image/jpeg"
-        width={1280}
+        width={400}
         videoConstraints={videoConstraints}
       />
-      <button onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Logowanie'}</button>
-      {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-
+      {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}
+      <button className="col-10 col-md-8 col-lg-8 global-btn local-employee-btn loginButton" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button>
+      {/*<button onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Logowanie'}</button>*/}
     </div>
   );
 };

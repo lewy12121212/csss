@@ -32,7 +32,7 @@ function FaceRegistration(props) {
         clearInterval(time);
         setError(null);
         setWarning("Twarz zarejestrowana - przetwarzanie...");    
-        axios.post(`http://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
+        axios.post(`https://${dbAddress}:4000/employee/faceRegistration`, { login: login, image: table_of_img }).then(response => {
           setWarning("Twarz zarejestrowana poprawnie!");
           handleModifyModel()
 
@@ -52,7 +52,7 @@ function FaceRegistration(props) {
 
   const handleModifyModel = () => {
 
-    axios.post(`http://${dbAddress}:4000/employee/modifyFaceModel`).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/modifyFaceModel`).then(response => {
       setWarning("Poprawnie zmodyfikowano model");
       setLoading(false);
     

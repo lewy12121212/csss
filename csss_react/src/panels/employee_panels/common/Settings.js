@@ -60,7 +60,7 @@ function Settings(props) {
   const handleUserDataValidation = () => {
     console.log("Walidacja danych...")
     closeAlert()
-    axios.post(`http://${dbAddress}:4000/employee/common/userDataValidation`, {UserData: userData}).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/common/userDataValidation`, {UserData: userData}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowWarningAlertSubmitData(true)
     }).catch((error) => {
@@ -72,7 +72,7 @@ function Settings(props) {
   const handleCommitChanges = () => {
     console.log("Zmiana danych...")
     closeAlert()
-    axios.post(`http://${dbAddress}:4000/employee/common/changeUserData`, {UserData: userData}).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/common/changeUserData`, {UserData: userData}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
     }).catch((error) => {
@@ -85,7 +85,7 @@ function Settings(props) {
   const handlePasswordValidation = () => {
     console.log("Walidacja danych...")
     closeAlert()
-    axios.post(`http://${dbAddress}:4000/employee/common/passwordValidation`, {UserPass: userPass, Id: userData.Id}).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/common/passwordValidation`, {UserPass: userPass, Id: userData.Id}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowWarningAlertSubmitPass(true)
     }).catch((error) => {
@@ -97,7 +97,7 @@ function Settings(props) {
   const handleCommitPassChanges = () => {
     console.log("Zmiana hasła...")
     closeAlert()
-    axios.post(`http://${dbAddress}:4000/employee/common/changePassword`, {UserPass: userPass, Id: userData.Id}).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/common/changePassword`, {UserPass: userPass, Id: userData.Id}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
       setUserPass({OldPass: "", NewPass: "", NewRePass: ""})
