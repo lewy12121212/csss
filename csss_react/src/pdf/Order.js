@@ -1,7 +1,7 @@
 import React from "react";
 import './pdf.scss';
 
-class TableComponent extends React.Component {
+class Order extends React.Component {
     render() {
       return (
         
@@ -44,4 +44,4 @@ class TableComponent extends React.Component {
     }
   }
   
-  export default TableComponent;
+  export default Order;

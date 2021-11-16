@@ -2,7 +2,7 @@ import React from 'react';
 import ReactToPrint from 'react-to-print';
 import Facture from './Facture';
 import Form from './Form'
-import Order from "./Order";
+import Order from './Order';
 import './pdf.scss';
  
 class ExportPdfComponent extends React.Component {

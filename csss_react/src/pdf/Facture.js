@@ -1,7 +1,7 @@
 import React from "react";
 import './pdf.scss';
-import Form from "./Form";
-import Order from "./Order";
+//import Form from "./Form";
+//import Order from "./Order";
 /*import logo from './logo_csss.png'
 
 
