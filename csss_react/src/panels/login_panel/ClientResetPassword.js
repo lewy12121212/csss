@@ -22,7 +22,7 @@ function ClientResetPassword (props) {
   const [validCode, setValidCode] = useState(null);
   const [codeGetTime, setCodeGetTime] = useState(null);
   const [strongEnough, setStrongEnough] = useState(true);
- 
+
   const handleBack = () => {
     props.history.push("/ClientLoginPanel");
   }
@@ -49,7 +49,6 @@ function ClientResetPassword (props) {
     if(email.value !== '')
     {
       axios.post(`http://${dbAddress}:4000/client/ResetPassword`, { email: email.value}).then(response => {
-        
         setValidCode(response.data.verifyCode)
         setCodeGetTime(d.getTime());
         //starting countdown of validCode lifetime
@@ -57,11 +56,9 @@ function ClientResetPassword (props) {
         console.log(codeGetTime);
         setResetPass(false);
         setSendCode(true);
-
       }).catch(error =>{
         setError(error.response.data.message)
       });
-      
     }
     else
     {
@@ -85,7 +82,6 @@ function ClientResetPassword (props) {
       setError("Nieprawidłowy kod lub upłynął limit czasu ważności kodu.")
     }
   }
-
 
   const handleChangePassword = () => {
     console.log(repeatPassword)
@@ -119,51 +115,49 @@ function ClientResetPassword (props) {
         </div>
         {resetPass &&
           <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
-          <div className="client-form-group field col-10">
-            <input type="input" className="client-form-field" placeholder="email..." {...email} name="email" id='email' required />
-            <label htmlFor="email" className="client-form-label">Email</label>
+            <div className="client-form-group field col-10">
+              <input type="input" className="client-form-field" placeholder="email..." {...email} name="email" id='email' required />
+              <label htmlFor="email" className="client-form-label">Email</label>
+            </div>
+            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+            <button className="global-btn local-client-btn" onClick={handleReset} disabled={loading}>{loading ? 'Ładowanie...' : 'Wyślij kod'}</button><br />
+            <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
           </div>
-          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-          <button className="global-btn local-client-btn" onClick={handleReset} disabled={loading}>{loading ? 'Ładowanie...' : 'Wyślij kod'}</button><br />
-          <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
-        </div>
         }
         {sendCode &&
-      
-        <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
-        <div className="client-form-group field col-10">
-          <input type="input" className="client-form-field" placeholder="kod weryfikacyjny..." {...verifyCodeClient} name="verifyCode" id='verifyCode' required />
-          <label htmlFor="verifyCode" className="client-form-label">Kod weryfikacyjny</label>
-        </div>
-        {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-        <button className="global-btn local-client-btn" onClick={handleVerifyCode} disabled={loading}>{loading ? 'Ładowanie...' : 'Zweryfikuj'}</button><br />
-        <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
-      </div>
-      }
-      {verifyCode &&
-         <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
-         <div className="client-form-group field col-10">
-           <input type="password" id="password1" className="client-form-field" placeholder="Nowe hasło." value={password} onChange={e => setPassword(e.target.value)}/>
-           <label htmlFor="password1" className="client-form-label">Nowe hasło</label>
-           <PasswordStrengthBar password={password} scoreWords={["słabe", "średnie", "dobre", "bardzo dobre", "silne"]} shortScoreWord={["Zbyt krótkie"]} minLength={8} onChangeScore={(score, feedback) => { if(score===2) setStrongEnough(false); else setStrongEnough(true);}}/>
-         </div>
-         <div className="client-form-group field col-10">
-           <input type="password" className="client-form-field" placeholder="powtórz hasło..." {...repeatPassword} name="repeatPassword" id='repeatPassword' required />
-           <label htmlFor="repeatPassword" className="client-form-label">Powtórz hasło</label>
-         </div>
-         {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-          <div className="description-password-rules col-10">
-
-            <label>Wymagania co do złożoności hasła:</label>
-            <ul className="client-list">
-              <li>Hasło musi składać się z conajmniej 8 znaków.</li>
-              <li>Musi zawierać co najmniej: dużą, małą literę, cyfrę oraz znak specjalny.</li>
-            </ul>
+          <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
+            <div className="client-form-group field col-10">
+              <input type="input" className="client-form-field" placeholder="kod weryfikacyjny..." {...verifyCodeClient} name="verifyCode" id='verifyCode' required />
+              <label htmlFor="verifyCode" className="client-form-label">Kod weryfikacyjny</label>
+            </div>
+            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+            <button className="global-btn local-client-btn" onClick={handleVerifyCode} disabled={loading}>{loading ? 'Ładowanie...' : 'Zweryfikuj'}</button><br />
+            <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
           </div>
-         <button className="global-btn local-client-btn" onClick={handleChangePassword} disabled={strongEnough}>Resetuj hasło</button><br />
-         <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
-       </div>
-      }
+        }
+        {verifyCode &&
+          <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
+            <div className="client-form-group field col-10">
+              <input type="password" id="password1" className="client-form-field" placeholder="Nowe hasło." value={password} onChange={e => setPassword(e.target.value)}/>
+              <label htmlFor="password1" className="client-form-label">Nowe hasło</label>
+              <PasswordStrengthBar password={password} scoreWords={["słabe", "średnie", "dobre", "bardzo dobre", "silne"]} shortScoreWord={["Zbyt krótkie"]} minLength={8} onChangeScore={(score, feedback) => { if(score===2) setStrongEnough(false); else setStrongEnough(true);}}/>
+            </div>
+            <div className="client-form-group field col-10">
+              <input type="password" className="client-form-field" placeholder="powtórz hasło..." {...repeatPassword} name="repeatPassword" id='repeatPassword' required />
+              <label htmlFor="repeatPassword" className="client-form-label">Powtórz hasło</label>
+            </div>
+            {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+              <div className="description-password-rules col-10">
+                <label>Wymagania co do złożoności hasła:</label>
+                <ul className="client-list">
+                  <li>Hasło musi składać się z conajmniej 8 znaków.</li>
+                  <li>Musi zawierać co najmniej: dużą, małą literę, cyfrę oraz znak specjalny.</li>
+                </ul>
+              </div>
+            <button className="global-btn local-client-btn" onClick={handleChangePassword} disabled={strongEnough}>Resetuj hasło</button><br />
+            <button className="global-btn local-client-btn" onClick={handleBack}>Wróć</button>
+          </div>
+        }
       </div>
     </div>
   );
