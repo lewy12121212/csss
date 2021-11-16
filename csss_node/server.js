@@ -48,12 +48,11 @@ app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
 require('./qrCode')(app);
-
+require('./mailSender')(app);
 
 //panels endpoints
 require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
-
 
 
 app.use((req, res, next) => {

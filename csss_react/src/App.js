@@ -21,7 +21,9 @@ import FaceLogin from './panels/login_panel/face_recognition/FaceLogin'
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './utils/Common';
+
 import QrGenerator from './qr_generator/QrGenerator';
+import ClientResetPassword from './panels/login_panel/ClientResetPassword';
 
 function App() {
 
@@ -61,6 +63,7 @@ function App() {
 
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
+            <PublicRoute path="/ClientResetPassword" component={ClientResetPassword} panelType="Client" />
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
             {/* Private components */}
             <PrivateRoute path="/ClientDashboard" component={ClientDashboard} panelType="Client" />
