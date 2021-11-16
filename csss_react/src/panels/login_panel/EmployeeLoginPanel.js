@@ -14,7 +14,7 @@ function EmployeeLoginPanel(props) {
   const username = useFormInput('');
   const password = useFormInput('');
   const [error, setError] = useState(null);
-  const [typeLogin, setTypeLogin] = useState("text");
+  //const [typeLogin, setTypeLogin] = useState("text");
   const [faceLogin, setFaceLogin] = useState(false)
 
   const handleHomeBack = () => {

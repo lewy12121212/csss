@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import Webcam from "react-webcam";
-import axios from 'axios';
-import { dbAddress } from '../../../dbCon';
+//import axios from 'axios';
+//import { dbAddress } from '../../../dbCon';
 
 import '../login.scss'
 
