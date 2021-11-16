@@ -21,6 +21,7 @@ import FaceLogin from './panels/login_panel/face_recognition/FaceLogin'
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './utils/Common';
+import QrGenerator from './qr_generator/QrGenerator';
 
 function App() {
 
@@ -52,9 +53,11 @@ function App() {
         <div className="content box">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
-            {/* webCam for tests */}
+            {/* FaceLogin for tests */}
             <PublicRoute path="/FaceRegistration" component={FaceRegistration} panelType="EmployeeCam" />
             <PublicRoute path="/FaceLogin" component={FaceLogin} panelType="EmployeeCam" />
+            {/* QrCode for tests */}
+            <PublicRoute path="/Qr" component={QrGenerator} panelType="QR" />
 
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />

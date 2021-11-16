@@ -29,6 +29,14 @@ const db = mysql.createPool({
 });
 exports.db = db;
 
+//const db = mysql.createPool({
+//  host: 'dysk.sytes.net',
+//  user: 'csss_admin',
+//  password: 'csss.2000.!@',
+//  port: '8888',
+//  database: 'DB_csss'
+//});
+
 // enable CORS
 app.use(cors());
 
@@ -39,6 +47,8 @@ app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
 //extention files
 require('./employeeLogin')(app, db, employeeUtils);
 require('./clientLogin')(app, db, clientUtils);
+require('./qrCode')(app);
+
 
 //panels endpoints
 require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
