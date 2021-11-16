@@ -21,16 +21,18 @@ function ClientLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post(`http://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
+    axios.post(`https://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/ClientDashboard');
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Something went wrong. Please try again later.");
+      else setError("Coś poszło nie tak...");
     });
   }
+
+
 
   return(
     <div className="container col-xl-6 col-lg-8 col-md-10 col-12">
@@ -47,10 +49,19 @@ function ClientLoginPanel(props) {
             <input type="text" className="client-form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
             <label htmlFor="repairId" className="client-form-label">Id naprawy</label>
           </div>
-          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+          {error && <><small className="warningLoginError" style={{ color: 'red' }}>{error}</small></>}
+          {/*TODO - change the link style*/}
+          <a href='/ClientResetPassword'> Zapomniałem hasła </a>
+          <button className="col-10 col-md-8 col-lg-8 global-btn local-client-btn loginButton" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button>
+          <button className="col-10 col-md-8 col-lg-8 global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
 
+{/*
+          {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+          <a href='/ClientResetPassword'> Zapomniałem hasła </a>
           <button className="global-btn local-client-btn" onClick={handleLogin} disabled={loading}>{loading ? 'Ładowanie...' : 'Zaloguj'}</button><br />
           <button className="global-btn local-client-btn" onClick={handleHomeBack}>Wróć</button>
+>>>>>>> EmailNotification
+*/}
         </div>
       </div>
     </div>

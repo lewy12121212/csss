@@ -12,6 +12,8 @@ function generateToken(user) {
         Name: user.Name,
         Surname: user.Surname,
         Login: user.Login,
+        Mail: user.Mail,
+        Phone: user.Phone,
         Type: user.Type
     };
 
@@ -29,6 +31,8 @@ function getCleanUser(user) {
         Name: user.Name,
         Surname: user.Surname,
         Login: user.Login,
+        Mail: user.Mail,
+        Phone: user.Phone,
         Type: user.Type
     };
 }

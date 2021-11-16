@@ -16,9 +16,16 @@ import Home from './Home'
 import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
 import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
 
+import FaceRegistration from './panels/login_panel/face_recognition/FaceRegistration'
+import FaceLogin from './panels/login_panel/face_recognition/FaceLogin'
+import Pdf from './pdf/Pdf'
+import QrGenerator from './qr_generator/QrGenerator';
+
 import PrivateRoute from './utils/PrivateRoute';
 import PublicRoute from './utils/PublicRoute';
 import { getToken, removeUserSession, setUserSession } from './utils/Common';
+
+import ClientResetPassword from './panels/login_panel/ClientResetPassword';
 
 function App() {
 
@@ -31,7 +38,7 @@ function App() {
     }
 
     //uogólnić verifyToken -> wyłuskać typ użytkownika, i uzależnić od niego zapytanie do odpowiedniej tabeli!
-    axios.get(`http://${dbAddress}:4000/verifyToken?token=${token}`).then(response => {
+    axios.get(`https://${dbAddress}:4000/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {
@@ -50,8 +57,18 @@ function App() {
         <div className="content box">
           {/* Private oraz Public Route - to komponenty importowane w nagłówkach, poprzez parametr "props" przekazują komponenty "login oraz Dashboard" */}
           <Switch>
+            {/* FaceLogin for tests */}
+            <PublicRoute path="/FaceRegistration" component={FaceRegistration} panelType="EmployeeCam" />
+            <PublicRoute path="/FaceLogin" component={FaceLogin} panelType="EmployeeCam" />
+            {/* QrCode for tests */}
+            <PublicRoute path="/Qr" component={QrGenerator} panelType="QR" />
+            {/* PdfGenerator for tests */}
+            <PublicRoute path="/Pdf" component={Pdf} />
+            {/* END TEST SECTION */}
+
             {/* Public login components */}
             <PublicRoute path="/ClientLoginPanel" component={ClientLoginPanel} panelType="Client" />
+            <PublicRoute path="/ClientResetPassword" component={ClientResetPassword} panelType="Client" />
             <PublicRoute path="/EmployeeLoginPanel" component={EmployeeLoginPanel} panelType="Employee" />
             {/* Private components */}
             <PrivateRoute path="/ClientDashboard" component={ClientDashboard} panelType="Client" />
