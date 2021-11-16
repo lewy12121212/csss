@@ -5,9 +5,8 @@ module.exports = (app) => {
 
     return res.status(200).json({
       error: false,
-      message: "Status 200"
-     
+      message: "Status 200"    
     });
- 
+
   })
 }
