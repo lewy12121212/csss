@@ -45,7 +45,7 @@ function ClientResetPassword (props) {
   //}
 
   const handleReset = () => {
-
+    setLoading(true)
     if(email.value !== '')
     {
       axios.post(`https://${dbAddress}:4000/client/ResetPassword`, { email: email.value}).then(response => {
@@ -65,28 +65,31 @@ function ClientResetPassword (props) {
     {
       setError('Należy podać adres email.')
     }
-    
+    setLoading(false)
   }
 
   const handleVerifyCode = () => {
-    console.log(parseInt(verifyCodeClient.value,10))
-    console.log(d.getTime() - codeGetTime)
-    setError('');
+    //console.log(parseInt(verifyCodeClient.value,10))
+    //console.log(d.getTime() - codeGetTime)
+    //setError(null);
+    setLoading(true)
     //remeber time was get in ms
     if(parseInt(verifyCodeClient.value,10) === validCode && (d.getTime() - codeGetTime)<180000)
     {
       setSendCode(false);
       setVerifyCode(true);
+      setError(null);
     }
     else 
     {
       setError("Nieprawidłowy kod lub upłynął limit czasu ważności kodu.")
     }
+    setLoading(false)
   }
 
   const handleChangePassword = () => {
-    console.log(repeatPassword)
-    setError('');
+    //console.log(repeatPassword)
+    setLoading(true)
     if(password.length<7)
     {
       setError("Podane hasło jest zbyt krótkie.")
@@ -97,6 +100,7 @@ function ClientResetPassword (props) {
 
         alert("Hasło zostało zmienione.");
         props.history.push("/ClientLoginPanel");
+        setError(null);
       }).catch(error => {
         setError(error.response.data.message)
       })
@@ -105,6 +109,7 @@ function ClientResetPassword (props) {
     {
       setError('Błędnie powtórzono hasło.');
     }
+    setLoading(false)
   }
 
 
