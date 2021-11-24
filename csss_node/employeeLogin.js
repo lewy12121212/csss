@@ -1,7 +1,7 @@
-const cloud = require('./cloudinaryConfig')
-const detection = require('./faceDetection')
-const faceapi = require('@vladmandic/face-api');
-const canvas = require("canvas");
+//const cloud = require('./cloudinaryConfig')
+//const detection = require('./faceDetection')
+//const faceapi = require('@vladmandic/face-api');
+//const canvas = require("canvas");
 const path = require('path')
 
 module.exports = (app, db, employeeUtils) => {
