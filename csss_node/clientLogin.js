@@ -73,11 +73,13 @@ module.exports = (app, db, clientUtils) => {
   });
 
   app.post('/client/ChangePassword', (req,res) => {
-    const sqlQuery = "UPDATE DB_clients SET Password = (?) WHERE Mail LIKE (?)";
+    const sqlQuery = "UPDATE DB_clients SET Password = (?) WHERE Mail = (?)";
     const email = req.body.email;
     const password = req.body.password;
 
-    db.query(sqlQuery, [email, password], (error, results)=>{
+    console.log('email ', email, ' pass ', password)
+
+    db.query(sqlQuery, [password, email], (error, results)=>{
       
       if(error)
         return res.status(401).json({
