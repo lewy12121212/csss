@@ -46,6 +46,7 @@ function ClientResetPassword (props) {
 
   const handleReset = () => {
     setLoading(true)
+    console.log("Dziaaa")
     if(email.value !== '')
     {
       axios.post(`https://${dbAddress}:4000/client/ResetPassword`, { email: email.value}).then(response => {
@@ -96,7 +97,7 @@ function ClientResetPassword (props) {
     }
     else if(password === repeatPassword.value)
     {
-      axios.post(`https://${dbAddress}:4000/client/ChangePassword`, { email: email.value, password: password.value}).then(result => {
+      axios.post(`https://${dbAddress}:4000/client/ChangePassword`, { email: email.value, password: password}).then(result => {
 
         alert("Hasło zostało zmienione.");
         props.history.push("/ClientLoginPanel");

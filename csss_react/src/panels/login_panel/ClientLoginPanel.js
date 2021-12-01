@@ -10,7 +10,7 @@ import './login.scss';
 
 function ClientLoginPanel(props) {
   const [loading, setLoading] = useState(false);
-  const repairId = useFormInput('');
+  const pass = useFormInput('');
   const email = useFormInput('');
   const [error, setError] = useState(null);
 
@@ -21,7 +21,7 @@ function ClientLoginPanel(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post(`https://${dbAddress}:4000/client/signin`, { email: email.value, repairId: repairId.value }).then(response => {
+    axios.post(`https://${dbAddress}:4000/client/signin`, { email: email.value, pass: pass.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       props.history.push('/ClientDashboard');
@@ -42,12 +42,12 @@ function ClientLoginPanel(props) {
         </div>
         <div className="col-10 col-lg-7 d-flex flex-column align-items-center content-panel">
           <div className="client-form-group field col-10">
-            <input type="input" className="client-form-field" placeholder="email..." {...email} name="email" id='email' required />
+            <input type="text" className="client-form-field" placeholder="Email..." {...email} name="email" id='email' required />
             <label htmlFor="email" className="client-form-label">Email</label>
           </div>
           <div className="client-form-group field col-10">
-            <input type="text" className="client-form-field" placeholder="Id naprawy..." {...repairId} name="repairId" id='repairId' required />
-            <label htmlFor="repairId" className="client-form-label">Id naprawy</label>
+            <input type="password" className="client-form-field" placeholder="Hasło..." {...pass} name="pass" id='pass' required />
+            <label htmlFor="pass" className="client-form-label">Hasło</label>
           </div>
           {error && <><small className="warningLoginError" style={{ color: 'red' }}>{error}</small></>}
           {/*TODO - change the link style*/}

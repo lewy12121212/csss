@@ -9,7 +9,7 @@ module.exports = (app, db, clientUtils) => {
   // validate the user credentials
   app.post('/client/signin', (req, res) => {
     const email = req.body.email;
-    const repairId = req.body.repairId;
+    const repairId = req.body.pass;
 
     if (!email || !repairId) { //if empty
       return res.status(400).json({
@@ -77,7 +77,9 @@ module.exports = (app, db, clientUtils) => {
     const email = req.body.email;
     const password = req.body.password;
 
-    db.query(sqlQuery, [email, password], (error, results)=>{
+    console.log("veryfi data: " + email + " : " + password);
+
+    db.query(sqlQuery, [password, email], (error, results)=>{
       
       if(error)
         return res.status(401).json({
