@@ -11,7 +11,7 @@ module.exports = (app, db) => {
 
         //console.log(id + name + surname + mail + login + phone)
     if(name === "" || surname === "" || password === "" || mail === "" || phone === ""){
-      return res.status(401).json({
+      return res.status(400).json({
         error: true,
         mainInfo: "Dane nie mogą być puste!",
         secondaryInfo: "Uzupełni wymagane dane."
@@ -20,7 +20,7 @@ module.exports = (app, db) => {
 
     //regex
     if(!commonFunc.validateNameSurname(name) || !commonFunc.validateNameSurname(surname)){
-      return res.status(401).json({
+      return res.status(400).json({
         error: true,
         mainInfo: "Imię lub nazwisko zawiera nieprawidłową składnie!",
         secondaryInfo: "Sprawdź poprawność podanych informacji."
@@ -28,7 +28,7 @@ module.exports = (app, db) => {
     }
 
     if(!commonFunc.validateEmail(mail)){
-      return res.status(401).json({
+      return res.status(400).json({
         error: true,
         mainInfo: "Adres mailowy zawiera nieprawidłową składnie!",
         secondaryInfo: "Sprawdź poprawność podanych informacji."
@@ -36,7 +36,7 @@ module.exports = (app, db) => {
     }
     
     if(!commonFunc.validatePhone(phone)){
-      return res.status(401).json({
+      return res.status(400).json({
         error: true,
         mainInfo: "Numer telefonu zawiera nieprawidłową składnie!",
         secondaryInfo: "Sprawdź poprawność podanych informacji."
@@ -122,7 +122,7 @@ module.exports = (app, db) => {
       if(error)
       { console.log(error)
 
-        return res.status(401).json({
+        return res.status(404).json({
           error: true,
           message: "Błąd bazy danych. Spróbuj ponownie później."
         });
@@ -148,7 +148,7 @@ module.exports = (app, db) => {
       if(error)
       { console.log(error)
 
-        return res.status(401).json({
+        return res.status(404).json({
           error: true,
           message: "Błąd bazy danych. Spróbuj ponownie później."
         });
