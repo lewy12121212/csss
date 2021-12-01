@@ -1,6 +1,6 @@
 //Opis komponentu - będzie zawierał części wspólne dla paneli użytkowników
 import React from 'react';
-import { getUser, removeUserSession } from '../../utils/Common';
+import { removeUserSession } from '../../utils/Common';
 
 function ClientDashboard(props) {
   //const user = getUser();

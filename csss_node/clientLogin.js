@@ -59,7 +59,10 @@ module.exports = (app, db, clientUtils) => {
         let text = {to: number, message: verifyCode + " to Twój kod weryfikacyjny", from: "CSSS"}
         let sender = require('./smsSender')
   
+        //sms sender
         //sender.sendSMS(text)
+        //sms sender end
+        
         console.log(verifyCode)
         return res.status(200).json({verifyCode: verifyCode})
       }
