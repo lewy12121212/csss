@@ -51,14 +51,14 @@ module.exports = (app, db) => {
   })
 
   app.get('/repair/getListOfClients', (req,res) => {
-    const sqlQuery = "SELECT Name, Mail, Phone, IsCompany FROM DB_clients";
+    const sqlQuery = "SELECT Id, Name, FirstName, Surname, Mail, Phone, IsCompany FROM DB_clients";
 
     db.query(sqlQuery, (err, result) => {
       if (err) {
         console.log(err)
         return res.status(406).json({
           error: true,
-          message: "Problem z pobraniem bazy klientów"
+          message: "Problem z pobraniem bazy klientów."
         }) 
       } else {
         return res.status(200).json({ 
@@ -68,6 +68,51 @@ module.exports = (app, db) => {
       }
     })
   })
+
+  app.get('/repair/getListOfDevice', (req,res) => {
+    const sqlQuery = "SELECT * FROM DB_Devices WHERE ClientId = (?)"
+
+    const id =  req.body.id;
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy urządzeń."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+
+
+  })
+
+  app.get('/repair/getEmployees', (req,res) => {
+
+    const sqlQuery = "SELECT Name, Surname, Login FROM DB_Employees WHERE Type LIKE Service";
+
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy pracowników."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+  })
+
+
 
   app.post('/repair/addNewClient', (req,res) => {
     const sqlQuery = "INSERT into DB_clients (Name, FirstName, Surname, Address, City, PostalCode, Mail, Password, Phone, IsCompany) VALUES (?,?,?,?,?,?,?,?,?,?)"
@@ -101,7 +146,7 @@ module.exports = (app, db) => {
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano klienta'})
+      else return res.status(200).json({message:'Pomyślnie dodano klienta', result: results})
     });
 
   })
@@ -114,10 +159,9 @@ module.exports = (app, db) => {
     const clientid = req.body.clientid;
     const serviceid = req.body.serviceid;
     const deviceid = req.body.deviceid;
-    const qrcode = req.body.qrcode;
     const description = req.body.description;
 
-    db.query(sqlQuery, [clientid, serviceid, deviceid, qrcode, description], (error, results)=>{
+    db.query(sqlQuery, [clientid, serviceid, deviceid, description], (error, results)=>{
       
       if(error)
       { console.log(error)
@@ -128,7 +172,28 @@ module.exports = (app, db) => {
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano zlecenie.'})
+      else return res.status(200).json({message:'Pomyślnie dodano zlecenie.', result: results})
+    });
+
+  })
+
+  app.post('/repair/addQRcode', (req,res) => {
+
+    const sqlQuery = "UPDATE DB_repairs SET QrCode = (?);"
+    const qr = req.body.qr;
+
+    db.query(sqlQuery, [qr], (error, results)=>{
+      
+      if(error)
+      { console.log(error)
+
+        return res.status(404).json({
+          error: true,
+          message: "Błąd bazy danych. Spróbuj ponownie później."
+        });
+        
+      }
+      else return res.status(200).json({message:'Pomyślnie dodano kod QR.', result: results})
     });
 
   })
@@ -154,7 +219,7 @@ module.exports = (app, db) => {
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano klienta'})
+      else return res.status(200).json({message:'Pomyślnie dodano klienta', result: results})
     });
   })
 }

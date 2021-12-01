@@ -156,4 +156,25 @@ module.exports = (app, db, employeeUtils) => {
 
   })
 
+  app.get('/employee/common/allRepairs', (req,res) => {
+    
+    const sqlQuery = "SELECT * FROM DB_repairs"
+
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+
+  })
+
 }
