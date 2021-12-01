@@ -4,7 +4,7 @@ import { getUser, removeUserSession } from '../../../utils/Common';
 
 import Settings from '../common/Settings'
 import Chat from '../chat/Chat'
-import AllOrders from './bookmarks/AllOrders'
+import ShowRepairsList from '../common/ShowRepairsList'
 import AssignedOrders from './bookmarks/AssignedOrders'
 
 import LeftMenu from './LeftMenu'
@@ -37,7 +37,7 @@ function ServicePanel(props) {
       <div className="container col-12">
         <Switch>
           <Route exact path="/EmployeeDashboard/Service/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
-          <Route path="/EmployeeDashboard/Service/AllOrders" render={() => <AllOrders />} />
+          <Route path="/EmployeeDashboard/Service/Repairs" render={() => <ShowRepairsList />} />
           <Route path="/EmployeeDashboard/Service/AssignedOrders" render={() => <AssignedOrders />} />
           <Route path="/EmployeeDashboard/Service/Chat" render={() => <Chat />} />
           <Redirect to="/EmployeeDashboard/Service/Settings" />

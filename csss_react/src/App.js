@@ -15,6 +15,7 @@ import ClientDashboard from './panels/client_panel/ClientDashboard'
 import Home from './Home'
 import ClientLoginPanel from './panels/login_panel/ClientLoginPanel'
 import EmployeeLoginPanel from './panels/login_panel/EmployeeLoginPanel'
+import ShowRepair from "./panels/employee_panels/common/ShowRepair"
 
 import FaceRegistration from './panels/login_panel/face_recognition/FaceRegistration'
 import FaceLogin from './panels/login_panel/face_recognition/FaceLogin'
@@ -76,6 +77,7 @@ function App() {
             <PrivateRoute path="/EmployeeDashboard/Coordinator" component={CoordinatorPanel} panelType="Coordinator" />
             <PrivateRoute path="/EmployeeDashboard/Manager" component={ManagerPanel} panelType="Manager" />
             <PrivateRoute path="/EmployeeDashboard/Service" component={ServicePanel} panelType="Service" />
+            <PrivateRoute path="/Repairs/:id" component={routerProps => <ShowRepair id={routerProps.match.params.id} />} panelType="Repairs" />
             {/* Main route */}
             <PublicRoute exact path="/" component={Home} />
             <Redirect to="/" />
