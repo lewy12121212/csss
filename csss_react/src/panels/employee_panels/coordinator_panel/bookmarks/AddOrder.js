@@ -73,7 +73,7 @@ const handleGetClients = () => {
   axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
       console.log(response.data)
       //getClientsNames(response.data.data)
-      addSelectOptions("Clients",getClientsNames(response.data.data))
+      //addSelectOptions("Clients",getClientsNames(response.data.data))
 
     }).catch(error => {
       if (error.response.status === 401) setError(error.response.data.message);
