@@ -47,8 +47,6 @@ function App() {
     });
   }, []);
 
-
-
   if (authLoading && getToken()) {
     return <div className="content">Checking Authentication...</div>
   }
@@ -78,7 +76,8 @@ function App() {
             <PrivateRoute path="/EmployeeDashboard/Coordinator" component={CoordinatorPanel} panelType="Coordinator" />
             <PrivateRoute path="/EmployeeDashboard/Manager" component={ManagerPanel} panelType="Manager" />
             <PrivateRoute path="/EmployeeDashboard/Service" component={ServicePanel} panelType="Service" />
-            <PrivateRoute path="/Repairs/:id" component={routerProps => <ShowRepair id={routerProps.match.params.id} />} panelType="Repairs" />
+            {/*<PrivateRoute path="/Repairs/:id" component={routerProps => <ShowRepair id={routerProps.match.params.id} />} panelType="Repairs" />*/}
+            <PrivateRoute path="/Repairs/:id" component={ShowRepair} panelType="Repairs" />
             {/* Main route */}
             <PublicRoute exact path="/" component={Home} />
             <Redirect to="/" />
