@@ -32,26 +32,10 @@ class QrGenerator extends React.Component {
     var qrBase64 = qrCanvas.toDataURL()
     console.log(qrBase64)
 
-    /* //To SVG - currently don't work
-    var serializedSVG = new XMLSerializer().serializeToString(this.qrcode.current.getElementsByTagName('svg')[0]);
-    var base64Data = window.btoa(serializedSVG);
-    console.log("data:image/svg+xml;base64," + base64Data)
-    */
-
-
     axios.get(`https://${dbAddress}:4000/qr`, {qrcode: this.qrcode }).then(response => {
 
-      //console.log(response.data)
-  
     }).catch(error => {
-      
-      //console.log(error)
-      //if (error.response.status === 401) this.setState(error.response.data.message);
-      //if (error.response.status === 500){
-      //  console.log("500 plus")
-      //  this.setState({Comment: 'HALLO'});
-      //} 
-      //else this.setState({Comment: 'Coś poszło nie tak...'})
+
     });
 
   }

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink, } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import Offcanvas from "react-bootstrap/Offcanvas";
 import closeImg from '../img/close_arrow.png'
 
@@ -24,6 +24,7 @@ function LeftMenu(props) {
           </div>
           <div>
             <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
+            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Repairs" onClick={props.handleClose}>Lista zleceń</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddOrder" onClick={props.handleClose}>Dodaj zlecenie</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddClient" onClick={props.handleClose}>Dodaj klienta</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/Chat" onClick={props.handleClose}>Czat</NavLink>

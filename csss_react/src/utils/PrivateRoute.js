@@ -11,7 +11,9 @@ function PrivateRoute({ component: Component, panelType: PanelType, ...rest }) {
     <Route
       {...rest}
       render={(props) => {
-        if(token && userData.Type === undefined && PanelType === "Client"){
+        if (PanelType === "Repairs" && token){
+          return <Component {...props} />
+        } else if(token && userData.Type === undefined && PanelType === "Client"){
           return <Component {...props} />
         } else if(token && userData.Type === PanelType) {
           console.log("type of user: " + userData.Type + " ?= " + PanelType)
