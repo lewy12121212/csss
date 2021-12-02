@@ -25,11 +25,11 @@ function ShowRepairsList(props) {
   useEffect(() => {
     if(didMount) {
       console.log('mounted');
-      axios.get(`https://${dbAddress}:4000/employee/common/allRepairs`).then(response => {
+      axios.get(`https://${dbAddress}:4000/employee/common/allRepairsInner`).then(response => {
         setRepairsTable(response.data.data)
         console.log(response.data.data)
       }).catch(error => {
-  //
+
       });
     } else {
       console.log('state updated');
@@ -38,20 +38,60 @@ function ShowRepairsList(props) {
 
 
   return (
-    <div className="">
+    <div className="col-12">
       Lista zleceń
-      <div>
-        <NavLink className="" to="/Repairs/1" target="_blank" >Zlecenie 1</NavLink>
-        <NavLink className="" to="/Repairs/2" target="_blank" >Zlecenie 2</NavLink>
+      <div className="table-responseive" >
+        <button className="btn btn-warning" >Odświerz</button>
+        <table className="table">
+          <thead className="thead-dark">
+            <tr>
+              <th scope="col" rowSpan="2">#</th>
+              <th scope="col" colSpan="2">Dane naprawy</th>
+              <th scope="col" colSpan="2">Dane urządzenia</th>
+              <th scope="col" colSpan="3">Dane klienta</th>
+              <th scope="col" colSpan="2">Dane serwisanta</th>
+              <th scope="col" rowSpan="2">Edytuj</th>
+            </tr>
+            <tr>              
+              <th scope="col">Opis Naprawy</th>
+              <th scope="col">Informacje serwisanta</th>
+              
+              <th scope="col">Nazwa</th>
+              <th scope="col">Model</th>
+              
+              <th scope="col">Imię</th>
+              <th scope="col">Telefon</th>
+              <th scope="col">Mail</th>
+
+              <th scope="col">Login</th>
+              <th scope="col">Imię</th>
+            </tr>
+          </thead>
+          <tbody>
+          {repairsTable.map((data) => 
+
+            <tr key={data.Id}>   
+              <td>{data.Id}</td>
+
+              <td>{data.Description}</td>
+              <td>{data.PrivateDescription}</td>
+
+              <td>{data.DeviceName}</td>
+              <td>{data.DeviceModel}</td>
+
+              <td>{data.ClientName}</td>
+              <td>{data.ClientPhone}</td>
+              <td>{data.ClientMail}</td>
+
+              <td>{data.EmployeeLogin}</td>
+              <td>{data.EmployeeName}</td>
+
+              <td><NavLink className="btn btn-primary" to={`/Repairs/${data.Id}`} target="_blank" >Edytuj</NavLink></td>
+            </tr>
+          )}
+          </tbody>
+        </table>
       </div>
-      {repairsTable.map((row) => 
-        <div key={row.Id}>
-          {row.Id}
-        </div>
-      )}
-      {/*<Switch>
-        <Route path="/Repairs/:id" render={routerProps => <ShowRepair id={routerProps.match.params.id} />} />
-      </Switch>*/}
     </div>
   );
 }
