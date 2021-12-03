@@ -1,7 +1,7 @@
 //const cloud = require('./cloudinaryConfig')
-//const detection = require('./faceDetection')
-//const faceapi = require('@vladmandic/face-api');
-//const canvas = require("canvas");
+const detection = require('./faceDetection')
+const faceapi = require('@vladmandic/face-api');
+const canvas = require("canvas");
 const path = require('path')
 
 module.exports = (app, db, employeeUtils) => {
@@ -99,6 +99,7 @@ module.exports = (app, db, employeeUtils) => {
       {
         db.query(sqlQuery2, [id, picture[i]], (err, result) => {
           if (err) reject(err)
+          console.log('aa ', result)
         });
       }
       resolve(true)

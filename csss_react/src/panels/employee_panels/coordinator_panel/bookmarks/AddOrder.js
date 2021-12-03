@@ -9,89 +9,73 @@ import { dbAddress } from '../../../../dbCon';
 import './bookmarks.scss';
 
 function AddOrder(props) {
+  
+  const [error, setError] = useState(null);
+  const  clientsName = [];
   /*
-  const [clientName, setUserData] = useState(JSON.parse(props.userData))
+  function addSelectOptions(selectId, table){
+    var select = document.getElementById(selectId);
+    for(var i = 0; i < table.length; i++)
+    {
+        var option = document.createElement("OPTION"),
+            txt = document.createTextNode(table[i]);
+        option.appendChild(txt);
+        option.setAttribute("value",table[i]);
+        select.insertBefore(option,select.lastChild);
+    }
+  }
+  */
 
-  const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
-  const [showDangerAlert, setShowDangerAlert] = useState(false)
-  const [showInfoAlert, setShowInfoAlert] = useState(false)
-  const [showWarningAlertSubmitData, setShowWarningAlertSubmitData] = useState(false)
-  const [showWarningAlertSubmitPass, setShowWarningAlertSubmitPass] = useState(false)
 
-  function closeAlert(){
-    setShowDangerAlert(false)
-    setShowInfoAlert(false)
-    setShowWarningAlertSubmitData(false)
-    setShowWarningAlertSubmitPass(false)
-    setAlertMsg({MainInfo: "", SecondaryInfo: ""})
+  function getClientsNames(data){
+   //poprawić update clientsName = []; żeby zapisywało, 
+  
+    const id = 0
+    const cood = "Dodaj nowego klienta"
+    const newData = {
+        "id": id,
+        "clientName": cood
+    };
+    clientsName.push(newData);
+   
+    for (var i = 0; i < data.length; i++) {
+      const id = i
+      const cood = data[i].Name
+      const newData = {
+        "id": id+1,
+        "clientName": cood
+      };
+      clientsName.push(newData);
+    }
+  console.log(clientsName)
+  return  clientsName;
   }
 
-  const handleGetClientList = () => {
+  const handleGetClients = () => {
     console.log("Pobieranie listy klientów...")
-    closeAlert()
-    //"SELECT Name, Mail, Phone, IsCompany FROM DB_clients";
-    //UserPass: userPass, Id: userData.Id
-    axios.get('/repair/getListOfClients', {Name: clientName}).then(response => {
-      setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
-      setShowInfoAlert(true)
-      console.log("Klient:")
-      console.log(clientName)
-      
-    }).catch((error) => {
-      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
-      setShowDangerAlert(true)
-    });
+    axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
+        //console.log(response.data)
+        getClientsNames(response.data.data)
+        console.log("TUTA")
+        console.log(clientsName)
+        //addSelectOptions("Clients",getClientsNames(response.data.data))
+
+      }).catch(error => {
+        if (error.response.status === 401) setError(error.response.data.message);
+        else setError("Coś poszło nie tak...");
+      });
   }
-*/
-const [error, setError] = useState(null);
-
-/*
-function addSelectOptions(selectId, table){
-  var select = document.getElementById(selectId);
-  for(var i = 0; i < table.length; i++)
-  {
-      var option = document.createElement("OPTION"),
-          txt = document.createTextNode(table[i]);
-      option.appendChild(txt);
-      option.setAttribute("value",table[i]);
-      select.insertBefore(option,select.lastChild);
-  }
-}
-*/
-
-
-function getClientsNames(data){
-  var names = [];
-  for (var i = 0; i < data.length; i++) {
-    names.push(data[i].Name);
-}
-//console.log(names)
-return names;
-}
-
-const handleGetClients = () => {
-  console.log("Pobieranie listy klientów...")
-  axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
-      console.log(response.data)
-      //getClientsNames(response.data.data)
-      //addSelectOptions("Clients",getClientsNames(response.data.data))
-
-    }).catch(error => {
-      if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Coś poszło nie tak...");
-    });
-}
-//<select onClick={(handleGetClients) => { 
-//              //https://stackoverflow.com/questions/31413053/how-to-use-an-array-as-option-for-react-select-component/45361667
-//
-//              /*useEffect zrobić  https://github.com/lewy12121212/PZ-2021-wypozyczalnia/commit/ea2fd1bb538b167775d68d955a94e22d2b4e8f01*/}}>
-//              <option selected>...Wybierz użytkownika</option>
-//              {names.map((val) => {
-//                  return (
-//                      <option value={val.Id}>{val.Id}. {val.Name} </option>
-//                  )
-//              })}
-//  </select>
+  //<select onClick={(handleGetClients) => { 
+  //              //https://stackoverflow.com/questions/31413053/how-to-use-an-array-as-option-for-react-select-component/45361667
+  //
+  //              /*useEffect zrobić  https://github.com/lewy12121212/PZ-2021-wypozyczalnia/commit/ea2fd1bb538b167775d68d955a94e22d2b4e8f01*/}}>
+  //              <option selected>...Wybierz użytkownika</option>
+  //              {names.map((val) => {
+  //                  return (
+  //                      <option value={val.Id}>{val.Id}. {val.Name} </option>
+  //                  )
+  //              })}
+  //  </select>
 
 
   return (
@@ -100,8 +84,10 @@ const handleGetClients = () => {
       <form className="justify-content-center">
           <div className="row col-12 mx-auto">
           <label htmlFor="Clients">Wybór klienta</label>
-            <select id="Clients" onClick={handleGetClients}>
-              <option value="0">Dodaj nowego klienta </option>
+            <select id="Clients" onClick={handleGetClients}>{
+              clientsName.map((option) => (
+              <option value={option.id}>{option.clientName}</option>
+            ))}
             </select> 
             
 

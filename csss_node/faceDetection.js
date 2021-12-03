@@ -1,4 +1,4 @@
-//require('@tensorflow/tfjs-node')
+require('@tensorflow/tfjs-node')
 //const express = require('express');
 //const faceapi = require('face-api.js');
 const faceapi = require('@vladmandic/face-api');
