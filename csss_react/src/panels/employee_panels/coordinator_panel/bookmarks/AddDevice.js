@@ -5,13 +5,13 @@ import React from 'react';
 //import '../../EmployeePanels.scss';
 import './bookmarks.scss';
 
-function AddClient(props) {
+function AddDevice(props) {
 
   return (
     <div className="col-12 m-2">
-      Dodaj klienta
+      Dodaj urządzenie
     </div>
   );
 }
 
-export default AddClient;
+export default AddDevice;

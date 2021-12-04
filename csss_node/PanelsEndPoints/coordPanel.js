@@ -69,10 +69,9 @@ module.exports = (app, db) => {
     })
   })
 
-  app.get('/repair/getListOfDevice', (req,res) => {
-    const sqlQuery = "SELECT * FROM DB_Devices WHERE ClientId = (?)"
-
-    const id =  req.body.id;
+  app.post('/repair/getListOfDevice', (req,res) => {
+    const id = req.body.id;
+    const sqlQuery = "SELECT * FROM DB_devices WHERE ClientId like (?)"
 
     db.query(sqlQuery, [id], (err, result) => {
       if (err) {
@@ -88,13 +87,11 @@ module.exports = (app, db) => {
         }); 
       }
     })
-
-
   })
 
   app.get('/repair/getEmployees', (req,res) => {
 
-    const sqlQuery = "SELECT Name, Surname, Login FROM DB_Employees WHERE Type LIKE Service";
+    const sqlQuery = "SELECT Name, Surname, Login FROM DB_employees WHERE Type LIKE Service";
 
     db.query(sqlQuery, (err, result) => {
       if (err) {

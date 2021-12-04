@@ -1,4 +1,5 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useDidMount } from '../common/commonFunc'
 import axios from 'axios';
 import { NavLink } from 'react-router-dom';
 
@@ -7,21 +8,11 @@ import { dbAddress } from '../../../dbCon';
 //import { useLocation } from "react-router-dom";
 //import ShowRepair from "./ShowRepair"
 //<NavLink className="" exact to={`${location}/1`}>Zlecenie 1</NavLink>
-function useDidMount() {
-  const didMountRef = useRef(true);
-  
-  useEffect(() => {
-    didMountRef.current = false;
-  }, []);
-  return didMountRef.current;
-};
 
 function ShowRepairsList(props) {
   const didMount = useDidMount();
   const [repairsTable, setRepairsTable] = useState([])
   //const location = props.path.pathname;
-
-
   useEffect(() => {
     if(didMount) {
       console.log('mounted');

@@ -5,7 +5,7 @@ import { getUser, removeUserSession } from '../../../utils/Common';
 
 import Settings from '../common/Settings'
 import Chat from '../chat/Chat'
-import AddOrder from './bookmarks/AddOrder'
+import AddRepair from './bookmarks/AddRepair'
 import AddClient from './bookmarks/AddClient'
 import Repairs from "../common/ShowRepairsList"
 
@@ -54,7 +54,7 @@ function CoordinatorPanel(props) {
         <Switch>
           <Route exact path="/EmployeeDashboard/Coordinator/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
           <Route path="/EmployeeDashboard/Coordinator/Repairs" render={() => <Repairs path={location} />} />
-          <Route path="/EmployeeDashboard/Coordinator/AddOrder" render={() => <AddOrder />} />
+          <Route path="/EmployeeDashboard/Coordinator/AddOrder" render={() => <AddRepair />} />
           <Route path="/EmployeeDashboard/Coordinator/AddClient" render={() => <AddClient />} />
           <Route path="/EmployeeDashboard/Coordinator/Chat" render={() => <Chat />} />
           <Redirect to="/EmployeeDashboard/Coordinator/Settings" />
