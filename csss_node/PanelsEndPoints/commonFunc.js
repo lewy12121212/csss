@@ -9,7 +9,7 @@ function validatePhone(phone) {
 }
 
 function validateNameSurname(name) {
-  const re = /^[a-zA-Z\-]+$/;
+  const re = /^[a-zA-ZżźćńółęąśŻŹĆĄŚĘŁÓŃ\-]+$/;
   return re.test(name);
 }
 
@@ -18,9 +18,15 @@ function validateLogin(login) {
   return re.test(login);
 }
 
+function validatePostalCode(postal) {
+  const re = /[0-9]{2}\-[0-9]{3}/
+  return re.test(postal)
+}
+
 module.exports = {
   validateEmail,
   validatePhone,
   validateNameSurname,
-  validateLogin
+  validateLogin,
+  validatePostalCode
 }

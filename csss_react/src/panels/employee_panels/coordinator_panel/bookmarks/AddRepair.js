@@ -57,60 +57,32 @@ function AddRepair(props) {
       else setError("Coś poszło nie tak...");
     });
   }
+
   /*
-  function addSelectOptions(selectId, table){
-    var select = document.getElementById(selectId);
-    for(var i = 0; i < table.length; i++)
-    {
-        var option = document.createElement("OPTION"),
-            txt = document.createTextNode(table[i]);
-        option.appendChild(txt);
-        option.setAttribute("value",table[i]);
-        select.insertBefore(option,select.lastChild);
-    }
-  }
+  axios.get(`https://${dbAddress}:4000/repair/getEmployees`).then(response => {
+    
+    setServiceName(response.data.data);
+    
+    console.log(serviceName)
+
+  }).catch(error => {
+    if (error.response.status === 401) setError(error.response.data.message);
+    else setError("Coś poszło nie tak...");
+  });
   */
 
-  /*function getClientsNames(data){
-   //poprawić update clientsName = []; żeby zapisywało, 
-  
-    const id = 0
-    const cood = "Dodaj nowego klienta"
-    const newData = {
-        "id": id,
-        "clientName": cood
-    };
-    clientsName.push(newData);
-
-    for (var i = 0; i < data.length; i++) {
-      const id = i
-      const cood = data[i].Name
-      const newData = {
-        "id": id+1,
-        "clientName": cood
-      };
-      clientsName.push(newData);
-    }
-  console.log(clientsName)
-  return  clientsName;
-  }*/
-
-  //const handleGetClients = () => {
-  //  console.log("Pobieranie listy klientów...")
-  //}
-  //<select onClick={(handleGetClients) => { 
-  //              //https://stackoverflow.com/questions/31413053/how-to-use-an-array-as-option-for-react-select-component/45361667
-  //
-  //              /*useEffect zrobić  https://github.com/lewy12121212/PZ-2021-wypozyczalnia/commit/ea2fd1bb538b167775d68d955a94e22d2b4e8f01*/}}>
-  //              <option selected>...Wybierz użytkownika</option>
-  //              {names.map((val) => {
-  //                  return (
-  //                      <option value={val.Id}>{val.Id}. {val.Name} </option>
-  //                  )
-  //              })}
-  //  </select>
-
-
+//Dodać na dole
+/*
+  <label htmlFor="Servisants">Wybór serwisanta</label>
+          <select id="Servisants" onChange={(e) => {
+            setChoosenService(e.target.value)
+            console.log("servisant:" + choosenService)
+          }}>
+            {serviceName.map((data) => (
+              <option value={data.Id} key={data.Id}>{data.Name}</option>
+            ))}
+          </select> 
+*/
   return (
     <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
       Dodaj zlecenie
@@ -139,14 +111,12 @@ function AddRepair(props) {
               <option value={data.Name} key={data.Id}>{data.Id} {data.Name} {data.Model} {data.SN}</option>
             ))}
           </select> 
-          {choosenDevice === "new" && <AddDevice deviceData={deviceName}/>}
+          {choosenDevice === "new" && <AddDevice deviceData={choosenClient}/>}
             
             
-            <label htmlFor="Servisants">Wybór serwisanta</label>
-            <select id="Servisants">
-              <option value ="1" >Serwisant A</option>
-              <option value ="2" >Serwisant B</option>
-            </select>
+          
+  
+
           </div>
         </form>
       

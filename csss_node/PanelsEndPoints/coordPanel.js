@@ -2,19 +2,22 @@ const commonFunc = require('./commonFunc')
 
 module.exports = (app, db) => {
 
-  app.post('/repair/dataValidate', (req, res) => {
-    const name = req.body.firstname;
-    const surname = req.body.surname;
-    const password = req.body.password;
-    const mail = req.body.mail;
-    const phone = req.body.phone;
+  app.post('/repair/clientValidate', (req, res) => {
+    const name = req.body.ClientData.FirstName;
+    const surname = req.body.ClientData.Surname;
+    const password = req.body.ClientData.Password;
+    const mail = req.body.ClientData.Mail;
+    const phone = req.body.ClientData.Phone;
+    const address = req.body.ClientData.Address;
+    const city = req.body.ClientData.City;
+    const postalcode = req.body.ClientData.PostalCode;
 
-        //console.log(id + name + surname + mail + login + phone)
-    if(name === "" || surname === "" || password === "" || mail === "" || phone === ""){
+   
+    if(name === "" || surname === "" || password === "" || mail === "" || phone === "" || address === "" || city === "" || postalcode === ""){
       return res.status(400).json({
         error: true,
         mainInfo: "Dane nie mogą być puste!",
-        secondaryInfo: "Uzupełni wymagane dane."
+        secondaryInfo: "Uzupełnij wymagane dane."
       }) 
     } 
 
@@ -43,11 +46,42 @@ module.exports = (app, db) => {
       }) 
     }
 
+    if(!commonFunc.validatePostalCode(postalcode)){
+      return res.status(400).json({
+        error: true,
+        mainInfo: "Kod pocztowy zawiera nieprawidłową składnie!",
+        secondaryInfo: "Sprawdź poprawność podanych informacji."
+      }) 
+    }
+
     return res.status(200).json({ 
       error: false,
       mainInfo: "Dane są poprawne.",
-      secondaryInfo: "Czy na pewno chcesz zmienić dane użytkownika?"
+      secondaryInfo: "Czy na pewno chcesz dodać klienta?"
     }); 
+  })
+
+  app.post('/repair/deviceValidate', (req, res) => {
+  
+    const name = req.body.DeviceData.name;
+    const model = req.body.DeviceData.model;
+    const sn = req.body.DeviceData.Sn;
+    const type = req.body.DeviceData.type;
+
+    if(name === "" || model === "" || sn === "" || type === ""){
+      return res.status(400).json({
+        error: true,
+        mainInfo: "Dane nie mogą być puste!",
+        secondaryInfo: "Uzupełnij wymagane dane."
+      }) 
+    }
+    else{
+      return res.status(200).json({ 
+        error: false,
+        mainInfo: "Dane są poprawne.",
+        secondaryInfo: "Czy na pewno chcesz dodać klienta?"
+      }); 
+    }
   })
 
   app.get('/repair/getListOfClients', (req,res) => {
@@ -114,36 +148,42 @@ module.exports = (app, db) => {
   app.post('/repair/addNewClient', (req,res) => {
     const sqlQuery = "INSERT into DB_clients (Name, FirstName, Surname, Address, City, PostalCode, Mail, Password, Phone, IsCompany) VALUES (?,?,?,?,?,?,?,?,?,?)"
 
-    let name = req.body.name;
-    const firstName = req.body.firstname;
-    const surname = req.body.surname;
-    const address = req.body.address;
-    const city = req.body.city;
-    const postalcode = req.body.postalcode;
-    const mail = req.body.mail;
-    const password = req.body.password;
-    const phone = req.body.phone;
-    const company = req.body.company
-    if (name === "") name = firstName + ' ' + surname;
-    console.log(typeof(company))
-    db.query(sqlQuery, [name, firstName, surname, address, city, postalcode, mail, password, phone, company], (error, results)=>{
+    let name = req.body.ClientData.Name;
+
+    const firstname = req.body.ClientData.FirstName;
+    const surname = req.body.ClientData.Surname;
+    const password = req.body.ClientData.Password;
+    const mail = req.body.ClientData.Mail;
+    const phone = req.body.ClientData.Phone;
+    const address = req.body.ClientData.Address;
+    const city = req.body.ClientData.City;
+    const postalcode = req.body.ClientData.PostalCode;
+    let company = 1;
+
+    if (name === "") {
+      name = firstname + ' ' + surname;
+      company = 0;
+    }
+    console.log(name)
+    db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, password, phone, company], (error, results)=>{
       
       if(error)
       { console.log(error)
-        if(console.error.errno === 1036)
+        if(error.errno == 1062)
         {
           return res.status(400).json({
             error: true,
-            message: "Klient o podanym mailu już istnieje."
+            mainInfo: "Problem z dodaniem danych!",
+            secondaryInfo: "Klient o podanym mailu już istnieje."
           });
         }
         return res.status(406).json({
           error: true,
-          message: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano klienta', result: results})
+      else return res.status(200).json({mainInfo:'Pomyślnie dodano klienta', result: results})
     });
 
   })
@@ -199,11 +239,11 @@ module.exports = (app, db) => {
 
     const sqlQuery = "INSERT into DB_devices (ClientId, Name, Model, SN, Type) VALUES (?,?,?,?,?)"
 
-    const clientid = req.body.clientid;
-    const name = req.body.name;
-    const model = req.body.model;
-    const sn = req.body.sn;
-    const type = req.body.type;
+    const clientid = req.body.DeviceData.ClientId;
+    const name = req.body.DeviceData.Name;
+    const model = req.body.DeviceData.Model;
+    const sn = req.body.DeviceData.Sn;
+    const type = req.body.DeviceData.Type;
 
     db.query(sqlQuery, [clientid, name, model, sn, type], (error, results)=>{
       
@@ -216,7 +256,7 @@ module.exports = (app, db) => {
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano klienta', result: results})
+      else return res.status(200).json({mainInfo:'Pomyślnie dodano urządzenie.', result: results})
     });
   })
 }
