@@ -198,7 +198,8 @@ module.exports = (app, db, employeeUtils) => {
     FROM `DB_repairs` \
     INNER JOIN `DB_clients` ON `DB_repairs`.`ClientId` like `DB_clients`.`Id` \
     INNER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
-    INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`;";
+    INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
+    ORDER BY `DB_repairs`.`CreationDate` ASC;";
     
 
     db.query(sqlQuery, (err, result) => {

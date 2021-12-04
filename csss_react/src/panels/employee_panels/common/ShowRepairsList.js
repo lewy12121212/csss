@@ -19,7 +19,6 @@ function ShowRepairsList(props) {
       axios.get(`https://${dbAddress}:4000/employee/common/allRepairsInner`).then(response => {
         setRepairsTable(response.data.data)
         console.log(response.data.data)
-      }).catch(error => {
 
       });
     } else {
@@ -32,27 +31,20 @@ function ShowRepairsList(props) {
     <div className="col-12">
       Lista zleceń
       <div className="table-responseive" >
-        <button className="btn btn-warning" >Odświerz</button>
+        
         <table className="table">
           <thead className="thead-dark">
             <tr>
-              <th scope="col" rowSpan="2">#</th>
-              <th scope="col" colSpan="2">Dane naprawy</th>
-              <th scope="col" colSpan="2">Dane urządzenia</th>
-              <th scope="col" colSpan="3">Dane klienta</th>
+              <th scope="col" rowSpan="2">#</th>          
+              <th scope="col" colSpan="3">Dane urządzenia</th>
+              <th scope="col" colSpan="1" rowSpan="2">Dane klienta</th>
               <th scope="col" colSpan="2">Dane serwisanta</th>
               <th scope="col" rowSpan="2">Edytuj</th>
             </tr>
-            <tr>              
-              <th scope="col">Opis Naprawy</th>
-              <th scope="col">Informacje serwisanta</th>
-              
-              <th scope="col">Nazwa</th>
+            <tr>
+              <th scope="col">Data przyjęcia</th>             
+              <th scope="col">Typ</th>
               <th scope="col">Model</th>
-              
-              <th scope="col">Imię</th>
-              <th scope="col">Telefon</th>
-              <th scope="col">Mail</th>
 
               <th scope="col">Login</th>
               <th scope="col">Imię</th>
@@ -64,15 +56,12 @@ function ShowRepairsList(props) {
             <tr key={data.Id}>   
               <td>{data.Id}</td>
 
-              <td>{data.Description}</td>
-              <td>{data.PrivateDescription}</td>
-
-              <td>{data.DeviceName}</td>
-              <td>{data.DeviceModel}</td>
+              <td>{data.CreationDate.slice(0,10)}</td>
+              <td>{data.DeviceType}</td>
+              <td>{data.DeviceName + ' ' +data.DeviceModel}</td>
 
               <td>{data.ClientName}</td>
-              <td>{data.ClientPhone}</td>
-              <td>{data.ClientMail}</td>
+
 
               <td>{data.EmployeeLogin}</td>
               <td>{data.EmployeeName}</td>
