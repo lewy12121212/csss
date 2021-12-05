@@ -8,6 +8,7 @@ import AddClient from './AddClient'
 import AddDevice from './AddDevice'
 
 import InfoAlert from '../../../../alerts/InfoAlert'
+import DangerAlert from '../../../../alerts/DangerAlert'
 //import '../AdminPanel.scss'
 //import '../../../../index.scss';
 //import '../../EmployeePanels.scss';
@@ -16,11 +17,12 @@ import './bookmarks.scss';
 
 function AddRepair(props) {
   const didMount = useDidMount();
-  const [error, setError] = useState(null);
+  //const [error, setError] = useState(null);
   const [clientsName, setClientsName] = useState([]); //Przerobione na useState
   const [deviceName, setDeviceName] = useState([]); //Przerobione na useState
   const [serviceName, setServiceName] = useState([]); //Przerobione na useState
 
+  const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
   const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
 
@@ -33,8 +35,8 @@ function AddRepair(props) {
       setClientsName(response.data.data); //zamiast funkcji getClientsNames :D
       console.log(clientsName)
     }).catch(error => {
-      if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Coś poszło nie tak...");
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
     });
   }, [setClientsName, clientsName])
 
@@ -44,8 +46,8 @@ function AddRepair(props) {
       setDeviceName(response.data.data);
       console.log(deviceName)
     }).catch(error => {
-      if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Coś poszło nie tak...");
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
     });
   }
 
@@ -54,8 +56,8 @@ function AddRepair(props) {
       setServiceName(response.data.data)
       console.log(serviceName)
     }).catch(error => {
-      if (error.response.status === 401) setError(error.response.data.message);
-      else setError("Coś poszło nie tak...");
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
     });
   }, [setServiceName, serviceName])
 
@@ -84,6 +86,7 @@ function AddRepair(props) {
 
   return (
     <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
+      {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
       {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
 
       Dodaj zlecenie
@@ -109,7 +112,7 @@ function AddRepair(props) {
           <div className="row col-12 mx-auto">
             <hr className="mt-4"/>
             <label htmlFor="Devices">Wybór urządzenia</label>
-            <select value={choosenDevice} className="form-select" defaultValue="new" id="Devices" onChange={(e) => {
+            <select value={choosenDevice} className="form-select" id="Devices" onChange={(e) => {
               setChoosenDevice(e.target.value)
               getService()
               console.log("device:" + choosenDevice)

@@ -74,7 +74,7 @@ function AddDevice(props) {
                 handleDeviceDataChange(e)
                 //console.log(e.target.value + ": " + e.target.name)
               }}>
-                <option value="none" hidden selected="selected">Wybierz typ urządzenia...</option>
+                <option value="none" hidden>Wybierz typ urządzenia...</option>
                 <option value="Laptop" key="Laptop">Laptop</option>
                 <option value="Komputer" key="Komputer">Komputer</option>
                 <option value="Tablet" key="Tablet">Tablet</option>
