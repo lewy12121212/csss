@@ -1,11 +1,13 @@
 import React from 'react';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useDidMount } from '../../common/commonFunc'
 import axios from 'axios';
 import { dbAddress } from '../../../../dbCon';
 
 import AddClient from './AddClient'
 import AddDevice from './AddDevice'
+
+import InfoAlert from '../../../../alerts/InfoAlert'
 //import '../AdminPanel.scss'
 //import '../../../../index.scss';
 //import '../../EmployeePanels.scss';
@@ -19,78 +21,78 @@ function AddRepair(props) {
   const [deviceName, setDeviceName] = useState([]); //Przerobione na useState
   const [serviceName, setServiceName] = useState([]); //Przerobione na useState
 
+  const [showInfoAlert, setShowInfoAlert] = useState(false)
+  const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
+
   const [choosenClient, setChoosenClient] = useState("new"); //wyświetlanie formularza dodawania
   const [choosenDevice, setChoosenDevice] = useState("new");
   const [choosenService, setChoosenService] = useState("");
 
-  useEffect(() => { //useEfFect zamiast on click
-    if(didMount) {
-      console.log('mounted');
-      axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
-        //console.log(response.data)
-        setClientsName(response.data.data); //zamiast funkcji getClientsNames :D
-        //getClientsNames(response.data.data)
-        console.log(clientsName)
-        //addSelectOptions("Clients",getClientsNames(response.data.data))
-      }).catch(error => {
-        if (error.response.status === 401) setError(error.response.data.message);
-        else setError("Coś poszło nie tak...");
-      });
-
-
-    } else {
-      console.log('state updated');
-    }
-  }, [setClientsName, clientsName, didMount]);
+  const getClients = useCallback(() => {
+    axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
+      setClientsName(response.data.data); //zamiast funkcji getClientsNames :D
+      console.log(clientsName)
+    }).catch(error => {
+      if (error.response.status === 401) setError(error.response.data.message);
+      else setError("Coś poszło nie tak...");
+    });
+  }, [setClientsName, clientsName])
 
   const getDevices = (clientId) => {
     console.log('getDevices', clientId)
     axios.post(`https://${dbAddress}:4000/repair/getListOfDevice`, { id: clientId }).then(response => {
-      //console.log(response.data)
-      console.log('getDevices v2', clientId)
-      setDeviceName(response.data.data); //zamiast funkcji getClientsNames :D
-      //getClientsNames(response.data.data)
-      console.log(response.data.data)
-      //addSelectOptions("Clients",getClientsNames(response.data.data))
+      setDeviceName(response.data.data);
+      console.log(deviceName)
     }).catch(error => {
       if (error.response.status === 401) setError(error.response.data.message);
       else setError("Coś poszło nie tak...");
     });
   }
 
-  /*
-  axios.get(`https://${dbAddress}:4000/repair/getEmployees`).then(response => {
-    
-    setServiceName(response.data.data);
-    
-    console.log(serviceName)
+  const getService = useCallback(() => {
+    axios.get(`https://${dbAddress}:4000/repair/getService`).then(response => {
+      setServiceName(response.data.data)
+      console.log(serviceName)
+    }).catch(error => {
+      if (error.response.status === 401) setError(error.response.data.message);
+      else setError("Coś poszło nie tak...");
+    });
+  }, [setServiceName, serviceName])
 
-  }).catch(error => {
-    if (error.response.status === 401) setError(error.response.data.message);
-    else setError("Coś poszło nie tak...");
-  });
-  */
+  useEffect(() => { //useEfFect zamiast on click
+    if(didMount) {
+      console.log('mounted');
+      getClients();
+      getService();
+    } else {
+      console.log('state updated');
+    }
+  }, [setClientsName, clientsName, didMount, getClients, getService]);
 
-//Dodać na dole
-/*
-  <label htmlFor="Servisants">Wybór serwisanta</label>
-          <select id="Servisants" onChange={(e) => {
-            setChoosenService(e.target.value)
-            console.log("servisant:" + choosenService)
-          }}>
-            {serviceName.map((data) => (
-              <option value={data.Id} key={data.Id}>{data.Name}</option>
-            ))}
-          </select> 
-*/
+  function setChoosenClientFunc(param){
+    setChoosenClient(param)
+  }
+
+  function setChoosenDeviceFunc(param){
+    setChoosenDevice(param)
+  }
+
+  function closeAlert(){
+    setShowInfoAlert(false)
+    setAlertMsg({MainInfo: "", SecondaryInfo: ""})
+  }
+
   return (
     <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
+      {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
+
       Dodaj zlecenie
-      <form className="justify-content-center">
+        {/*Wybór klienta*/}
         <div className="row col-12 mx-auto">
           <label htmlFor="Clients">Wybór klienta</label>
-          <select id="Clients" onChange={(e) => {
+          <select value={choosenClient} className="form-select" id="Clients" onChange={(e) => {
             setChoosenClient(e.target.value)
+            setChoosenDevice("new")
             getDevices(e.target.value)
             console.log("client:" + choosenClient)
           }}>
@@ -99,27 +101,45 @@ function AddRepair(props) {
               <option value={data.Id} key={data.Id}>{data.Name}</option>
             ))}
           </select> 
-          {choosenClient === "new" && <AddClient clientData={clientsName}/>}
-
-          <label htmlFor="Devices">Wybór urządzenia</label>
-          <select id="Devices" onChange={(e) => {
-            setChoosenDevice(e.target.value)
-            console.log("device:" + choosenDevice)
-          }}>
-            <option value="new" key={0}>Dodaj nowego urządzenie...</option>
-            {deviceName.map((data) => (
-              <option value={data.Name} key={data.Id}>{data.Id} {data.Name} {data.Model} {data.SN}</option>
-            ))}
-          </select> 
-          {choosenDevice === "new" && <AddDevice deviceData={choosenClient}/>}
-            
-            
-          
-  
-
+        </div>
+        {choosenClient === "new" && <AddClient clientData={clientsName} getClients={getClients} setChoosenClient={setChoosenClientFunc} setAlertMsg={setAlertMsg} setShowInfoAlert={setShowInfoAlert}/>}
+        
+        {/*Wybór urzadzenia klienta*/}
+        {choosenClient !== "new" && 
+          <div className="row col-12 mx-auto">
+            <hr className="mt-4"/>
+            <label htmlFor="Devices">Wybór urządzenia</label>
+            <select value={choosenDevice} className="form-select" defaultValue="new" id="Devices" onChange={(e) => {
+              setChoosenDevice(e.target.value)
+              getService()
+              console.log("device:" + choosenDevice)
+            }}>
+              <option value="new" key={0}>Dodaj nowe urządzenie...</option>
+              {deviceName.map((data) => (
+                <option value={data.Id} key={data.Id}>{data.Id} {data.Name} {data.Model} {data.SN}</option>
+              ))}
+            </select> 
+            {choosenDevice === "new" && <AddDevice deviceData={choosenClient} getDevices={getDevices} setChoosenDevice={setChoosenDeviceFunc} setAlertMsg={setAlertMsg} setShowInfoAlert={setShowInfoAlert}/>}
           </div>
-        </form>
-      
+        }
+
+        {/*Wybór serwisanta przypisanego do zlecenia*/}
+        {choosenDevice !== "new" && 
+          <div className="row col-12 mx-auto">
+            <hr className="mt-4"/>
+            <label htmlFor="Service">Wybór serwisanta</label>
+            <select value={choosenService} id="Service" className="form-select" onChange={(e) => {
+              setChoosenService(e.target.value)
+              console.log("service:" + choosenService)
+            }}>
+              {serviceName.map((data) => (
+                <option value={data.Id} key={data.Id}>{data.Id} {data.Name} {data.Surname} {data.Login}</option>
+              ))}
+            </select> 
+
+            <button className="btn btn-success mt-2">Dodaj zlecenie</button>
+          </div>   
+        }
     </div>
   );
 }

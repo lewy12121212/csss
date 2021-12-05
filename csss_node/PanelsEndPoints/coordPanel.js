@@ -12,7 +12,6 @@ module.exports = (app, db) => {
     const city = req.body.ClientData.City;
     const postalcode = req.body.ClientData.PostalCode;
 
-   
     if(name === "" || surname === "" || password === "" || mail === "" || phone === "" || address === "" || city === "" || postalcode === ""){
       return res.status(400).json({
         error: true,
@@ -63,10 +62,10 @@ module.exports = (app, db) => {
 
   app.post('/repair/deviceValidate', (req, res) => {
   
-    const name = req.body.DeviceData.name;
-    const model = req.body.DeviceData.model;
+    const name = req.body.DeviceData.Name;
+    const model = req.body.DeviceData.Model;
     const sn = req.body.DeviceData.Sn;
-    const type = req.body.DeviceData.type;
+    const type = req.body.DeviceData.Type;
 
     if(name === "" || model === "" || sn === "" || type === ""){
       return res.status(400).json({
@@ -123,9 +122,9 @@ module.exports = (app, db) => {
     })
   })
 
-  app.get('/repair/getEmployees', (req,res) => {
+  app.get('/repair/getService', (req,res) => {
 
-    const sqlQuery = "SELECT Name, Surname, Login FROM DB_employees WHERE Type LIKE Service";
+    const sqlQuery = "SELECT Id, Name, Surname, Login FROM DB_employees WHERE Type LIKE 'Service'";
 
     db.query(sqlQuery, (err, result) => {
       if (err) {
@@ -142,8 +141,6 @@ module.exports = (app, db) => {
       }
     })
   })
-
-
 
   app.post('/repair/addNewClient', (req,res) => {
     const sqlQuery = "INSERT into DB_clients (Name, FirstName, Surname, Address, City, PostalCode, Mail, Password, Phone, IsCompany) VALUES (?,?,?,?,?,?,?,?,?,?)"
@@ -252,7 +249,8 @@ module.exports = (app, db) => {
 
         return res.status(404).json({
           error: true,
-          message: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd połączenia z bazą",
+          secondaryInfo: "Spróbuj ponownie później."
         });
         
       }
