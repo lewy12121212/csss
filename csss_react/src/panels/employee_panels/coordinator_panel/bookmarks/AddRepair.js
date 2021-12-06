@@ -29,6 +29,7 @@ function AddRepair(props) {
   const [choosenClient, setChoosenClient] = useState("new"); //wyświetlanie formularza dodawania
   const [choosenDevice, setChoosenDevice] = useState("new");
   const [choosenService, setChoosenService] = useState("");
+  const [description, setDescription] = useState("");
 
   const getClients = useCallback(() => {
     axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
@@ -55,11 +56,15 @@ function AddRepair(props) {
     axios.get(`https://${dbAddress}:4000/repair/getService`).then(response => {
       setServiceName(response.data.data)
       console.log(serviceName)
+      //console.log(serviceName[0])
+      setChoosenService(response.data.data[0].Id)
     }).catch(error => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       setShowDangerAlert(true)
     });
-  }, [setServiceName, serviceName])
+
+    console.log(choosenService)
+  }, [setServiceName, serviceName, setChoosenService, choosenService])
 
   useEffect(() => { //useEfFect zamiast on click
     if(didMount) {
@@ -81,7 +86,20 @@ function AddRepair(props) {
 
   function closeAlert(){
     setShowInfoAlert(false)
+    setShowDangerAlert(false)
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
+  }
+
+  const handleAddRepair = () => {
+    axios.post(`https://${dbAddress}:4000/repair/addRepair`, {clientId: choosenClient,serviceId: choosenService,deviceId: choosenDevice,description: description}).then(response => {
+      setAlertMsg({MainInfo: response.data.message, SecondaryInfo: ""})
+      console.log(response.data.result.insertId)
+      setShowInfoAlert(true)
+    }).catch(error => {
+      console.log(error)
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
+    });
   }
 
   return (
@@ -97,6 +115,7 @@ function AddRepair(props) {
             setChoosenClient(e.target.value)
             setChoosenDevice("new")
             getDevices(e.target.value)
+            setDescription("")
             console.log("client:" + choosenClient)
           }}>
             <option value="new" key={0}>Dodaj nowego klienta...</option>
@@ -128,6 +147,7 @@ function AddRepair(props) {
 
         {/*Wybór serwisanta przypisanego do zlecenia*/}
         {choosenDevice !== "new" && 
+          
           <div className="row col-12 mx-auto">
             <hr className="mt-4"/>
             <label htmlFor="Service">Wybór serwisanta</label>
@@ -139,8 +159,17 @@ function AddRepair(props) {
                 <option value={data.Id} key={data.Id}>{data.Id} {data.Name} {data.Surname} {data.Login}</option>
               ))}
             </select> 
+            
+            <hr className="mt-4"/>
+            <label htmlFor="Description">Opis zgłoszenia serwisowego</label>
+            <textarea id="Description" className="p-2" onChange={(e) => {
+              setDescription(e.target.value) 
+              console.log("Description: " + description)}
+            }></textarea>
 
-            <button className="btn btn-success mt-2">Dodaj zlecenie</button>
+            {description.length > 0 &&
+              <button className="btn btn-success mt-2" onClick={handleAddRepair}>Dodaj zlecenie</button>
+            }
           </div>   
         }
     </div>

@@ -188,12 +188,14 @@ module.exports = (app, db) => {
 
   app.post('/repair/addRepair', (req,res) => {
 
-    const sqlQuery = "INSERT into DB_repairs (ClientId, ServiceId, DeviceId, QrCode, Descrption) VALUES (?,?,?,?,?)"
+    const sqlQuery = "INSERT into DB_repairs (ClientId, ServiceId, DeviceId, Description) VALUES (?,?,?,?)"
 
-    const clientid = req.body.clientid;
-    const serviceid = req.body.serviceid;
-    const deviceid = req.body.deviceid;
+    const clientid = req.body.clientId;
+    const serviceid = req.body.serviceId;
+    const deviceid = req.body.deviceId;
     const description = req.body.description;
+
+    //console.log("cli: " + clientid + "serv: " + serviceid + "device: " + deviceid + "description: " + description);
 
     db.query(sqlQuery, [clientid, serviceid, deviceid, description], (error, results)=>{
       
@@ -202,18 +204,19 @@ module.exports = (app, db) => {
 
         return res.status(404).json({
           error: true,
-          message: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd bazy danych.",
+          secondaryInfo: "Spróbuj ponownie później."
         });
         
       }
-      else return res.status(200).json({message:'Pomyślnie dodano zlecenie.', result: results})
+      else return res.status(200).json({message:"Pomyślnie dodano zlecenie.", result: results})
     });
 
   })
 
   app.post('/repair/addQRcode', (req,res) => {
 
-    const sqlQuery = "UPDATE DB_repairs SET QrCode = (?);"
+    const sqlQuery = "UPDATE DB_repairs SET QrCode = (?) WHERE Id like (?);"
     const qr = req.body.qr;
 
     db.query(sqlQuery, [qr], (error, results)=>{
