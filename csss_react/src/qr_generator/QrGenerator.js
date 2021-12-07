@@ -9,9 +9,9 @@ class QrGenerator extends React.Component {
     super(props);
     this.qrcode = React.createRef();
     this.options = null;
-    
+
     this.state = {
-      qrBase64: null
+      qrBase64: "tekst-wstepny"
     };
   }
 
@@ -33,13 +33,15 @@ class QrGenerator extends React.Component {
 
   createQrCode = () => {
     new QRCode(this.qrcode.current, this.options);
-    var qrCanvas = this.qrcode.current.getElementsByTagName('canvas')[0]
-
+    let qrCanvas = this.qrcode.current.getElementsByTagName('canvas')[0]
+    //this.qrBase64 = qrCanvas.toDataURL()
     this.setState({
+      ...this.state,
       qrBase64: qrCanvas.toDataURL()
     })
+
     //var qrBase64 = qrCanvas.toDataURL()
-    console.log(qrCanvas.toDataURL())
+    //console.log(qrCanvas.toDataURL())
     console.log(this.state.qrBase64)
 
   }
@@ -61,10 +63,14 @@ class QrGenerator extends React.Component {
     return ( 
       <div className = "App">
         Qr dla zlenenia numer: {this.props.repairId}
+        
         {/*this.baseToImage(this.qrBase64)*/}
         {/*<input type="text" onChange={this.handleChange} />
-        <input type="button" value="Generuj QR code" onClick={this.handleOption} />*/}
+        <input type="button" value="Generuj QR code" onClick={this.createQrCode} />*/}
         <div ref={this.qrcode}></div> 
+        {this.state.qrBase64}
+        <img src={this.state.qrBase64} alt="smutno"/>
+
       </div>
     );
   }
