@@ -9,6 +9,8 @@ import AddDevice from './AddDevice'
 
 import InfoAlert from '../../../../alerts/InfoAlert'
 import DangerAlert from '../../../../alerts/DangerAlert'
+
+import QrGenerator from '../../../../qr_generator/QrGenerator'
 //import '../AdminPanel.scss'
 //import '../../../../index.scss';
 //import '../../EmployeePanels.scss';
@@ -30,6 +32,10 @@ function AddRepair(props) {
   const [choosenDevice, setChoosenDevice] = useState("new");
   const [choosenService, setChoosenService] = useState("");
   const [description, setDescription] = useState("");
+
+  //for Qr generator
+  const [repairId, setRepairId] = useState(null)
+  const [showQrGenerator, setShowQrGenerator] = useState(false);
 
   const getClients = useCallback(() => {
     axios.get(`https://${dbAddress}:4000/repair/getListOfClients`).then(response => {
@@ -95,6 +101,8 @@ function AddRepair(props) {
       setAlertMsg({MainInfo: response.data.message, SecondaryInfo: ""})
       console.log(response.data.result.insertId)
       setShowInfoAlert(true)
+      setRepairId(response.data.result.insertId)
+      setShowQrGenerator(true)
     }).catch(error => {
       console.log(error)
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
@@ -172,6 +180,8 @@ function AddRepair(props) {
             }
           </div>   
         }
+
+        {showQrGenerator && <QrGenerator repairId={repairId} />}
     </div>
   );
 }

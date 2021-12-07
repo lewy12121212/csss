@@ -1,4 +1,4 @@
-export let dbAddress = "localhost"
+export let dbAddress = "192.168.1.10"
 //for windows
 //set HTTPS=true&&set SSL_CRT_FILE=./httpsCert/cert.pem&&set SSL_KEY_FILE=./httpsCert/key.pem&&react-scripts start
 //for linux
