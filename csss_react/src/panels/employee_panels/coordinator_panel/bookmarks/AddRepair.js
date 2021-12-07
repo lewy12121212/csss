@@ -24,6 +24,8 @@ function AddRepair(props) {
   const [deviceName, setDeviceName] = useState([]); //Przerobione na useState
   const [serviceName, setServiceName] = useState([]); //Przerobione na useState
 
+  //const [ifRepairAdd, setIfRepairAdd] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
   const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
@@ -97,6 +99,7 @@ function AddRepair(props) {
   }
 
   const handleAddRepair = () => {
+    setLoading(true)
     axios.post(`https://${dbAddress}:4000/repair/addRepair`, {clientId: choosenClient,serviceId: choosenService,deviceId: choosenDevice,description: description}).then(response => {
       setAlertMsg({MainInfo: response.data.message, SecondaryInfo: ""})
       console.log(response.data.result.insertId)
@@ -115,7 +118,9 @@ function AddRepair(props) {
       {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
       {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
 
-      Dodaj zlecenie
+      {!showQrGenerator && 
+        <section>
+        Dodaj zlecenie
         {/*Wybór klienta*/}
         <div className="row col-12 mx-auto">
           <label htmlFor="Clients">Wybór klienta</label>
@@ -176,12 +181,13 @@ function AddRepair(props) {
             }></textarea>
 
             {description.length > 0 &&
-              <button className="btn btn-success mt-2" onClick={handleAddRepair}>Dodaj zlecenie</button>
+              <button className="btn btn-success mt-2" onClick={handleAddRepair} disabled={loading}>{loading ? "Przetwarzanie..." : "Dodaj zlecenie"}</button>
             }
           </div>   
         }
-
-        {showQrGenerator && <QrGenerator repairId={repairId} />}
+        </section>
+      }
+      {showQrGenerator && <QrGenerator repairId={repairId} />}
     </div>
   );
 }

@@ -102,7 +102,7 @@ module.exports = (app, db) => {
     })
   })
 
-  app.get('/repair/getListOfDevice', (req,res) => {
+  app.post('/repair/getListOfDevice', (req,res) => {
     const id = req.body.id;
     const sqlQuery = "SELECT * FROM DB_devices WHERE ClientId like (?)"
 
@@ -111,7 +111,8 @@ module.exports = (app, db) => {
         console.log(err)
         return res.status(406).json({
           error: true,
-          message: "Problem z pobraniem bazy urządzeń."
+          mainInfo: "Problem z pobraniem bazy urządzeń.",
+          secondaryInfo: "Spróbuj ponownie później"
         }) 
       } else {
         return res.status(200).json({ 
@@ -195,7 +196,7 @@ module.exports = (app, db) => {
     const deviceid = req.body.deviceId;
     const description = req.body.description;
 
-    //console.log("cli: " + clientid + "serv: " + serviceid + "device: " + deviceid + "description: " + description);
+    console.log("cli: " + clientid + "serv: " + serviceid + "device: " + deviceid + "description: " + description);
 
     db.query(sqlQuery, [clientid, serviceid, deviceid, description], (error, results)=>{
       
@@ -217,16 +218,20 @@ module.exports = (app, db) => {
   app.post('/repair/addQRcode', (req,res) => {
 
     const sqlQuery = "UPDATE DB_repairs SET QrCode = (?) WHERE Id like (?);"
-    const qr = req.body.qr;
+    const qr = req.body.qrcode;
+    const id = req.body.id;
 
-    db.query(sqlQuery, [qr], (error, results)=>{
+    //console.log(qr + "id" + id)
+
+    db.query(sqlQuery, [qr, id], (error, results)=>{
       
       if(error)
       { console.log(error)
 
         return res.status(404).json({
           error: true,
-          message: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd bazy danych.",
+          secondaryInfo: "Spróbuj ponownie później."
         });
         
       }

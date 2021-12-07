@@ -16,8 +16,7 @@ function ShowRepair(props) {
 
   return (
     <div className="">
-      Ło panie
-      {props.match.params.id}
+      Zlecenie numer: {props.match.params.id}
     </div>
   );
 }
