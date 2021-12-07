@@ -1,0 +1,26 @@
+@import "../../../index.scss";
+
+.mainRepairBox{
+  border: 2px solid black;
+  padding: 10px;
+  border-radius: 25px;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.repairTextarea{
+  resize: none;
+  height: 100px;
+}
+
+h6{
+  margin: 0px;
+  padding: 0px;
+  font-weight: bold !important;
+  display: inline;
+}
+
+.selectBox{
+
+}

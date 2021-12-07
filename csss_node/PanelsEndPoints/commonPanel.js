@@ -174,8 +174,30 @@ module.exports = (app, db, employeeUtils) => {
         }); 
       }
     })
-
   })
+
+  //app.post('/employee/common/oneRepair', (req,res) => {
+  //  
+  //  const id = req.body.Id;
+  //  const sqlQuery = "SELECT * FROM DB_repairs WHERE Id like (?)"
+//
+  //  console.log("id repair" + id)
+//
+  //  db.query(sqlQuery, [id], (err, result) => {
+  //    if (err) {
+  //      console.log(err)
+  //      return res.status(406).json({
+  //        error: true,
+  //        message: "Problem z pobraniem bazy napraw."
+  //      }) 
+  //    } else {
+  //      return res.status(200).json({ 
+  //        error: false,
+  //        data: result
+  //      }); 
+  //    }
+  //  })
+  //})
 
   app.get('/employee/common/allRepairsInner', (req,res) => {
     
@@ -220,5 +242,49 @@ module.exports = (app, db, employeeUtils) => {
 
   })
 
+  app.post('/employee/common/oneRepairInner', (req,res) => {
+
+    const id = req.body.Id
+    const sqlQuery = "SELECT \
+    `DB_repairs`.*, \
+    `DB_devices`.`Name` AS DeviceName, \
+    `DB_devices`.`Model` AS DeviceModel, \
+    `DB_devices`.`SN` AS DeviceSN, \
+    `DB_devices`.`Type` AS DeviceType, \
+    `DB_clients`.`Id` AS ClientId, \
+    `DB_clients`.`Name` AS ClientName, \
+    `DB_clients`.`Mail` AS ClientMail, \
+    `DB_clients`.`Phone` AS ClientPhone, \
+    `DB_employees`.`Id` AS EmployeeId, \
+    `DB_employees`.`Name` AS EmployeeName, \
+    `DB_employees`.`Surname` AS EmployeeSurname, \
+    `DB_employees`.`Login` AS EmployeeLogin, \
+    `DB_employees`.`Mail` AS EmployeeMail, \
+    `DB_employees`.`Phone` AS EmployeePhone \
+    FROM `DB_repairs` \
+    INNER JOIN `DB_clients` ON `DB_repairs`.`ClientId` like `DB_clients`.`Id` \
+    INNER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
+    INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
+    WHERE `DB_repairs`.`Id` like (?) \
+    ORDER BY `DB_repairs`.`CreationDate` ASC;";
+    
+    console.log("ID: " + id)
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+
+  })
 
 }
