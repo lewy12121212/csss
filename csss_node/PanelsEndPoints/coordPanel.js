@@ -102,7 +102,7 @@ module.exports = (app, db) => {
     })
   })
 
-  app.post('/repair/getListOfDevice', (req,res) => {
+  app.get('/repair/getListOfDevice', (req,res) => {
     const id = req.body.id;
     const sqlQuery = "SELECT * FROM DB_devices WHERE ClientId like (?)"
 
