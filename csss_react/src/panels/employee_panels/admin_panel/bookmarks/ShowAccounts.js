@@ -23,6 +23,7 @@ function ShowAccount(props) {
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
   const [showWarningAlertSubmitData, setShowWarningAlertSubmitData] = useState(false)
+  const [showWarningAlertSubmitDel, setShowWarningAlertSubmitDel] = useState(false)
   const [alertMsg, setAlertMsg] = useState({MainInfo: "", SecondaryInfo: ""})
 
 
@@ -30,6 +31,7 @@ function ShowAccount(props) {
     setShowDangerAlert(false)
     setShowInfoAlert(false)
     setShowWarningAlertSubmitData(false)
+    setShowWarningAlertSubmitDel(false)
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
   }
 
@@ -55,11 +57,25 @@ function ShowAccount(props) {
     let genPass = PassGenerator();
     setEmployeeData({Login: login, Password: genPass});
 
-    setAlertMsg({MainInfo: "Reset hasła.", SecondaryInfo: `Czy na pewno zresetować hasło użytkownikowi ${login}`})
+    setAlertMsg({MainInfo: "Reset hasła.", SecondaryInfo: `Czy na pewno zresetować hasło użytkownikowi ${login}.`})
     setShowWarningAlertSubmitData(true)
     
     //setClientPassword(genPass)
   }
+
+
+  const handleDelAccount = (login) => {
+
+    closeAlert()
+
+    setEmployeeData({Login: login});
+
+    setAlertMsg({MainInfo: "Usunięcie konta.", SecondaryInfo: `Czy na pewno usunąć konto pracownika ${login}.`})
+    setShowWarningAlertSubmitDel(true)
+    
+    //setClientPassword(genPass)
+  }
+
 
   const handleCommitChanges = () => {
     
@@ -74,12 +90,30 @@ function ShowAccount(props) {
     });
   }
 
+
+  const handleDelete = () => {
+
+    closeAlert()
+
+    axios.post(`https://${dbAddress}:4000/employee/admin/deleteAccount`, {EmployeeData: employeeData}).then(response => {
+      setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
+      setShowInfoAlert(true)
+    }).catch((error) => {
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
+    });
+
+  }
+
   return (
     <div className="bookmarkBox container col-12 col-md-10 col-lg-8">
 
       {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
       {showInfoAlert && <InfoAlert Content={alertMsg} CloseAlert={closeAlert}/>}
+      {/*reset hasła*/}
       {showWarningAlertSubmitData && <WarningAlertSubmit Content={alertMsg} Func={handleCommitChanges} CloseAlert={closeAlert}/>}
+      {/*usunięcie konta*/}
+      {showWarningAlertSubmitDel && <WarningAlertSubmit Content={alertMsg} Func={handleDelete} CloseAlert={closeAlert}/>}
 
       Informacje o użytkownikach
 
@@ -105,6 +139,7 @@ function ShowAccount(props) {
               <td>{data.Mail}</td>
 
               <td><button className="btn btn-warning mt-2"  onClick={() => handleResetPass(data.Login)}>Resetuj hasło</button></td>
+              <td><button className="btn btn-danger mt-2"  onClick={() => handleDelAccount(data.Login)}>Usuń konto</button></td>
             </tr>
           )}
         </tbody>

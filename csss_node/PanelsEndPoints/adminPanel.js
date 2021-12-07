@@ -116,4 +116,26 @@ module.exports = (app, db, employeeUtils) => {
 
   })
 
+
+  app.post('/employee/admin/deleteAccount', (req,res) => {
+
+    const sqlQuery = "DELETE FROM DB_employees WHERE Login = (?)";
+
+    const login = req.body.EmployeeData.Login;
+
+    db.query(sqlQuery, [login], (err, result) => {
+      if(err)
+      { 
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+        });
+        
+      }
+      else return res.status(200).json({mainInfo:`Usunięto konto pracownika ${login}`})
+    })
+
+  })
+
 }
