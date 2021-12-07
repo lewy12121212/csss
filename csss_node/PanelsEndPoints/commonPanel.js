@@ -199,6 +199,7 @@ module.exports = (app, db, employeeUtils) => {
     INNER JOIN `DB_clients` ON `DB_repairs`.`ClientId` like `DB_clients`.`Id` \
     INNER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
     INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
+    WHERE `DB_repairs`.`IfReceived` = FALSE \
     ORDER BY `DB_repairs`.`CreationDate` ASC;";
     
 
