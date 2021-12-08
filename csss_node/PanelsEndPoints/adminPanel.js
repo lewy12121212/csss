@@ -138,4 +138,90 @@ module.exports = (app, db, employeeUtils) => {
 
   })
 
+  app.post('/employee/admin/reopenRepair', (req,res) => {
+
+    const sqlQuery = "UPDATE DB_repairs SET Closed = 0 WHERE Id = (?);"
+
+    const id = req.body.Id;
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if(err)
+      { 
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+        });
+        
+      }
+      else return res.status(200).json({mainInfo:`Zlecenie przeniesione do naprawianych.`})
+    })
+  })
+
+
+  app.post('/employee/admin/changeReceived', (req,res) => {
+
+    const sqlQuery = "UPDATE DB_repairs SET IfReceived = 0 WHERE Id = (?);"
+
+    const id = req.body.Id;
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if(err)
+      { 
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+        });
+        
+      }
+      else return res.status(200).json({mainInfo:`Zlecenie przeniesione do oczekujących na odebranie.`})
+    })
+  })
+
+
+  app.get('/employee/admin/allClosedRepair', (req,res) => {
+    
+    const sqlQuery = "SELECT \
+    `DB_repairs`.*, \
+    `DB_devices`.`Name` AS DeviceName, \
+    `DB_devices`.`Model` AS DeviceModel, \
+    `DB_devices`.`SN` AS DeviceSN, \
+    `DB_devices`.`Type` AS DeviceType, \
+    `DB_clients`.`Id` AS ClientId, \
+    `DB_clients`.`Name` AS ClientName, \
+    `DB_clients`.`Mail` AS ClientMail, \
+    `DB_clients`.`Phone` AS ClientPhone, \
+    `DB_employees`.`Id` AS EmployeeId, \
+    `DB_employees`.`Name` AS EmployeeName, \
+    `DB_employees`.`Surname` AS EmployeeSurname, \
+    `DB_employees`.`Login` AS EmployeeLogin, \
+    `DB_employees`.`Mail` AS EmployeeMail, \
+    `DB_employees`.`Phone` AS EmployeePhone \
+    FROM `DB_repairs` \
+    INNER JOIN `DB_clients` ON `DB_repairs`.`ClientId` like `DB_clients`.`Id` \
+    INNER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
+    INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
+    WHERE `DB_repairs`.`Closed` = 1 \
+    ORDER BY `DB_repairs`.`CreationDate` ASC;";
+    
+
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+
+  })
+
+
 }

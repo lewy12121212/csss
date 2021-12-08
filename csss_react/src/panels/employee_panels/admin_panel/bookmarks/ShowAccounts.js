@@ -98,6 +98,10 @@ function ShowAccount(props) {
     axios.post(`https://${dbAddress}:4000/employee/admin/deleteAccount`, {EmployeeData: employeeData}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
+
+      axios.get(`https://${dbAddress}:4000/employee/admin/getUsersTable`).then(response => {
+        setEmployeesTable(response.data.data)
+      });
     }).catch((error) => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       setShowDangerAlert(true)
