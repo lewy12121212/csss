@@ -45,7 +45,7 @@ function EmployeeLoginPanel(props) {
 
   const handleFaceLogin = (image, setLoadingCam, setErrorCam) => {
     console.log("error")
-    axios.post(`https://${dbAddress}:4000/employee/faceLogin`, {image: image }).then(response => {
+    axios.post(`https://${dbAddress}:4000/employee/faceLogin`, { image: image }).then(response => {
       setLoadingCam(false);
       //alert("Zalogowano!" + response.data.user); //pamiętać wyrzucić!!!
       setUserSession(response.data.token, response.data.user);
@@ -53,8 +53,10 @@ function EmployeeLoginPanel(props) {
     }).catch(error => {
       //setLoading(false);
       setLoadingCam(false);
-      if (error.response.status === 401) setErrorCam(error.response.data.message);
-      else setErrorCam("Coś poszło nie tak...");
+      console.log("błąd logowania twarzą" + error.response.data.message);
+      setErrorCam(error.response.data.message);
+      //if (error.response.status === 401) setErrorCam(error.response.data.message);
+      //else setErrorCam("Coś poszło nie tak...");
     });
   }
 

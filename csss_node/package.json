@@ -15,7 +15,7 @@
     "@tensorflow/tfjs": "^3.10.0",
     "@tensorflow/tfjs-core": "^3.10.0",
     "@tensorflow/tfjs-node": "^3.11.0",
-    "@vladmandic/face-api": "^1.5.7",
+    "@vladmandic/face-api": "^1.5.8",
     "blob": "^0.1.0",
     "body-parser": "^1.19.0",
     "canvas": "^2.8.0",

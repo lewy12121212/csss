@@ -8,7 +8,7 @@ const { promises: fs } = require('fs')
 const canvas = require("canvas");
 
 //const db = require('./server.js');
-const { resolve } = require('path');
+//const { resolve } = require('path');
 const { loadImage, Canvas, Image, ImageData } = canvas; 
 
 

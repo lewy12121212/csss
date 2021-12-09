@@ -1,67 +1,112 @@
 import React from 'react';
 import axios from 'axios';
+import { NavLink } from 'react-router-dom';
 import * as QRCode from 'easyqrcodejs';
 import { dbAddress } from '../dbCon';
+import ReactToPrint from 'react-to-print';
 
+import InfoAlert from '../alerts/InfoAlert'
+import DangerAlert from '../alerts/DangerAlert'
 class QrGenerator extends React.Component {
   
   constructor(props) {
     super(props);
     this.qrcode = React.createRef();
     this.options = null;
+
     this.state = {
-      count: 0
+      qrBase64: "tekst-wstepny",
+      showDangerAlert: false,
+      showInfoAlert: false,
+      alertMsg: {MainInfo: "", SecondaryInfo: ""}
     };
   }
 
-  handleChange = e => {
+  closeAlert(){
+    this.setState({
+      ...this.state,
+      showInfoAlert: false,
+      showDangerAlert: false,
+      alertMsg: ({MainInfo: "", SecondaryInfo: ""})
+    })
+  }
+
+  async componentDidMount(){
+    await this.createQrContext(this.props.repairId)
+    await this.createQrCode()
+    this.saveQrCodeInDb(this.state.qrBase64)
+
+  }
+
+  createQrContext = (repairId) => {
     this.options = {
-      text: e.target.value,
-      width: 300,
-      height: 300,
+      text: `https://${dbAddress}:3000/Repairs/${repairId}`,
+      width: 100,
+      height: 100,
       colorDark: "#000000",
       colorLight: "#FFFFFF",
       //drawer: "svg" //To make QRcode in SVG
     };
   }
 
-  handleOption = () => {
+  createQrCode = () => {
     new QRCode(this.qrcode.current, this.options);
-
-    var qrCanvas = this.qrcode.current.getElementsByTagName('canvas')[0]
-    var qrBase64 = qrCanvas.toDataURL()
-    console.log(qrBase64)
-
-    /* //To SVG - currently don't work
-    var serializedSVG = new XMLSerializer().serializeToString(this.qrcode.current.getElementsByTagName('svg')[0]);
-    var base64Data = window.btoa(serializedSVG);
-    console.log("data:image/svg+xml;base64," + base64Data)
-    */
-
-
-    axios.get(`https://${dbAddress}:4000/qr`, {qrcode: this.qrcode }).then(response => {
-
-      //console.log(response.data)
-  
-    }).catch(error => {
-      
-      //console.log(error)
-      //if (error.response.status === 401) this.setState(error.response.data.message);
-      //if (error.response.status === 500){
-      //  console.log("500 plus")
-      //  this.setState({Comment: 'HALLO'});
-      //} 
-      //else this.setState({Comment: 'Coś poszło nie tak...'})
-    });
-
+    let qrCanvas = this.qrcode.current.getElementsByTagName('canvas')[0]
+    this.setState({
+      ...this.state,
+      qrBase64: qrCanvas.toDataURL()
+    })
   }
+
+  saveQrCodeInDb = () => {
+    //TODO - show alerts from update QR-code
+    axios.post(`https://${dbAddress}:4000/repair/addQRcode`, {qrcode: this.state.qrBase64, id: this.props.repairId}).then(response => {  
+      console.log(response.data.message)
+      //this.setState({
+      //  ...this.state,
+      //  alertMsg: {MainInfo: response.data.message, SecondaryInfo: ""},
+      //  showInfoAlert: true
+      //})
+      //this.setState(prevState => ({
+      //  alertMsg:{
+      //    ...prevState.alertMsg,
+      //    MainInfo: response.data.message
+      //  },
+      //  showInfoAlert: true
+      //}));
+    }).catch(error => {
+      console.log(error.response.data.mainInfo)
+      //this.setState({
+      //  ...this.state,
+      //  alertMsg: {MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo},
+      //  showDangerAlert: true,
+      //})
+    });
+  }
+
 
   render() {
     return ( 
-      <div className = "App">
+      <div className = "container">
+        {this.state.showDangerAlert && <DangerAlert Content={this.alertMsg} CloseAlert={this.closeAlert}/>}
+        {this.state.showInfoAlert && <InfoAlert Content={this.alertMsg} CloseAlert={this.closeAlert}/>}
+
+        Qr dla zlecenia numer: {this.props.repairId} <br />
+
+        <div ref={this.qrcode} hidden></div> 
+        {/*this.baseToImage(this.qrBase64)
         <input type="text" onChange={this.handleChange} />
-        <input type="button" value="Generuj QR code" onClick={this.handleOption} />
-        <div ref={this.qrcode}></div> 
+        <input type="button" value="Generuj QR code" onClick={this.createQrCode} />
+        {this.state.qrBase64}
+        <img src={this.state.qrBase64} alt="smutno" ref={(response) => (this.componentRef = response)}/>
+        */}
+        <img src={this.state.qrBase64} alt="smutno" ref={(response) => (this.componentRef = response)}/><br />
+        <ReactToPrint
+          content={() => this.componentRef}
+          trigger={() => <button className="btn btn-success">Drukuj QrCode</button>}
+        />
+        <br />
+        <NavLink className="btn btn-warning p-2" to="/EmployeeDashboard/Coordinator/Repairs">Lista zleceń</NavLink>
       </div>
     );
   }

@@ -1,5 +1,20 @@
 @import "../../index.scss";
 
+.reset-password{
+  background-color: transparent !important;
+  padding: 5px !important;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.reset-password:hover{
+  color: rgb(255, 238, 0) !important;
+  padding: 5px !important;
+  font-weight: bold !important;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
 .local-client-btn{
 	background: $lightBlue;
   margin: 10px;

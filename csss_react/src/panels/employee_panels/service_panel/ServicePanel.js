@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { getUser, removeUserSession } from '../../../utils/Common';
 
 import Settings from '../common/Settings'
 import Chat from '../chat/Chat'
-import AllOrders from './bookmarks/AllOrders'
-import AssignedOrders from './bookmarks/AssignedOrders'
+import ShowRepairsList from '../common/ShowRepairsList'
+import AssignedRepairs from './bookmarks/AssignedRepairs'
 
 import LeftMenu from './LeftMenu'
 import UpperMenu from '../common/UpperMenu'
@@ -29,6 +29,18 @@ function ServicePanel(props) {
     props.history.push('/');
   }
 
+  useEffect(() => {
+    const handleInvalidToken = e => {
+      if (e.key === 'token' && e.oldValue && !e.newValue) {
+        props.history.push('/');
+      }
+    }
+    window.addEventListener('storage', handleInvalidToken)
+    return function cleanup() {
+      window.removeEventListener('storage', handleInvalidToken)
+    }
+  }, [props])
+
   return (
     <div className="col-12">
       <UpperMenu handleShow={handleShow} handleLogout={handleLogout} /> 
@@ -37,8 +49,8 @@ function ServicePanel(props) {
       <div className="container col-12">
         <Switch>
           <Route exact path="/EmployeeDashboard/Service/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
-          <Route path="/EmployeeDashboard/Service/AllOrders" render={() => <AllOrders />} />
-          <Route path="/EmployeeDashboard/Service/AssignedOrders" render={() => <AssignedOrders />} />
+          <Route path="/EmployeeDashboard/Service/Repairs" render={() => <ShowRepairsList />} />
+          <Route path="/EmployeeDashboard/Service/AssignedRepairs" render={() => <AssignedRepairs />} />
           <Route path="/EmployeeDashboard/Service/Chat" render={() => <Chat />} />
           <Redirect to="/EmployeeDashboard/Service/Settings" />
         </Switch>

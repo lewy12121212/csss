@@ -97,6 +97,7 @@ function ClientResetPassword (props) {
     }
     else if(password === repeatPassword.value)
     {
+      //console.log('email ', email.value, ' pass ', password);
       axios.post(`https://${dbAddress}:4000/client/ChangePassword`, { email: email.value, password: password}).then(result => {
 
         alert("Hasło zostało zmienione.");

@@ -1,4 +1,4 @@
-const cloud = require('./cloudinaryConfig')
+//const cloud = require('./cloudinaryConfig')
 const detection = require('./faceDetection')
 const faceapi = require('@vladmandic/face-api');
 const canvas = require("canvas");
@@ -99,6 +99,7 @@ module.exports = (app, db, employeeUtils) => {
       {
         db.query(sqlQuery2, [id, picture[i]], (err, result) => {
           if (err) reject(err)
+          console.log('aa ', result)
         });
       }
       resolve(true)
@@ -196,7 +197,7 @@ module.exports = (app, db, employeeUtils) => {
             message: "Problem z połączeniem z bazą."
           });
     
-          if(result.length > 1){
+          if(result.length > 1 || result.length === 0){
             return res.status(401).json({
               error: true,
               message: "Wielu użytkowników o tych samych danych."
@@ -205,13 +206,13 @@ module.exports = (app, db, employeeUtils) => {
             let userData = result[0]
             const token = employeeUtils.generateToken(userData);
             const userObj = employeeUtils.getCleanUser(userData);
-            return res.status(200).json({ user: userObj, token }); 
+            return res.status(200).json({ user: userObj, token: token }); 
           }
         })
       } 
       else res.status(401).json({
         error: true,
-        message: "Face recognition failed"
+        message: "Błąd rozpoznawania twarzy"
       });
   });
 

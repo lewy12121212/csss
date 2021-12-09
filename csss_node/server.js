@@ -53,7 +53,7 @@ require('./mailSender')(app);
 //panels endpoints
 require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
-
+require('./PanelsEndPoints/coordPanel')(app,db);
 
 app.use((req, res, next) => {
   var token = req.headers['authorization'];
@@ -157,3 +157,6 @@ server.listen(port, () => {
   console.log('Server started on: ' + port);
 });
 
+app.listen(4001, () => {
+  console.log('Server started on: 4001');
+});

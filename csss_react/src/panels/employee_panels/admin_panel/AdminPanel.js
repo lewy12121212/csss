@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import { getUser, removeUserSession } from '../../../utils/Common';
 //import Offcanvas from "react-bootstrap/Offcanvas";
@@ -31,6 +31,18 @@ function AdminPanel(props) {
     removeUserSession();
     props.history.push('/');
   }
+
+  useEffect(() => {
+    const handleInvalidToken = e => {
+      if (e.key === 'token' && e.oldValue && !e.newValue) {
+        props.history.push('/');
+      }
+    }
+    window.addEventListener('storage', handleInvalidToken)
+    return function cleanup() {
+      window.removeEventListener('storage', handleInvalidToken)
+    }
+  }, [props])
 
   return (
     <div className="col-12">
