@@ -12,7 +12,7 @@ function UpperMenu(props) {
       <div className="flexRight container">
         <input type="button" className="btn btn-primary btn-upperMenu col-10 col-md-6 col-lg-4" onClick={props.handleLogout} value="Wyloguj" />
       </div>
-  </div>
+    </div>
   );
 }
 

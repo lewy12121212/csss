@@ -188,17 +188,23 @@ module.exports = (app, db) => {
 
 
   app.post('/repair/addRepair', (req,res) => {
+    const d = new Date();
 
     const sqlQuery = "INSERT into DB_repairs (ClientId, ServiceId, DeviceId, Description) VALUES (?,?,?,?)"
 
     const clientid = req.body.clientId;
     const serviceid = req.body.serviceId;
     const deviceid = req.body.deviceId;
-    const description = req.body.description;
+    const description = {
+      "repair":[
+        {"Date": d.toLocaleDateString(),"Time": d.toLocaleTimeString(), "Status": "Przyjęte", "Description": req.body.description, "ClientDecision": null}
+      ]
+    }
 
-    console.log("cli: " + clientid + "serv: " + serviceid + "device: " + deviceid + "description: " + description);
+    console.log("opis zlecenia" + JSON.stringify(description));
+    //console.log("cli: " + clientid + "serv: " + serviceid + "device: " + deviceid + "description: " + description);
 
-    db.query(sqlQuery, [clientid, serviceid, deviceid, description], (error, results)=>{
+    db.query(sqlQuery, [clientid, serviceid, deviceid, JSON.stringify(description)], (error, results)=>{
       
       if(error)
       { console.log(error)

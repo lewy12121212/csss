@@ -54,6 +54,7 @@ require('./mailSender')(app);
 require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/coordPanel')(app,db);
+require('./PanelsEndPoints/servicePanel')(app,db);
 
 app.use((req, res, next) => {
   var token = req.headers['authorization'];
