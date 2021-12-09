@@ -15,6 +15,9 @@ function ShowRepairService(props) {
   const [jsonDescription, setJsonDescription] = useState([]);
   let componentRef = "";
 
+  const [newRepairStatus, setNewRepairStatus] = useState("");
+  const [description, setDescription] = useState("")
+
   const [showDangerAlert, setShowDangerAlert] = useState(false)
   const [showWarningAlert, setShowWarningAlert] = useState(false)
   const [showInfoAlert, setShowInfoAlert] = useState(false)
@@ -71,6 +74,16 @@ function ShowRepairService(props) {
     });
   }
 
+  const handleAddRepairAction = () => {
+    axios.post(`https://${dbAddress}:4000/repair/addRepairAction`, {id: repairInfo.Id, status: newRepairStatus, description: description}).then(response => {
+      setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
+      setShowInfoAlert(true)
+    }).catch((error) => {
+      setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      setShowDangerAlert(true)
+    });
+  }
+
   return (
     <div className="mainRepairBox container col-11 col-md-10 mt-4 mb-4">
       {showDangerAlert && <DangerAlert Content={alertMsg} CloseAlert={closeAlert}/>}
@@ -106,9 +119,9 @@ function ShowRepairService(props) {
           <p>Model: <i>{repairInfo.DeviceModel}</i></p>
           <p>Numer seryjny: <i>{repairInfo.DeviceSN}</i></p>
         </div>
-
-      
       </div>
+
+
       <div className="row text-center">
         <div className="col-12 mt-2">
           <hr />
@@ -126,20 +139,26 @@ function ShowRepairService(props) {
 
 
       <div className="row text-center">
-        <div className="container col-12 mt-2 ">
+        <div className="container col-12 mt-2 text-center center-block">
           <hr />
           <h5>Dodaj czynność</h5>
           Opis:<br />
-          <textarea className="col-10 repairTextarea" id="Desc" name="Desc">{repairInfo.PrivateDescription}</textarea><br />
-          <div className="col-12 selectBox">
-            <select className="form-select" id="Status" name="Status">
+          <textarea className="col-10 repairTextarea" id="Desc" name="Desc" onChange={(e) => {
+            setDescription(e.target.value);
+            console.log(description)
+          }}></textarea><br />
+          <div className="col-10 col-md-8 col-lg-6 selectBox mx-auto">
+            Status:
+            <select className="form-select" id="Status" name="Status" onChange={(e) => {
+              setNewRepairStatus(e.target.value)
+            }}>
               <option value="Naprawiane" key="Naprawiane">Naprawiane</option>
               <option value="Oczekujące" key="Oczekujące">Oczekujące</option>
               <option value="Oczekujące_na_decyzje" key="Oczekujące_na_decyzje">Oczekujące na decyzje</option>
               <option value="Zamknięte" key="Zamknięte">Zamknięte</option>
             </select>
           </div>
-          <button className="btn btn-success mt-2">Dodaj czynność</button>
+          <button className="btn btn-success mt-2" onClick={handleAddRepairAction}>Dodaj czynność</button>
         </div>
       </div>
 
@@ -158,9 +177,7 @@ function ShowRepairService(props) {
           <hr />
         </div>
       </div>
-
-
-      {/*JSON.stringify(repairInfo)*/}
+      
     </div>
   );
 }
