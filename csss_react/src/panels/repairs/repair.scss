@@ -1,5 +1,7 @@
 @import "../../index.scss";
 
+$iconStatus: 25px;
+
 .mainRepairBox{
   border: 2px solid black;
   padding: 10px;
@@ -25,3 +27,72 @@ h6{
 
 }
 
+.status-box{
+  width: 25px;
+  height: 25px;
+  //background: rgb(0, 70, 223);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+
+.status-box::after{
+  //content: "-";
+  //color: black;
+}
+
+/*
+.status-box-blue{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(0, 70, 223);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+
+.status-box-yellow{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(206, 209, 0);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+.status-box-red{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: red;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+.status-box-green{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(49, 172, 0);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+*/

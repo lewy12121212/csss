@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect, useCallback} from 'react';
 import axios from 'axios';
 import { useDidMount } from '../employee_panels/common/commonFunc';
 import { dbAddress } from '../../dbCon';
@@ -6,6 +6,8 @@ import ReactToPrint from 'react-to-print';
 import InfoAlert from '../../alerts/InfoAlert'
 import WarningAlertSubmit from '../../alerts/WarningAlertSubmit'
 import DangerAlert from '../../alerts/DangerAlert'
+
+import StatusBox from './StatusBox'
 
 import './repair.scss'
 
@@ -31,24 +33,23 @@ function ShowRepairService(props) {
     setAlertMsg({MainInfo: "", SecondaryInfo: ""})
   }
 
+  const selectRepair = useCallback(() => {
+    axios.post(`https://${dbAddress}:4000/employee/common/oneRepairInner`, {Id: props.linkId}).then(response => {
+      setRepairInfo(response.data.data[0])
+      console.log(response.data.data)
+      console.log(JSON.parse(response.data.data[0].Description))
+      setJsonDescription(JSON.parse(response.data.data[0].Description).repair.reverse())
+    }).catch((error) => {
+      //setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+      //setShowDangerAlert(true)
+    });
+  }, [setRepairInfo, setJsonDescription, props])
+
   useEffect(() => {
 
     if(didMount) {
       console.log('mounted');
-      axios.post(`https://${dbAddress}:4000/employee/common/oneRepairInner`, {Id: props.linkId}).then(response => {
-        setRepairInfo(response.data.data[0])
-        console.log(response.data.data)
-        console.log(JSON.parse(response.data.data[0].Description))
-        setJsonDescription(JSON.parse(response.data.data[0].Description).repair)
-        //console.log("Repair")
-        //var a = JSON.parse(response.data.data[0].Description).repair
-        //console.log(a[0].Time)
-        //setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
-        //setShowInfoAlert(true)
-      }).catch((error) => {
-        //setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
-        //setShowDangerAlert(true)
-      });
+      selectRepair()
     } else {
       console.log('state updated');
     }
@@ -62,7 +63,7 @@ function ShowRepairService(props) {
     return function cleanup() {
       window.removeEventListener('storage', handleInvalidToken)
     }
-  }, [props, didMount, setRepairInfo, repairInfo, setJsonDescription])
+  }, [props, didMount, setRepairInfo, repairInfo, setJsonDescription, selectRepair])
 
   const handleChangePrivateDescription = () => {
     axios.post(`https://${dbAddress}:4000/repair/changePrivateDescription`, {description: repairInfo.PrivateDescription, id: repairInfo.Id}).then(response => {
@@ -75,9 +76,11 @@ function ShowRepairService(props) {
   }
 
   const handleAddRepairAction = () => {
+    console.log("new status add action" + newRepairStatus)
     axios.post(`https://${dbAddress}:4000/repair/addRepairAction`, {id: repairInfo.Id, status: newRepairStatus, description: description}).then(response => {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
+      selectRepair()
     }).catch((error) => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       setShowDangerAlert(true)
@@ -121,7 +124,7 @@ function ShowRepairService(props) {
         </div>
       </div>
 
-
+      {!repairInfo.Close &&
       <div className="row text-center">
         <div className="col-12 mt-2">
           <hr />
@@ -135,9 +138,9 @@ function ShowRepairService(props) {
           }}></textarea><br />
           <button className="btn btn-success" onClick={handleChangePrivateDescription}>Zaktualizuj opis</button>
         </div>
-      </div>
+      </div>}
 
-
+      {!repairInfo.Close &&
       <div className="row text-center">
         <div className="container col-12 mt-2 text-center center-block">
           <hr />
@@ -151,16 +154,18 @@ function ShowRepairService(props) {
             Status:
             <select className="form-select" id="Status" name="Status" onChange={(e) => {
               setNewRepairStatus(e.target.value)
+              console.log("new status" + newRepairStatus)
             }}>
+              <option value="" key="empty" default hidden>Wybierz status</option>
               <option value="Naprawiane" key="Naprawiane">Naprawiane</option>
               <option value="Oczekujące" key="Oczekujące">Oczekujące</option>
-              <option value="Oczekujące_na_decyzje" key="Oczekujące_na_decyzje">Oczekujące na decyzje</option>
+              <option value="Oczekujące na decyzje" key="Oczekujące_na_decyzje">Oczekujące na decyzje</option>
               <option value="Zamknięte" key="Zamknięte">Zamknięte</option>
             </select>
           </div>
           <button className="btn btn-success mt-2" onClick={handleAddRepairAction}>Dodaj czynność</button>
         </div>
-      </div>
+      </div>}
 
 
       <div className="row text-center">
@@ -170,8 +175,7 @@ function ShowRepairService(props) {
           {/*jsonDescription.repair[0]*/}
           {jsonDescription.map((data) => (
             <div key={`${data.Time}${data.Data}`}>
-              <div className="status-box"></div>
-              {data.Status} + {data.Date} + {data.Time} + {data.Description} + {data.ClientDecision}
+              <StatusBox data={data} />
             </div>
           ))}
           <hr />

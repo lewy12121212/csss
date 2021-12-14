@@ -28,14 +28,26 @@ module.exports = (app, db) => {
   })
 
   app.post('/repair/addRepairAction', (req,res) => {
-    const desc = req.body.description;
+    const d = new Date();
     const id = req.body.id;
-    const sqlQuery = "UPDATE DB_repairs SET PrivateDescription = (?) WHERE Id like (?);"
+    const status = req.body.status;
+    const description = req.body.description;
+    const descriptionToAdd = {"Date": d.toLocaleDateString(),"Time": d.toLocaleTimeString(), "Status": status, "Description": description, "ClientDecision": null}
 
-    //console.log("ID" + id)
+    const sqlQuerySelect = "SELECT Description FROM DB_repairs WHERE Id like (?)"
+    const sqlQueryUpdate = "UPDATE DB_repairs SET Description = (?) WHERE Id like (?)"
 
-    db.query(sqlQuery, [desc, id], (err, result) => {
-      if (err) {
+    if(status === "" || description === ""){
+      return res.status(406).json({
+        error: true,
+        mainInfo: "Dane nie mogą być puste.",
+        secondaryInfo: "Uzupełni dane oby dodać nowy status zlecenia."
+      }) 
+    }
+
+    db.query(sqlQuerySelect, [id], (err, result) => {
+      
+      if (err || result.length === 0 || result.length > 1) {
         console.log(err)
         return res.status(406).json({
           error: true,
@@ -43,11 +55,27 @@ module.exports = (app, db) => {
           secondaryInfo: "Spróbuj ponownie później."
         }) 
       } else {
-        return res.status(200).json({ 
-          error: false,
-          mainInfo: "Opis pomyślnie zmieniono",
-          secondaryInfo: ""
-        }); 
+        let jsonparse = JSON.parse(result[0].Description)
+        //console.log(result.length + "result" + JSON.stringify(jsonparse.repair[0]))
+        jsonparse.repair.push(descriptionToAdd)
+        //console.log(result.length + "result" + JSON.stringify(jsonparse) + "ID:" + id)
+
+        db.query(sqlQueryUpdate, [JSON.stringify(jsonparse), id], (err, result) => {
+          if (err) {
+            console.log(err)
+            return res.status(406).json({
+              error: true,
+              mainInfo: "Problem z UPDATE.",
+              secondaryInfo: "Spróbuj ponownie później."
+            }) 
+          } else {
+            return res.status(200).json({ 
+              error: false,
+              mainInfo: "Pomyślnie dodano czynność serwisową",
+              secondaryInfo: ""
+            }); 
+          }
+        })
       }
     })
   })
