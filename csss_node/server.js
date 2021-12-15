@@ -23,7 +23,6 @@ const server = https.createServer({key: privateKey, cert: certificate }, app);
 
 const mysql = require("mysql");
 
-
 const db = mysql.createPool({
   host: 'dysk.sytes.net',
   user: 'csss_admin',
@@ -65,10 +64,7 @@ require('./PanelsEndPoints/coordPanel')(app,db);
 require('./PanelsEndPoints/servicePanel')(app,db);
 require('./serverChat')(db, server, socketIo);
 
-
 //serwer for chat
-
-
 app.use((req, res, next) => {
   var token = req.headers['authorization'];
   if (!token) return next(); //if no token, continue
