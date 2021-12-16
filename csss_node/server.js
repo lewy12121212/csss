@@ -62,7 +62,7 @@ require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/coordPanel')(app,db);
 require('./PanelsEndPoints/servicePanel')(app,db);
-require('./serverChat')(db, server, socketIo);
+require('./serverChat')(db, server, app, socketIo);
 
 //serwer for chat
 app.use((req, res, next) => {

@@ -1,5 +1,5 @@
 
-module.exports = (db, server, socketIo) => {
+module.exports = (db, server, app, socketIo) => {
 
   const io = socketIo(server,{ 
     cors: {
@@ -15,6 +15,27 @@ module.exports = (db, server, socketIo) => {
     socket.on('message', ({ name, message }) => {
       io.emit('message', { name, message })
     })
+  })
+
+  app.get('/chat/getEmployeeList', (req, res) => {
+
+    const sqlQuery = "SELECT Login FROM DB_employees";
+
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Problem z pobraniem listy kontaków",
+          secondaryInfo: "Spróbuj ponownie później"
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          result: result
+        }); 
+      }
+    })
+
   })
   
   /*io.on("connection", (socket) => {
