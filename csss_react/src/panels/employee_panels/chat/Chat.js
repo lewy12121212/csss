@@ -29,7 +29,7 @@ function Chat() {
 			});
 		}
 
-		socketRef.current = io.connect("https://localhost:4000")
+		socketRef.current = io.connect(`https://${dbAddress}:4000`)
 		socketRef.current.on("message", ({ name, message }) => {
 			setChat([ ...chat, { name, message } ])
 		})
@@ -56,19 +56,15 @@ function Chat() {
     //TODO change style
     return chat.map(({ name, message }, index) => {
       if(name === user.Login){
-        return <div className="container col-12 d-flex  justify-content-end m-0 p-0" key={index}>
-          <div className="row d-flex justify-content-end">
-						<div className="col-12 d-flex justify-content-end"><small className="text-muted">{name}</small></div>
-            <div className="chat-message-box col-6 text-white p-2 rounded d-flex bg-primary justify-content-end text-wrap">{message}</div>
-					</div>
-			  </div>
+        return <div className="col-12 row d-flex justify-content-end m-0 p-0" key={index}>
+					<div className="col-12 d-flex justify-content-end"><small className="text-muted">{name}</small></div>
+          <div className="chat-message-box col-8 m-1 p-2 text-white rounded bg-primary d-flex justify-content-end text-break">{message}</div>
+				</div>
       } else {
-        return <div className="constainer col-12 d-flex justify-content-start m-0 p-0" key={index}>
-          <div className="row">
-						<div className="col-12 d-flex justify-content-start"><small className="text-muted">{name}</small></div>
-            <div className="chat-message-box col-6 text-white rounded bg-success d-flex justify-content-start">{message}</div>
-					</div>
-      </div>
+        return <div className="col-12 row ml-2 d-flex justify-content-start m-0 p-0" key={index}>
+					<div className="col-12 d-flex justify-content-start"><small className="text-muted">{name}</small></div>
+          <div className="chat-message-box col-8 m-1 text-white rounded bg-success d-flex justify-content-start text-break">{message}</div>
+      	</div>
       }
     })
     
@@ -77,25 +73,25 @@ function Chat() {
 
 	return (
 		<div className="row">
-			<div className="col-3 bg-success d-flex justify-content-start p-3">
-				<div className="">
+			<div className="col-2 bg-success d-flex justify-content-start p-3">
+				<div className="col-12">
 					Grupy:
-					<button className="btn btn-primary col-12 m-1" key="all" value="all" onClick={choosePearson}>Wszyscy</button>
+					<button className="btn btn-primary col-12" key="all" value="all" onClick={choosePearson}>Wszyscy</button>
 					Użytkownicy:
 					{employeeList.map((data) => {
-						return <button className="btn btn-primary col-12 m-1" value={data.Login} onClick={choosePearson} key={data.Login}>{data.Login}</button>
+						return <button className="btn btn-primary mt-1 col-12" value={data.Login} onClick={choosePearson} key={data.Login}>{data.Login}</button>
 					})}
 				</div>
 			</div>
-			<div className="render-chat col-9 ">
+			<div className="render-chat col-10">
 				<h1 className="mx-auto">Czat</h1>
 				{renderChat()}
 			</div>
-      <form className="form-group" onSubmit={onMessageSubmit}>
-				<h5 className="m-0 p-0">Wyślij wiadomość do wszystkich</h5>
+      
+			<form className="form-group fixed-bottom col-12 bg-dark" onSubmit={onMessageSubmit}>
 				<div className="form-group">
 					<input type="text"
-            className="col-12 p-2"
+            className="col-10 p-1"
 						name="message"
 						onChange={(e) => onTextChange(e)}
 						value={state.message}
@@ -103,8 +99,8 @@ function Chat() {
 						variant="outlined"
 						label="Message"
 					/>
+					<button className="btn btn-success col-2">Wyślij</button>
 				</div>
-				<button className="btn btn-success">Wyślij</button>
 			</form>
 		</div>
 	)

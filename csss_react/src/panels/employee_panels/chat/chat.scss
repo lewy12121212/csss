@@ -6,6 +6,9 @@
 }
 
 .chat-message-box{
+  margin-left: 15px;
+  //overflow: hidden;
+  max-width: 50px;
   white-space: pre-wrap;
-  word-wrap:break-word;
+  word-wrap: break-word;
 }
