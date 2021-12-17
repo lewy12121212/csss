@@ -3,9 +3,12 @@ import React, { useEffect, useRef, useState } from "react"
 import { getUser } from '../../../utils/Common'
 import { useDidMount } from '../common/commonFunc'
 import { dbAddress } from '../../../dbCon';
+import { animateScroll } from "react-scroll";
 
 import axios from 'axios';
 import io from "socket.io-client"
+
+import './chat.scss'
 //import "./App.css"
 
 function Chat() {
@@ -16,6 +19,16 @@ function Chat() {
 	const [ employeeList, setEmployeeList ] = useState([])
 
 	const socketRef = useRef()
+
+	const scrollToBottom = () => {
+    animateScroll.scrollToBottom({
+      containerId: "chatBox"
+    });
+
+		animateScroll.scrollMore(2000, {
+      containerId: "chatBox"
+    });
+	}
 
   //TODO change struct of useEffect
 	useEffect(() => {
@@ -42,10 +55,15 @@ function Chat() {
 	}
 
 	const onMessageSubmit = (e) => {
+		scrollToBottom()
 		const { name, message } = state
-		socketRef.current.emit("message", { name, message })
-		e.preventDefault()
-		setState({ message: "", name })
+		console.log("message " + message)
+		if(message !== ""){
+			socketRef.current.emit("message", { name, message })
+			e.preventDefault()
+			setState({ message: "", name })
+		}
+
 	}
 
 	const choosePearson = (e) => {
@@ -54,26 +72,35 @@ function Chat() {
 
 	const renderChat = () => {
     //TODO change style
+		//messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
+		scrollToBottom()
     return chat.map(({ name, message }, index) => {
       if(name === user.Login){
         return <div className="col-12 row d-flex justify-content-end m-0 p-0" key={index}>
 					<div className="col-12 d-flex justify-content-end"><small className="text-muted">{name}</small></div>
-          <div className="chat-message-box col-8 m-1 p-2 text-white rounded bg-primary d-flex justify-content-end text-break">{message}</div>
+          <div className="chat-message-box col-8 m-1 p-1 text-white rounded bg-primary d-flex justify-content-end text-break">{message}</div>
 				</div>
       } else {
         return <div className="col-12 row ml-2 d-flex justify-content-start m-0 p-0" key={index}>
 					<div className="col-12 d-flex justify-content-start"><small className="text-muted">{name}</small></div>
-          <div className="chat-message-box col-8 m-1 text-white rounded bg-success d-flex justify-content-start text-break">{message}</div>
-      	</div>
+          <div className="chat-message-box col-8 m-1 p-1 text-white rounded bg-success d-flex justify-content-start text-break">{message}</div>
+  			</div>
       }
     })
-    
 		//return chat.map(({ name, message }, index) => (
 	}
+	/*return(
+		<div className="d-flex flex-wrap">
+			<div className="col-2">aaa</div>
+			<div className="col-10">bbb</div>
+		</div>
+
+	)*/
 
 	return (
-		<div className="row">
-			<div className="col-2 bg-success d-flex justify-content-start p-3">
+		<div className="d-flex flex-wrap col-12 vh-100 margin-fix">
+			{/*Kontakty*/}
+			<div className="col-2 bg-white d-flex justify-content-start p-3 contacts">
 				<div className="col-12">
 					Grupy:
 					<button className="btn btn-primary col-12" key="all" value="all" onClick={choosePearson}>Wszyscy</button>
@@ -83,25 +110,38 @@ function Chat() {
 					})}
 				</div>
 			</div>
+
+			{/*Chat*/}
 			<div className="render-chat col-10">
-				<h1 className="mx-auto">Czat</h1>
-				{renderChat()}
+
+				<div className="chat-box col-12 h-100" id="chatBox">
+					{renderChat()}
+				</div>
+				<div className="d-flex fixed-bottom flex-wrap col-12">
+					<div className="col-2"></div>
+					<div className="col-10 bg-white chat">
+						<div className="form-group col-12 p-2">
+							<div className="input-group">
+								<input type="text"
+									name="message"
+									onChange={(e) => onTextChange(e)}
+									value={state.message}
+									id="outlined-multiline-static"
+									variant="outlined"
+									label="Message"
+									className="form-control" 
+									placeholder="Napisz wiadomość"
+								/>
+								<button className="btn btn-success" onClick={onMessageSubmit}>Wyślij</button>
+							</div>
+						</div>
+					</div>
+				</div>
+
 			</div>
       
-			<form className="form-group fixed-bottom col-12 bg-dark" onSubmit={onMessageSubmit}>
-				<div className="form-group">
-					<input type="text"
-            className="col-10 p-1"
-						name="message"
-						onChange={(e) => onTextChange(e)}
-						value={state.message}
-						id="outlined-multiline-static"
-						variant="outlined"
-						label="Message"
-					/>
-					<button className="btn btn-success col-2">Wyślij</button>
-				</div>
-			</form>
+			{/*
+*/}
 		</div>
 	)
 }
