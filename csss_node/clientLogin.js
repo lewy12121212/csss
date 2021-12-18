@@ -15,14 +15,14 @@ module.exports = (app, db, clientUtils) => {
 
     const pwdHash = commonFunc.makeHash(pwd);
 
-    if (!email || !repairId) { //if empty
+    if (!email || !pwd) { //if empty
       return res.status(400).json({
         error: true,
         message: "Username or Password required."
       });
     } 
 
-    console.log("email: " + email + ", repairId: " + pwd + "\n");
+    //console.log("email: " + email + ", pass " + pwd + "\n");
 
     const sqlQuery = "SELECT * FROM DB_clients WHERE Mail like (?) AND Password like (?)"
 
@@ -43,6 +43,7 @@ module.exports = (app, db, clientUtils) => {
         });
       } else {
         let userData = result[0]
+        console.log(userData)
         const token = clientUtils.generateToken(userData);
         const userObj = clientUtils.getCleanUser(userData);
         return res.status(200).json({ user: userObj, token }); 
