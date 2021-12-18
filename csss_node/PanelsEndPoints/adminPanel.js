@@ -1,4 +1,5 @@
 const commonFunc = require('./commonFunc')
+const {createHash,} = require('crypto');
 
 module.exports = (app, db, employeeUtils) => {
 
@@ -71,11 +72,13 @@ module.exports = (app, db, employeeUtils) => {
     const phone = req.body.EmployeeData.Phone;
     const type = req.body.EmployeeData.Type;
 
-//TODO - check login if exists in DB!!!
-
+    
+    //console.log(hash.digest('hex'));
+    const passHash = commonFunc.makeHash(pass)
+    //console.log(passHash);
     const sqlQuery = "INSERT INTO DB_employees (Name, Surname, Login, Pass, Mail, Phone, Type) VALUES (?,?,?,?,?,?,?)";
 
-    db.query(sqlQuery, [name, surname, login, pass, mail, phone, type], (err, result) => {
+    db.query(sqlQuery, [name, surname, login, passHash, mail, phone, type], (err, result) => {
       if(err)
       { 
         if(err.errno == 1062)

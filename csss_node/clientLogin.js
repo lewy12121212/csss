@@ -1,3 +1,5 @@
+const commonFunc = require('./PanelsEndPoints/commonFunc');
+
 module.exports = (app, db, clientUtils) => {
 
   app.get('/client/loginRouteTest', (req, res) => {
@@ -9,7 +11,9 @@ module.exports = (app, db, clientUtils) => {
   // validate the user credentials
   app.post('/client/signin', (req, res) => {
     const email = req.body.email;
-    const repairId = req.body.pass;
+    const pwd = req.body.pass;
+
+    const pwdHash = commonFunc.makeHash(pwd);
 
     if (!email || !repairId) { //if empty
       return res.status(400).json({
@@ -18,11 +22,11 @@ module.exports = (app, db, clientUtils) => {
       });
     } 
 
-    console.log("email: " + email + ", repairId: " + repairId + "\n");
+    console.log("email: " + email + ", repairId: " + pwd + "\n");
 
     const sqlQuery = "SELECT * FROM DB_clients WHERE Mail like (?) AND Password like (?)"
 
-    db.query(sqlQuery, [email, repairId], (err, result) => {
+    db.query(sqlQuery, [email, pwdHash], (err, result) => {
       if (err) return res.status(401).json({
         error: true,
         message: "Invalid database connection."

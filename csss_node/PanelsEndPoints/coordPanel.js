@@ -158,12 +158,14 @@ module.exports = (app, db) => {
     const postalcode = req.body.ClientData.PostalCode;
     let company = 1;
 
+    const passHash = commonFunc.makeHash(password);
+
     if (name === "") {
       name = firstname + ' ' + surname;
       company = 0;
     }
     console.log(name)
-    db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, password, phone, company], (error, results)=>{
+    db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, passHash, phone, company], (error, results)=>{
       
       if(error)
       { console.log(error)
@@ -177,11 +179,12 @@ module.exports = (app, db) => {
         }
         return res.status(406).json({
           error: true,
-          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd bazy danych.",
+          secondaryInfo: " Spróbuj ponownie później."
         });
         
       }
-      else return res.status(200).json({mainInfo:'Pomyślnie dodano klienta', result: results})
+      else return res.status(200).json({error: false, mainInfo:'Sukces.', secondaryInfo: 'Pomyślnie dodano klienta', result: results})
     });
 
   })

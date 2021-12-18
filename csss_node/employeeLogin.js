@@ -1,8 +1,9 @@
 //const cloud = require('./cloudinaryConfig')
-const detection = require('./faceDetection')
-const faceapi = require('@vladmandic/face-api');
+//const detection = require('./faceDetection')
+//const faceapi = require('@vladmandic/face-api');
 const canvas = require("canvas");
-const path = require('path')
+const path = require('path');
+const commonFunc = require('./PanelsEndPoints/commonFunc')
 
 module.exports = (app, db, employeeUtils) => {
 
@@ -17,6 +18,9 @@ module.exports = (app, db, employeeUtils) => {
     const user = req.body.username;
     const pwd = req.body.password;
 
+    
+    const pwdHash = commonFunc.makeHash(pwd);
+
     if (!user || !pwd) { //if empty
       return res.status(400).json({
         error: true,
@@ -26,7 +30,7 @@ module.exports = (app, db, employeeUtils) => {
 
     const sqlQuery = "SELECT * FROM DB_employees WHERE Login like (?) AND Pass like (?)"
 
-    db.query(sqlQuery, [user, pwd], (err, result) => {
+    db.query(sqlQuery, [user, pwdHash], (err, result) => {
       if (err) return res.status(401).json({
         error: true,
         message: "Invalid database connection."
