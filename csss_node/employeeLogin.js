@@ -110,6 +110,16 @@ module.exports = (app, db, employeeUtils) => {
     })
   }
 
+  function sqlDeleteImg(id){
+    const sqlQuery = "DELEtE FROM DB_employees_img WHERE LoginId=(?)"
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        console.log(err)
+      } 
+    })
+  }
+
   app.post('/employee/faceRegistration', (req, resSql) => {
     const picture = req.body.image;
     const login = req.body.login;
@@ -122,6 +132,9 @@ module.exports = (app, db, employeeUtils) => {
 
         id = res[0].Id;
         console.log("sqlUserSelect - resolve")
+
+        //deleting old img from db
+        sqlDeleteImg(id)
 
         checkUserFace(picture)
           .then((res) => {
