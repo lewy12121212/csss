@@ -1,4 +1,3 @@
-
 module.exports = (db, server, app, socketIo) => {
 
   const io = socketIo(server,{ 
@@ -9,12 +8,48 @@ module.exports = (db, server, app, socketIo) => {
     }
   })
 
+  var clients = {}
+
   io.on('connection', socket => {
     //Simple server broadcast 
     //from tutorial
     //https://www.youtube.com/watch?v=CgV8omlWq2o
-    socket.on('message', ({ name, message }) => {
-      io.emit('message', { name, message })
+
+
+    socket.on('addUser', (name) => {
+      clients[name] = {
+        "socket": socket.id
+      }
+      console.log("klient" + JSON.stringify(clients))
+      //io.to(socket.id).emit('message', { name, message })
+      //console.log("DODANO KLIENTA:" + socket.id + ":" + name)
+    })
+
+    socket.on('message', ({ from, to, message }) => {
+      console.log("MESSAGE: " + from + " : " + to + " : " + message)
+      //io.emit('message', { from, to, message })
+
+      if(clients.hasOwnProperty(to)){ //check if user is online
+        io.to(clients[from].socket).to(clients[to].socket).emit('message', { from, to, message })
+      } else {
+        io.to(clients[from].socket).emit('message', { from, to, message })
+      }
+
+      //ADD DATA TO DB
+      
+      //axios add message to DB.
+    })
+
+    socket.on('disconnect', () => {
+      //io.emit('message', { name, message })
+      //clients.pop(socket.id)
+      for(var name in clients) {
+        if(clients[name].socket === socket.id) {
+          delete clients[name];
+          //break;
+        }
+      }
+      console.log("dis - klient" + JSON.stringify(clients))
     })
   })
 
@@ -36,27 +71,26 @@ module.exports = (db, server, app, socketIo) => {
         }); 
       }
     })
-
   })
-  
-  /*io.on("connection", (socket) => {
-    //console.log("New client connected");
-    if (interval) {
-      clearInterval(interval);
-    }
 
-    getApiAndEmit(socket)
-    //interval = setInterval(() => getApiAndEmit(socket), 500);
-    socket.on("disconnect", () => {
-      console.log("Client disconnected");
-      clearInterval(interval);
-    });
-  });*/
+  app.get('/chat/getChatHistory', (req, res) => {
 
-  //const getApiAndEmit = socket => {
-  //  const response = new Date();
-  //  // Emitting a new message. Will be consumed by the client
-  //  socket.emit("FromAPI", response);
-  //};
-  //serwer for chat END
+    const sqlQuery = "SELECT * FROM DB_chat WHERE PrimaryUser like (?) OR PrimaryUser like (?) OR SecondaryUser like (?) OR SecondaryUser like (?)";
+    
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        return res.status(401).json({
+          error: true,
+          mainInfo: "Problem z pobraniem listy kontaków",
+          secondaryInfo: "Spróbuj ponownie później"
+        }) 
+      } else {
+        return res.status(200).json({ 
+          error: false,
+          result: result
+        }); 
+      }
+    })
+  })
+
 }
