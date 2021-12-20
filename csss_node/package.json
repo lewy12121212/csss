@@ -27,7 +27,8 @@
     "mysql": "^2.18.1",
     "nodemailer": "^6.7.0",
     "nodemailer-express-handlebars": "^4.0.0",
-    "smsapi": "^2.0.4"
+    "smsapi": "^2.0.4",
+    "socket.io": "^4.4.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.13"

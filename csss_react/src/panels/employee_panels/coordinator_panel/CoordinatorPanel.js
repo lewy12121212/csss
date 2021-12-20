@@ -50,7 +50,7 @@ function CoordinatorPanel(props) {
       <UpperMenu handleShow={handleShow} handleLogout={handleLogout} /> 
       <LeftMenu user={user} handleClose={handleClose} show={show}/>
 
-      <div className="container col-12">
+      <div className="col-12">
         <Switch>
           <Route exact path="/EmployeeDashboard/Coordinator/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
           <Route path="/EmployeeDashboard/Coordinator/Repairs" render={() => <Repairs path={location} />} />
