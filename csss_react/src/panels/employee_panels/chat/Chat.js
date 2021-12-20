@@ -45,8 +45,8 @@ function Chat() {
 
 		socketRef.current = io.connect(`https://${dbAddress}:4000`)
 		socketRef.current.emit("addUser", state.from)
-		socketRef.current.on("message", ({ from, to, message }) => {
-			setChat([ ...chat, { from, to, message } ])
+		socketRef.current.on("message", ({ message, from ,to }) => {
+			setChat([ ...chat, { message, from, to } ])
 		})
 		return () => socketRef.current.disconnect()
 		
