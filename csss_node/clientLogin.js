@@ -85,9 +85,10 @@ module.exports = (app, db, clientUtils) => {
     const email = req.body.email;
     const password = req.body.password;
 
+    const passwordHash = commonFunc.makeHash(password)
     console.log("veryfi data: " + email + " : " + password);
 
-    db.query(sqlQuery, [password, email], (error, results)=>{
+    db.query(sqlQuery, [passwordHash, email], (error, results)=>{
       
       if(error)
         return res.status(401).json({
