@@ -90,15 +90,15 @@ module.exports = (app, db, employeeUtils) => {
     const oldPassword = req.body.UserPass.OldPass
     const newPassword = req.body.UserPass.NewPass
     const newRePassword = req.body.UserPass.NewRePass
-
+    const oldPasswordHash = commonFunc.makeHash(oldPassword)
     const sqlQuery = "SELECT * FROM DB_employees WHERE Pass LIKE (?) AND Id LIKE (?)"
 
-    db.query(sqlQuery, [oldPassword, id], (err, result) => {
+    db.query(sqlQuery, [oldPasswordHash, id], (err, result) => {
       if (err) {
         return res.status(401).json({
           error: true,
           mainInfo: "Obecne hasło nie jest poprawne!",
-          secondaryInfo: "Uzupełni dane poprawnie."
+          secondaryInfo: "Uzupełnij dane poprawnie."
         })
       }
 
@@ -106,13 +106,13 @@ module.exports = (app, db, employeeUtils) => {
         return res.status(401).json({
           error: true,
           mainInfo: "Obecne hasło nie jest poprawne!",
-          secondaryInfo: "Uzupełni dane poprawnie, a w razie problemów skontaktuj się z administratorem."
+          secondaryInfo: "Uzupełnij dane poprawnie, a w razie problemów skontaktuj się z administratorem."
         })
       } else if(oldPassword === "" || newPassword === "" || newRePassword === ""){
         return res.status(401).json({
           error: true,
           mainInfo: "Hasła nie mogą być puste!",
-          secondaryInfo: "Uzupełni wymagane dane."
+          secondaryInfo: "Uzupełnij wymagane dane."
         })
       } else if(newPassword !== newRePassword){
         return res.status(401).json({
@@ -136,7 +136,7 @@ module.exports = (app, db, employeeUtils) => {
     const newPassword = req.body.UserPass.NewPass
     //const newRePassword = req.body.UserPass.NewRePass
 
-    const password = newPassword;
+    const password = commonFunc.makeHash(newPassword);
     const sqlQueryPassChange = "UPDATE DB_employees SET Pass = (?) WHERE Id like (?)";
   
     db.query(sqlQueryPassChange, [password, id], (err, result) => {
