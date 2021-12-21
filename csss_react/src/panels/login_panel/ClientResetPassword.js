@@ -9,7 +9,6 @@ import PasswordStrengthBar from 'react-password-strength-bar';
 
 function ClientResetPassword (props) {
 
-  const d = new Date();
   const email = useFormInput('');
   const [password, setPassword] = useState('');
   const repeatPassword = useFormInput('');
@@ -19,30 +18,11 @@ function ClientResetPassword (props) {
   const [verifyCode, setVerifyCode] = useState(false);
   const [sendCode, setSendCode] = useState(false);
   const [resetPass, setResetPass] = useState(true);
-  const [validCode, setValidCode] = useState(null);
-  const [codeGetTime, setCodeGetTime] = useState(null);
   const [strongEnough, setStrongEnough] = useState(true);
 
   const handleBack = () => {
     props.history.push("/ClientLoginPanel");
   }
-
-  //const codeLifetime = () =>{
-  //  let i = 20;
-  //  var time = setInterval(() => {
-  //    if (i===0)
-  //    {
-  //      clearInterval(time);
-  //      setValidCode(validCode.code = null, validCode.getTime = null)
-  //      console.log(validCode.code)
-  //      return
-  //    }
-  //    setValidCode(validCode.ttl = validCode.ttl - 1);
-  //    console.log(validCode.code);
-  //    i--;
-  //  }, 1000)
-  //
-  //}
 
   const handleReset = () => {
     setLoading(true)
@@ -50,11 +30,7 @@ function ClientResetPassword (props) {
     if(email.value !== '')
     {
       axios.post(`https://${dbAddress}:4000/client/ResetPassword`, { email: email.value}).then(response => {
-        setValidCode(response.data.verifyCode)
-        setCodeGetTime(d.getTime());
         //starting countdown of validCode lifetime
-        console.log(validCode);
-        console.log(codeGetTime);
         setResetPass(false);
         setSendCode(true);
         setError(null);
@@ -70,22 +46,19 @@ function ClientResetPassword (props) {
   }
 
   const handleVerifyCode = () => {
-    //console.log(parseInt(verifyCodeClient.value,10))
-    //console.log(d.getTime() - codeGetTime)
-    //setError(null);
+
     setLoading(true)
     //remeber time was get in ms
-    if(parseInt(verifyCodeClient.value,10) === validCode && (d.getTime() - codeGetTime)<180000)
-    {
+    axios.post(`https://${dbAddress}:4000/client/verifyCode`, { Code: verifyCodeClient.value, Mail: email.value}).then(response => {
       setSendCode(false);
       setVerifyCode(true);
       setError(null);
-    }
-    else 
+      setLoading(false);
+    }).catch(error =>
     {
-      setError("Nieprawidłowy kod lub upłynął limit czasu ważności kodu.")
-    }
-    setLoading(false)
+      setError(error.response.data.message);
+    })  
+ 
   }
 
   const handleChangePassword = () => {
@@ -98,7 +71,7 @@ function ClientResetPassword (props) {
     else if(password === repeatPassword.value)
     {
       //console.log('email ', email.value, ' pass ', password);
-      axios.post(`https://${dbAddress}:4000/client/ChangePassword`, { email: email.value, password: password}).then(result => {
+      axios.post(`https://${dbAddress}:4000/client/changePassword`, { Code: verifyCodeClient.value, Mail: email.value, ClientPass: password}).then(result => {
 
         alert("Hasło zostało zmienione.");
         props.history.push("/ClientLoginPanel");

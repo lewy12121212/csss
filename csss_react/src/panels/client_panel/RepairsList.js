@@ -19,7 +19,7 @@ function RepairsList(props) {
     if(didMount) {
       console.log(user)
       axios.post(`https://${dbAddress}:4000/client/getRepairsList`, {clientId: user.Id}).then(response => {
-        setRepairsTable(response.data.data)
+        setRepairsTable((response.data.data).filter(it => it.Closed === 0))
         console.log(response.data.data)
 
       });

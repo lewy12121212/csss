@@ -190,7 +190,7 @@ module.exports = (app, db) => {
 
   })
 
-  app.post('/client/ChangePassword', (req,res) => {
+  app.post('/client/changePassword', (req,res) => {
     
     const mail = req.body.Mail;
     const password = req.body.ClientPass;
@@ -222,10 +222,73 @@ module.exports = (app, db) => {
       return res.status(404).json({
         error: true,
         mainInfo: "Błąd.",
-        secondaryInfo: "Błędny kod weryfikacyjny."
+        secondaryInfo: "Błędny kod weryfikacyjny lub upłynęła jego ważność."
       }) 
     }
   })
+
+  app.post('/client/resetPassword', (req,res) => {
+    const email = req.body.email;
+
+    sqlClientSelect(email).then((phone) =>{
+      console.log(phone[0])
+      
+      if (phone[0]){
+        let number = phone[0].Phone;
+        
+        let verifyCode = generateCode();
+        let text = {to: number, message: verifyCode + " to Twój kod weryfikacyjny", from: "CSSS"}
+  
+        //sms sender
+        //sender.sendSMS(text)
+        //sms sender end
+        verifyCodes.push({mail: email, code: verifyCode, date: Date.now()})
+        console.log(verifyCode)
+        return res.status(200).json({verifyCode: verifyCode})
+      }
+      else return res.status(401).json({
+        error: true,
+        message: "Brak klienta o podanym adresie email."
+      });
+    });
+    
+  });
+
+  app.post('/client/verifyCode', (req,res) => {
+    const code = req.body.Code;
+    const mail = req.body.Mail;
+
+    var result = verifyCodes.filter(it => it.mail === mail);
+    //console.log(Date.now()-result[0].date <180000, result[0].code.toString() == code)
+    if(result[0].code.toString() == code && Date.now()-result[0].date <180000)
+    {
+      return res.status(200).json(
+      {
+        error: false,
+        message: "Kod jest poprawny.",
+      })
+    }
+    else
+    {
+      return res.status(404).json({
+        error: true,
+        message: "Błędny kod weryfikacyjny lub upłynęła jego ważność."
+      })
+    }
+  })
+
+
+  function sqlClientSelect(email){
+    const sqlQuery1 = "SELECT Phone FROM DB_clients WHERE Mail like (?)"
+
+    return new Promise((resolve, reject) => db.query(sqlQuery1, [email], (err, result) => {
+      if (err) 
+        reject(err)
+      else 
+        resolve(result)
+      })
+    );
+  }
 
   app.post('/client/getRepairsList', (req,res) => {
 
@@ -249,91 +312,6 @@ module.exports = (app, db) => {
     FROM `DB_repairs` \
     LEFT OUTER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
     LEFT JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
-    WHERE `DB_repairs`.`ClientId`=(?) AND `DB_repairs`.`IfReceived` = FALSE \
-    ORDER BY `DB_repairs`.`CreationDate` ASC;";
-
-    db.query(sqlQuery,  [id], (err, result) => {
-      if (err) {
-        console.log(err)
-        return res.status(406).json({
-          error: true,
-          message: "Problem z pobraniem bazy napraw."
-        }) 
-      } else {
-        console.log(result)
-        return res.status(200).json({ 
-          error: false,
-          data: result
-        }); 
-      }
-    })
-  })
-
- 
-
-  app.get('/client/getHistoricalList', (req,res) => {
-
-    const id = req.body.clientId;
-
-    const sqlQuery = "SELECT \
-    `DB_repairs`.`Id`,\
-    `DB_repairs`.`ServiceId`,\
-    `DB_repairs`.`DeviceId`,\
-    `DB_repairs`.`CreationDate` ,\
-    `DB_repairs`.`Description`,\
-    `DB_repairs`.`ReceivDate`,\
-    `DB_devices`.`Name` AS DeviceName, \
-    `DB_devices`.`Model` AS DeviceModel, \
-    `DB_devices`.`SN` AS DeviceSN, \
-    `DB_devices`.`Type` AS DeviceType, \
-    `DB_employees`.`Id` AS EmployeeId, \
-    `DB_employees`.`Name` AS EmployeeName, \
-    `DB_employees`.`Surname` AS EmployeeSurname, \
-    `DB_employees`.`Login` AS EmployeeLogin \
-    FROM `DB_repairs` \
-    LEFT OUTER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
-    LEFT JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
-    WHERE `DB_repairs`.`ClientId`=(?) AND `DB_repairs`.`IfReceived` = 1 AND `DB_repairs`.`Closed` = 1 \
-    ORDER BY `DB_repairs`.`CreationDate` ASC;";
-
-    db.query(sqlQuery,  [id], (err, result) => {
-      if (err) {
-        console.log(err)
-        return res.status(406).json({
-          error: true,
-          message: "Problem z pobraniem bazy napraw."
-        }) 
-      } else {
-        return res.status(200).json({ 
-          error: false,
-          data: result
-        }); 
-      }
-    })
-  })
-
-  app.get('/client/getHistoricalList', (req,res) => {
-
-    const id = req.body.clientId;
-
-    const sqlQuery = "SELECT \
-    `DB_repairs`.`Id`,\
-    `DB_repairs`.`ServiceId`,\
-    `DB_repairs`.`DeviceId`,\
-    `DB_repairs`.`CreationDate` ,\
-    `DB_repairs`.`Description`,\
-    `DB_repairs`.`ReceivDate`,\
-    `DB_devices`.`Name` AS DeviceName, \
-    `DB_devices`.`Model` AS DeviceModel, \
-    `DB_devices`.`SN` AS DeviceSN, \
-    `DB_devices`.`Type` AS DeviceType, \
-    `DB_employees`.`Id` AS EmployeeId, \
-    `DB_employees`.`Name` AS EmployeeName, \
-    `DB_employees`.`Surname` AS EmployeeSurname, \
-    `DB_employees`.`Login` AS EmployeeLogin \
-    FROM `DB_repairs` \
-    LEFT OUTER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
-    LEFT JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
     WHERE `DB_repairs`.`ClientId`=(?) \
     ORDER BY `DB_repairs`.`CreationDate` ASC;";
 
@@ -345,6 +323,7 @@ module.exports = (app, db) => {
           message: "Problem z pobraniem bazy napraw."
         }) 
       } else {
+        //console.log(result)
         return res.status(200).json({ 
           error: false,
           data: result
@@ -352,7 +331,6 @@ module.exports = (app, db) => {
       }
     })
   })
-
 
   function generateCode(){
     return Math.floor(
