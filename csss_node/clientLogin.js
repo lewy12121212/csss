@@ -43,9 +43,10 @@ module.exports = (app, db, clientUtils) => {
         });
       } else {
         let userData = result[0]
-        console.log(userData)
+        //console.log(userData)
         const token = clientUtils.generateToken(userData);
         const userObj = clientUtils.getCleanUser(userData);
+        //console.log('token', typeof(userObj.IsCompany))
         return res.status(200).json({ user: userObj, token }); 
       }
     })
@@ -80,24 +81,6 @@ module.exports = (app, db, clientUtils) => {
     
   });
 
-  app.post('/client/ChangePassword', (req,res) => {
-    const sqlQuery = "UPDATE DB_clients SET Password = (?) WHERE Mail = (?)";
-    const email = req.body.email;
-    const password = req.body.password;
-
-    const passwordHash = commonFunc.makeHash(password)
-    console.log("veryfi data: " + email + " : " + password);
-
-    db.query(sqlQuery, [passwordHash, email], (error, results)=>{
-      
-      if(error)
-        return res.status(401).json({
-          error: true,
-          message: "Błąd bazy danych. Spróbuj ponownie później."
-        });
-      else return res.status(200).json({message:'Pomyślnie zmieniono hasło.'})
-    });
-  })
 
   function sqlClientSelect(email){
     const sqlQuery1 = "SELECT Phone FROM DB_clients WHERE Mail like (?)"

@@ -24,6 +24,7 @@ function LeftMenu(props) {
           <div>
             <NavLink className="navLink-box col-12" to="/ClientDashboard/ActiveRepairs" onClick={props.handleClose}>Lista zleceń aktywnych</NavLink>
             <NavLink className="navLink-box col-12" to="/ClientDashboard/AllRepairs" onClick={props.handleClose}>Lista wszystkich zleceń</NavLink>
+            <NavLink className="navLink-box col-12" to="/ClientDashboard/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
