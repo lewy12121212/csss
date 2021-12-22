@@ -14,7 +14,7 @@ import './chat.scss'
 function Chat() {
   const user = getUser();
 	const didMount = useDidMount();
-	const [ state, setState ] = useState({ message: "", from: user.Login , to: ""})
+	const [ state, setState ] = useState({ message: "", from: user.Login , to: "all"})
 	const [ chat, setChat ] = useState([])
 	const [ employeeList, setEmployeeList ] = useState([])
 
@@ -48,9 +48,13 @@ function Chat() {
 		socketRef.current.on("message", ({ message, from ,to }) => {
 			setChat([ ...chat, { message, from, to } ])
 		})
-		return () => socketRef.current.disconnect()
 		
-	}, [ chat, setEmployeeList, didMount, state ])
+		return () => {
+			console.log("unmount")
+			//socketRef.current.disconnect()
+		}
+		
+	}, [chat, setEmployeeList, didMount, state ])
 
 	const onTextChange = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value })
@@ -79,6 +83,7 @@ function Chat() {
 		//messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
 		scrollToBottom()
     return chat.map(({ message, from, to }, index) => {
+
       if(from === user.Login){
         return <div className="col-12 row d-flex justify-content-end m-0 p-0" key={index}>
 					<div className="col-12 d-flex justify-content-end"><small className="text-muted">{from}</small></div>

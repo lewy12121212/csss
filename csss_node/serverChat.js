@@ -25,15 +25,16 @@ module.exports = (db, server, app, socketIo) => {
       //console.log("DODANO KLIENTA:" + socket.id + ":" + name)
     })
 
-    socket.on('message', ({ from, to, message }) => {
+    socket.on('message', ({ message, from, to }) => {
       console.log("MESSAGE: " + from + " : " + to + " : " + message)
       //io.emit('message', { from, to, message })
 
+      //io.emit('message', { message, from, to })
       if(clients.hasOwnProperty(to)){ //check if user is online
-        io.to(clients[from].socket).to(clients[to].socket).emit('message', { from, to, message })
+        io.to(clients[from].socket).to(clients[to].socket).emit('message', { message, from, to })
       } else {
         message = "niedostępny"
-        io.to(clients[from].socket).emit('message', { from, to, message })
+        io.to(clients[from].socket).emit('message', { message, from, to })
       }
 
       //ADD DATA TO DB
