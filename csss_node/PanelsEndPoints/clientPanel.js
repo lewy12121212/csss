@@ -301,6 +301,8 @@ module.exports = (app, db) => {
     `DB_repairs`.`CreationDate` ,\
     `DB_repairs`.`Description`,\
     `DB_repairs`.`Closed`,\
+    `DB_repairs`.`IfReceived`,\
+    `DB_repairs`.`ReceivDate`,\
     `DB_devices`.`Name` AS DeviceName, \
     `DB_devices`.`Model` AS DeviceModel, \
     `DB_devices`.`SN` AS DeviceSN, \
