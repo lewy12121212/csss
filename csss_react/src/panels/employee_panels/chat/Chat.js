@@ -1,7 +1,7 @@
 //import TextField from "@material-ui/core/TextField"
 import React, { useEffect, useRef, useState } from "react"
 import { getUser } from '../../../utils/Common'
-import { useDidMount } from '../common/commonFunc'
+//import { useDidMount } from '../common/commonFunc'
 import { dbAddress } from '../../../dbCon';
 import { animateScroll } from "react-scroll";
 
@@ -13,12 +13,12 @@ import './chat.scss'
 
 function Chat() {
   const user = getUser();
-	const didMount = useDidMount();
+	//const didMount = useDidMount();
 	const [ state, setState ] = useState({ message: "", from: user.Login , to: "all"})
 	const [ chat, setChat ] = useState([])
 	const [ employeeList, setEmployeeList ] = useState([])
-
 	const socketRef = useRef()
+	var chatAppend = []
 
 	const scrollToBottom = () => {
     animateScroll.scrollToBottom({
@@ -29,39 +29,43 @@ function Chat() {
       containerId: "chatBox"
     });
 	}
-	
-	useEffect(() => {
-		//TODO set default conversation
-		if(didMount) {
-			axios.get(`https://${dbAddress}:4000/chat/getEmployeeList`).then(response => {
-				setEmployeeList(response.data.result)
-				console.log(response.data.result)
-			}).catch(error => {
-				//TODO set alert message
-				//setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
-				//setShowDangerAlert(true)
-			});
-		}
 
+	useEffect(() => {
+		console.log("mount")
 		socketRef.current = io.connect(`https://${dbAddress}:4000`)
 		socketRef.current.emit("addUser", state.from)
-		socketRef.current.on("message", ({ message, from ,to }) => {
-			setChat([ ...chat, { message, from, to } ])
+
+		axios.get(`https://${dbAddress}:4000/chat/getEmployeeList`).then(response => {
+			setEmployeeList(response.data.result)
+			console.log(response.data.result)
+		}).catch(error => {
+			//TODO set alert message
+			//setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
+			//setShowDangerAlert(true)
+		});
+	}, [state])
+
+	useEffect(() => () => {
+		console.log("unmount")
+		socketRef.current.disconnect()
+	}, [])
+
+	useEffect(() => {
+		//TODO set default conversation
+		console.log("any update")
+		socketRef.current.on("message", ({ message, time, from, to }) => {
+			if(state.to === from || user.Login === from) {
+				setChat([ ...chat, { message, time, from, to } ])
+			}
 		})
-		
-		return () => {
-			console.log("unmount")
-			//socketRef.current.disconnect()
-		}
-		
-	}, [chat, setEmployeeList, didMount, state ])
+	})
 
 	const onTextChange = (e) => {
 		setState({ ...state, [e.target.name]: e.target.value })
 	}
 
 	const onMessageSubmit = (e) => {
-		scrollToBottom()
+		scrollToBottom()//TODO FIX SCROOL BOTTOM
 		const { message, from, to } = state
 		console.log("message " + message)
 		if(message !== ""){
@@ -69,12 +73,45 @@ function Chat() {
 			e.preventDefault()
 			setState({ message: "", from, to })
 		}
-
 	}
 
-	const choosePearson = (e) => {
-		console.log("pearson choose is: " + e.target.value)
+	const choosePearson =  (e) => {
+		console.log("pearson choose is: " + e.target.value + "chat" + chat)
 		setState({ ...state, "to": e.target.value })
+		//socketRef.current.emit("history", state.from, state.to)
+		
+		//pobranie historii rozmowy dla danego uzytkownika
+		socketRef.current.emit("getHistory", state.from, e.target.value, (response) => {
+			//console.log("FromTo" + JSON.stringify(response.chatFromTo)); // ok
+			//console.log("ToFrom" + JSON.stringify(response.chatToFrom));
+
+			//safe for empty
+			if(response.chatFromTo !== undefined && response.chatToFrom !== undefined) {
+				chatAppend = response.chatFromTo.concat(response.chatToFrom)
+				chatAppend.sort((a,b) =>  a.time-b.time)
+				chatAppend = chatAppend.filter(elm => elm);
+			} else if(response.chatFromTo !== undefined && response.chatToFrom === undefined){
+				chatAppend = response.chatFromTo
+				chatAppend.sort((a,b) =>  a.time-b.time)
+				chatAppend = chatAppend.filter(elm => elm);
+			} else if(response.chatFromTo === undefined && response.chatToFrom !== undefined){
+				chatAppend = response.chatToFrom
+				chatAppend.sort((a,b) =>  a.time-b.time)
+				chatAppend = chatAppend.filter(elm => elm);
+			} else {
+				chatAppend = []
+			}
+			
+			console.log("APPEND")
+			console.log(chatAppend);
+			
+			if(chatAppend.length > 0) {
+				setChat(chatAppend)
+			} else {
+				setChat([])
+			}
+
+		});
 		//TODO get history of message
 	}
 
@@ -82,7 +119,7 @@ function Chat() {
     //TODO change style
 		//messagesEndRef.current.scrollIntoView({ behavior: "smooth" })
 		scrollToBottom()
-    return chat.map(({ message, from, to }, index) => {
+    return chat.map(({ message, time, from, to }, index) => {
 
       if(from === user.Login){
         return <div className="col-12 row d-flex justify-content-end m-0 p-0" key={index}>
@@ -112,7 +149,7 @@ function Chat() {
 					Użytkownicy:
 					{employeeList.map((data) => {
 						if(data.Login !== user.Login){
-							return <button className="btn btn-primary mt-1 col-12" value={data.Login} onClick={choosePearson} key={data.Login}>{data.Login}</button>
+							return <button className="btn btn-primary mt-1 col-12" value={data.Login} onClick={choosePearson} key={data.Login} >{data.Login}</button>
 						} else {
 							return null
 						}
@@ -122,7 +159,7 @@ function Chat() {
 
 			{/*Chat*/}
 			<div className="render-chat col-10">
-
+			
 				<div className="chat-box col-12 h-100" id="chatBox">
 					{renderChat()}
 				</div>

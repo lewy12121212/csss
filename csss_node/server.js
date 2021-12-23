@@ -40,6 +40,7 @@ exports.db = db;
 //  database: 'DB_csss'
 //});
 
+
 // enable CORS
 app.use(cors());
 //app.use(function(req, res, next) {
@@ -62,6 +63,7 @@ require('./PanelsEndPoints/adminPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/commonPanel')(app, db, clientUtils);
 require('./PanelsEndPoints/coordPanel')(app,db);
 //require('./PanelsEndPoints/servicePanel')(app,db);
+
 require('./serverChat')(db, server, app, socketIo);
 
 //serwer for chat
