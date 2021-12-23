@@ -33,7 +33,7 @@ function Chat() {
 	useEffect(() => {
 		console.log("mount")
 		socketRef.current = io.connect(`https://${dbAddress}:4000`)
-		socketRef.current.emit("addUser", state.from)
+		socketRef.current.emit("addUser", user.Login)
 
 		axios.get(`https://${dbAddress}:4000/chat/getEmployeeList`).then(response => {
 			setEmployeeList(response.data.result)
@@ -43,7 +43,7 @@ function Chat() {
 			//setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
 			//setShowDangerAlert(true)
 		});
-	}, [state])
+	}, [user.Login])
 
 	useEffect(() => () => {
 		console.log("unmount")

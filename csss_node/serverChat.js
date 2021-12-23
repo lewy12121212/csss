@@ -11,7 +11,6 @@ module.exports = (db, server, app, socketIo) => {
   var clients = {}
   var chatHistory = {}
 
-
   io.on('connection', socket => {
     
     socket.on('addUser', (name) => {
