@@ -334,6 +334,55 @@ module.exports = (app, db) => {
     })
   })
 
+
+  app.post('/client/getDevices', (req,res) => {
+    const sqlQuery = "SELECT * FROM DB_devices WHERE ClientId like (?)"
+
+    const id = req.body.ClientId;
+
+    db.query(sqlQuery,  [id], (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      }
+      else {
+        //console.log(result)
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+        }
+    })
+
+  })
+
+  app.post('/client/DeviceRepairs', (req,res) => {
+    const sqlQuery = "SELECT Description FROM DB_repairs WHERE DeviceId LIKE (?);"
+
+    const id = req.body.DeviceId;
+
+    db.query(sqlQuery,  [id], (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      }
+      else {
+        //console.log(result)
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+        }
+    })
+    
+  })
+
   function generateCode(){
     return Math.floor(
       Math.random() * (999999 - 100000) + 100000

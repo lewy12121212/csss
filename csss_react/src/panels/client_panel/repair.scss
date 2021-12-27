@@ -1,0 +1,97 @@
+@import "../../index.scss";
+
+$iconStatus: 25px;
+
+.mainRepairBox{
+  border: 2px solid black;
+  padding: 10px;
+  border-radius: 25px;
+  box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -webkit-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.75);
+}
+
+.repairTextarea{
+  resize: none;
+  height: 100px;
+}
+
+h6{
+  margin: 0px;
+  padding: 0px;
+  font-weight: bold !important;
+  display: inline;
+}
+
+.selectBox{
+
+}
+
+.status-box{
+  width: 25px;
+  height: 25px;
+  //background: rgb(0, 70, 223);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+
+.status-box::after{
+  //content: "-";
+  //color: black;
+}
+
+/*
+.status-box-blue{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(0, 70, 223);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+.status-box-yellow{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(206, 209, 0);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+.status-box-red{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: red;
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+.status-box-green{
+  width: $iconStatus;
+  height: $iconStatus;
+  background: rgb(49, 172, 0);
+  -moz-border-radius: 50px;
+  -webkit-border-radius: 50px;
+  border-radius: 50px;
+  word-wrap: break-word;
+  text-align: center;
+  color: white;
+  padding: 15px;
+}
+*/
