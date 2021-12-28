@@ -12,7 +12,7 @@ import './repair.scss'
 
 function Device(props) {
   const didMount = useDidMount();
-  const [repairInfo, setRepairInfo] = useState("");
+
   const [jsonDescription, setJsonDescription] = useState([]);
 
 
@@ -31,15 +31,20 @@ function Device(props) {
 
   const selectRepair = useCallback(() => {
     axios.post(`https://${dbAddress}:4000/client/DeviceRepairs`, {DeviceId: props.Id}).then(response => {
-      setRepairInfo(response.data.data[0])
       console.log(response.data.data)
+      let jsonArray = []
+      response.data.data.forEach((row)=>{
+        let toAdd = JSON.parse(row.Description).repair.reverse()
+        jsonArray.push(toAdd)
+      })
+      console.log(jsonArray)
       console.log(JSON.parse(response.data.data[0].Description))
-      setJsonDescription(JSON.parse(response.data.data[0].Description).repair.reverse())
+      setJsonDescription(jsonArray)
     }).catch((error) => {
       //setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       //setShowDangerAlert(true)
     });
-  }, [setRepairInfo, setJsonDescription, props])
+  }, [setJsonDescription, props])
 
   useEffect(() => {
 
@@ -59,7 +64,7 @@ function Device(props) {
     return function cleanup() {
       window.removeEventListener('storage', handleInvalidToken)
     }
-  }, [props, didMount, setRepairInfo, repairInfo, setJsonDescription, selectRepair])
+  }, [props, didMount, setJsonDescription, selectRepair])
 
 
 
@@ -78,9 +83,11 @@ function Device(props) {
           <h5>Historia czynności zlecenia</h5>
           {/*jsonDescription.repair[0]*/}
           {jsonDescription.map((data) => (
-            <div key={`${data.Time}${data.Data}`}>
-              <StatusBox data={data} />
-            </div>
+            data.map((row) => (
+              <div key={`${row.Time}${row.Data}`}>
+                <StatusBox data={row} />
+              </div>
+            ))
           ))}
           <hr />
         </div>
