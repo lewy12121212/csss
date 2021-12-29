@@ -254,6 +254,92 @@ module.exports = (app, db) => {
     
   });
 
+  app.post('/client/getCode', (req,res) =>{
+    const email = req.body.Mail;
+
+    sqlClientSelect(email).then((phone) =>{
+      console.log(phone[0])
+      
+      if (phone[0]){
+        let number = phone[0].Phone;
+        
+        let verifyCode = generateCode();
+        let text = {to: number, message: verifyCode + " to Twój kod weryfikacyjny", from: "CSSS"}
+  
+        //sms sender
+        //sender.sendSMS(text)
+        //sms sender end
+        verifyCodes.push({mail: email, code: verifyCode, date: Date.now()})
+        console.log(verifyCode)
+        return res.status(200).json({verifyCode: verifyCode})
+      }
+      else return res.status(401).json({
+        error: true,
+        message: "Brak klienta o podanym adresie email."
+      });
+    });
+  })
+
+
+  app.post('/client/makeDecision', (req,res) => {
+    
+    const d = new Date();
+    const id = req.body.Id;
+    const code = req.body.Code;
+    const mail = req.body.Mail;
+    const decision = req.body.Decision;
+    const sqlQuerySelect = "SELECT Description FROM DB_repairs WHERE Id like (?)"
+    const sqlQueryUpdate = "UPDATE DB_repairs SET Description = (?) WHERE Id like (?)"
+    const descriptionToAdd = {"Date": d.toLocaleDateString(),"Time": d.toLocaleTimeString(), "Status": "Decyzja", "Description": "Decyzja klienta: ", "ClientDecision": decision}
+
+    var result = verifyCodes.filter(it => it.mail === mail);
+    //console.log(Date.now()-result[0].date <180000, result[0].code.toString() == code)
+    if(result[0].code.toString() == code && Date.now()-result[0].date <180000)
+      {
+      db.query(sqlQuerySelect, [id], (err, result) => {
+
+        if (err || result.length === 0 || result.length > 1) {
+          console.log(err)
+          return res.status(406).json({
+            error: true,
+            mainInfo: "Problem z edycją opisu.",
+            secondaryInfo: "Spróbuj ponownie później."
+          }) 
+        } else {
+          let jsonparse = JSON.parse(result[0].Description)
+          //console.log(result.length + "result" + JSON.stringify(jsonparse.repair[0]))
+          jsonparse.repair.push(descriptionToAdd)
+          //console.log(result.length + "result" + JSON.stringify(jsonparse) + "ID:" + id)
+
+          db.query(sqlQueryUpdate, [JSON.stringify(jsonparse), id], (err, result) => {
+            if (err) {
+              console.log(err)
+              return res.status(406).json({
+                error: true,
+                mainInfo: "Problem z UPDATE.",
+                secondaryInfo: "Spróbuj ponownie później."
+              }) 
+            } else {
+              return res.status(200).json({ 
+                error: false,
+                mainInfo: "Decyzja została przekazana do serwisu.",
+                secondaryInfo: ""
+              }); 
+            }
+          })
+        }
+      })
+    }
+    else{
+      return res.status(404).json({
+        error: true,
+        mainInfo: "Błąd.",
+        secondaryInfo: "Błędny kod weryfikacyjny lub upłynęła jego ważność."
+      }) 
+    }
+
+  })
+
   app.post('/client/verifyCode', (req,res) => {
     const code = req.body.Code;
     const mail = req.body.Mail;

@@ -16,7 +16,8 @@ function generateToken(user) {
         Address: user.Address,
         City: user.City,
         PostalCode: user.PostalCode,
-        IsCompany: user.IsCompany
+        IsCompany: user.IsCompany,
+        Type: "Client"
     };
 
     return jwt.sign(u, process.env.JWT_SECRET, {
@@ -38,7 +39,8 @@ function getCleanUser(user) {
         Address: user.Address,
         City: user.City,
         PostalCode: user.PostalCode,
-        IsCompany: user.IsCompany
+        IsCompany: user.IsCompany,
+        Type: "Client"
     };
 }
 

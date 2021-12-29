@@ -104,11 +104,14 @@ app.get('/verifyToken', (req, res) => {
   // check token that was passed by decoding token using secret
   jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
     if (err) return res.status(401).json({
+      
       error: true,
       message: "Invalid token."
     });
 
-    if(user.Type === undefined){
+    
+
+    if(user.Type === "Client"){
       const sqlQuery = "SELECT * FROM DB_clients WHERE Id like (?)"
 
       db.query(sqlQuery, [user.Id], (err, result) => {
