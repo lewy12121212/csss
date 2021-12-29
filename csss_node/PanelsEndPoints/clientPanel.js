@@ -212,9 +212,14 @@ module.exports = (app, db) => {
             error: true,
             message: "Błąd bazy danych. Spróbuj ponownie później."
           });
-        else return res.status(200).json(
+        else 
+        {
+          verifyCodes = verifyCodes.filter(it => it.mail !== mail);
+
+          return res.status(200).json(
           {mainInfo: "Dane poprawnie zmieniono!",
             secondaryInfo: ""})
+        }
       });
     }
     else
@@ -282,7 +287,7 @@ module.exports = (app, db) => {
 
 
   app.post('/client/makeDecision', (req,res) => {
-    
+
     const d = new Date();
     const id = req.body.Id;
     const code = req.body.Code;
@@ -291,7 +296,7 @@ module.exports = (app, db) => {
     const sqlQuerySelect = "SELECT Description FROM DB_repairs WHERE Id like (?)"
     const sqlQueryUpdate = "UPDATE DB_repairs SET Description = (?) WHERE Id like (?)"
     const descriptionToAdd = {"Date": d.toLocaleDateString(),"Time": d.toLocaleTimeString(), "Status": "Decyzja", "Description": "Decyzja klienta: ", "ClientDecision": decision}
-
+    console.log(code)
     var result = verifyCodes.filter(it => it.mail === mail);
     //console.log(Date.now()-result[0].date <180000, result[0].code.toString() == code)
     if(result[0].code.toString() == code && Date.now()-result[0].date <180000)
@@ -320,6 +325,8 @@ module.exports = (app, db) => {
                 secondaryInfo: "Spróbuj ponownie później."
               }) 
             } else {
+              verifyCodes = verifyCodes.filter(it => it.mail !== mail);
+
               return res.status(200).json({ 
                 error: false,
                 mainInfo: "Decyzja została przekazana do serwisu.",
@@ -396,7 +403,8 @@ module.exports = (app, db) => {
     `DB_employees`.`Id` AS EmployeeId, \
     `DB_employees`.`Name` AS EmployeeName, \
     `DB_employees`.`Surname` AS EmployeeSurname, \
-    `DB_employees`.`Login` AS EmployeeLogin \
+    `DB_employees`.`Login` AS EmployeeLogin, \
+    `DB_employees`.`Mail` AS EmployeeMail \
     FROM `DB_repairs` \
     LEFT OUTER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
     LEFT JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\

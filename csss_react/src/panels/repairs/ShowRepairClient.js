@@ -72,7 +72,7 @@ function ShowRepairClient(props) {
     return function cleanup() {
       window.removeEventListener('storage', handleInvalidToken)
     }
-  }, [props, didMount, selectRepair])
+  }, [props, repairInfo, didMount, selectRepair])
 
   useEffect(()=>{
     if(madeDecision)
@@ -82,6 +82,7 @@ function ShowRepairClient(props) {
         setMakeDecision(false)
         setAlertMsg({MainInfo: "Aby podjąć decyzję podaj kod wysłany na Twój numer telefonu.", SecondaryInfo: ""})
         setShowInfoAlert(true)
+
       })
       setMadeDecision(false);
     }
@@ -101,10 +102,13 @@ function ShowRepairClient(props) {
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
       setVerifyCode(false)
+      
     }).catch((error) => {
       setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
       setShowDangerAlert(true)
     });
+    console.log(repairInfo.EmployeeMail)
+    axios.post(`https://${dbAddress}:4000/sendMail`, {Mail: repairInfo.EmployeeMail, Id: props.linkId, Template: "decision"})
   }
 
   return (

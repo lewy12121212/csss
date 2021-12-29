@@ -25,15 +25,18 @@ module.exports = (app) =>{
   transporter.use('compile', hbs(options));
     
   app.post('/sendMail', (req,res) => {
-    const {to } = req.body;
+    console.log("hej")
+    const to = req.body.Mail;
+    const template = req.body.Template;
+    console.log(to)
     const mailData = {
       from: 'csss.notification@gmail.com',  // sender address
       to: to,   // list of receivers
       subject: "Status naprawy Twojego urządzenia uległ zmianie.",
-      template: 'email',
+      template: template,
       context: {
-        id: req.body.id,
-        status: req.body.status
+        id: req.body.Id,
+        status: req.body.Status
       }
     };
     
