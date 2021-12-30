@@ -7,6 +7,7 @@ import { getUser, removeUserSession } from '../../utils/Common';
 
 import ShowRepairService from './ShowRepairService';
 import ShowRepairClient from './ShowRepairClient';
+import ShowRepairCoord from './ShowRepairCoord';
 
 import './repair.scss'
 
@@ -36,7 +37,7 @@ function ShowRepair(props) {
   } else if(user.Type === 'Service'){
     return (<ShowRepairService linkId={props.match.params.id} handleLogout={handleLogout} history={props.history}/>)
   } else if(user.Type === 'Coordinator'){
-    return (<div>Jesteś koordynatorem</div>)
+    return (<ShowRepairCoord linkId={props.match.params.id} handleLogout={handleLogout} history={props.history}/>)
   }
 }
 

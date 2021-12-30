@@ -233,6 +233,7 @@ module.exports = (app, db, employeeUtils) => {
           message: "Problem z pobraniem bazy napraw."
         }) 
       } else {
+        //console.log(result)
         return res.status(200).json({ 
           error: false,
           data: result
@@ -278,6 +279,7 @@ module.exports = (app, db, employeeUtils) => {
           message: "Problem z pobraniem bazy napraw."
         }) 
       } else {
+        //console.log(result)
         return res.status(200).json({ 
           error: false,
           data: result
