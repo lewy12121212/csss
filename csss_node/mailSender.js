@@ -45,4 +45,26 @@ module.exports = (app) =>{
     });
   })
 
+  function sendMail(to, template, id, description, status){
+    console.log("ahoj")
+    const mailData = {
+      from: 'csss.notification@gmail.com',  // sender address
+      to: to,   // list of receivers
+      subject: "Status naprawy Twojego urządzenia uległ zmianie.",
+      template: template,
+      context: {
+        id: id,
+        status: status,
+        description: description
+      }
+    };
+    
+    transporter.sendMail(mailData, function (err, info) {
+      if(err)
+        console.log(err)
+      else
+        res.status(200).json({message: "Mail send", message_id: info.messageId})
+    });
+  }
+  module.exports = {sendMail}
 }

@@ -1,5 +1,6 @@
 const commonFunc = require('./commonFunc')
-
+const mail = require('../mailSender');
+//import {sendMail} from '../mailSender'
 module.exports = (app, db) => {
 
   app.post('/repair/changePrivateDescription', (req,res) => {
@@ -33,9 +34,13 @@ module.exports = (app, db) => {
     const status = req.body.status;
     const description = req.body.description;
     const descriptionToAdd = {"Date": d.toLocaleDateString(),"Time": d.toLocaleTimeString(), "Status": status, "Description": description, "ClientDecision": null}
+    const clientMail = req.body.clientMail
 
     const sqlQuerySelect = "SELECT Description FROM DB_repairs WHERE Id like (?)"
     const sqlQueryUpdate = "UPDATE DB_repairs SET Description = (?) WHERE Id like (?)"
+    const sqlQueryUpdateAndClose = "UPDATE DB_repairs SET Description = (?), Closed = 1 WHERE Id like (?)"
+
+    let sqlQuery = "";
 
     if(status === "" || description === ""){
       return res.status(406).json({
@@ -43,6 +48,13 @@ module.exports = (app, db) => {
         mainInfo: "Dane nie mogą być puste.",
         secondaryInfo: "Uzupełni dane oby dodać nowy status zlecenia."
       }) 
+    }
+
+    if (status === "Zamknięte"){
+      sqlQuery = sqlQueryUpdateAndClose;
+    }
+    else{
+      sqlQuery = sqlQueryUpdate;
     }
 
     db.query(sqlQuerySelect, [id], (err, result) => {
@@ -60,7 +72,7 @@ module.exports = (app, db) => {
         jsonparse.repair.push(descriptionToAdd)
         //console.log(result.length + "result" + JSON.stringify(jsonparse) + "ID:" + id)
 
-        db.query(sqlQueryUpdate, [JSON.stringify(jsonparse), id], (err, result) => {
+        db.query(sqlQuery, [JSON.stringify(jsonparse), id], (err, result) => {
           if (err) {
             console.log(err)
             return res.status(406).json({
@@ -69,6 +81,17 @@ module.exports = (app, db) => {
               secondaryInfo: "Spróbuj ponownie później."
             }) 
           } else {
+            mail.sendMail(clientMail, "status", id, description, status)
+            if(status === "Zamknięte")
+            { 
+              const number = req.body.number;
+              let text = {to: number, message: "Zlecenie "+ id + " zostało naprawione. Prosimy o odbiór urządzenia.", from: "CSSS"}
+              let sender = require('./smsSender')
+        
+              //sms sender
+              //sender.sendSMS(text)
+              //sms sender end
+            }
             return res.status(200).json({ 
               error: false,
               mainInfo: "Pomyślnie dodano czynność serwisową",
