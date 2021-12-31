@@ -81,17 +81,21 @@ module.exports = (app, db) => {
               secondaryInfo: "Spróbuj ponownie później."
             }) 
           } else {
-            mail.sendMail(clientMail, "status", id, description, status)
+            console.log("cooo", status)
             if(status === "Zamknięte")
             { 
+              
               const number = req.body.number;
+
+              console.log("wysyłka sms", number)
               let text = {to: number, message: "Zlecenie "+ id + " zostało naprawione. Prosimy o odbiór urządzenia.", from: "CSSS"}
-              let sender = require('./smsSender')
+              let sender = require('../smsSender')
         
               //sms sender
               //sender.sendSMS(text)
               //sms sender end
             }
+            mail.sendMail(clientMail, "status", id, description, status)
             return res.status(200).json({ 
               error: false,
               mainInfo: "Pomyślnie dodano czynność serwisową",
