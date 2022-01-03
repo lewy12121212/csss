@@ -3,9 +3,11 @@ require('dotenv').config();
 var fs = require('fs');
 //var http = require('http');
 var https = require('https');
+//var http = require('http');
 var privateKey  = fs.readFileSync('httpsCert/key.pem', 'utf8');
 var certificate = fs.readFileSync('httpsCert/cert.pem', 'utf8');
 //var credentials = {key: privateKey, cert: certificate};
+const socketIo = require("socket.io");
 
 const express = require('express');
 const cors = require('cors');
@@ -17,6 +19,7 @@ const clientUtils = require('./clientUtils');
 const app = express();
 const port = process.env.PORT || 4000;
 const server = https.createServer({key: privateKey, cert: certificate }, app);
+//const serverChat = http.createServer(app);
 
 const mysql = require("mysql");
 
@@ -37,9 +40,14 @@ exports.db = db;
 //  database: 'DB_csss'
 //});
 
+
 // enable CORS
 app.use(cors());
-
+//app.use(function(req, res, next) {
+//  res.header("Access-Control-Allow-Origin", "*");
+//  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+//  next();
+//});
 //payload size
 app.use(bodyParser.json({limit: '5mb'}));
 app.use(bodyParser.urlencoded({limit: '5mb', extended: true}));
@@ -57,6 +65,9 @@ require('./PanelsEndPoints/coordPanel')(app,db);
 require('./PanelsEndPoints/servicePanel')(app,db);
 require('./PanelsEndPoints/clientPanel')(app,db);
 
+require('./serverChat')(db, server, app, socketIo);
+
+//serwer for chat
 app.use((req, res, next) => {
   var token = req.headers['authorization'];
   if (!token) return next(); //if no token, continue
