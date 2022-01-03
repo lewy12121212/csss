@@ -1,7 +1,7 @@
-//require('@tensorflow/tfjs-node')
+require('@tensorflow/tfjs-node')
 //const express = require('express');
 //const faceapi = require('face-api.js');
-//const faceapi = require('@vladmandic/face-api');
+const faceapi = require('@vladmandic/face-api');
 const fetch = require('node-fetch');
 const path = require('path')
 const { promises: fs } = require('fs')
