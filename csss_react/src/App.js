@@ -39,6 +39,7 @@ function App() {
     }
     //uogólnić verifyToken -> wyłuskać typ użytkownika, i uzależnić od niego zapytanie do odpowiedniej tabeli!
     axios.get(`https://${dbAddress}:4000/verifyToken?token=${token}`).then(response => {
+      console.log('token ', response.data)
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {

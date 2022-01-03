@@ -23,8 +23,11 @@ function ClientLoginPanel(props) {
     setLoading(true);
     axios.post(`https://${dbAddress}:4000/client/signin`, { email: email.value, pass: pass.value }).then(response => {
       setLoading(false);
+      console.log(response.data.user)
       setUserSession(response.data.token, response.data.user);
+      console.log("kaboom")
       props.history.push('/ClientDashboard');
+      console.log("kaboom1")
     }).catch(error => {
       setLoading(false);
       if (error.response.status === 401) setError(error.response.data.message);

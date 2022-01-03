@@ -4,8 +4,9 @@ import React, {useEffect} from 'react';
 import { getUser, removeUserSession } from '../../utils/Common';
 //import { dbAddress } from '../../dbCon';
 //import ReactToPrint from 'react-to-print';
-
 import ShowRepairService from './ShowRepairService';
+import ShowRepairClient from './ShowRepairClient';
+import ShowRepairCoord from './ShowRepairCoord';
 
 import './repair.scss'
 
@@ -30,12 +31,13 @@ function ShowRepair(props) {
     }
   }, [props])
 
-  if(user.Type === null){
-    return (<div>Jesteś klientem</div>)
+  console.log(user)
+  if(user.Type === "Client"){
+    return (<ShowRepairClient linkId={props.match.params.id} handleLogout={handleLogout} history={props.history}/>)
   } else if(user.Type === 'Service'){
     return (<ShowRepairService linkId={props.match.params.id} handleLogout={handleLogout} history={props.history}/>)
   } else if(user.Type === 'Coordinator'){
-    return (<div>Jesteś koordynatorem</div>)
+    return (<ShowRepairCoord linkId={props.match.params.id} handleLogout={handleLogout} history={props.history}/>)
   }
 }
 

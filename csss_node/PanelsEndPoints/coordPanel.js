@@ -158,12 +158,14 @@ module.exports = (app, db) => {
     const postalcode = req.body.ClientData.PostalCode;
     let company = 1;
 
+    const passHash = commonFunc.makeHash(password);
+
     if (name === "") {
       name = firstname + ' ' + surname;
       company = 0;
     }
     console.log(name)
-    db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, password, phone, company], (error, results)=>{
+    db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, passHash, phone, company], (error, results)=>{
       
       if(error)
       { console.log(error)
@@ -177,11 +179,12 @@ module.exports = (app, db) => {
         }
         return res.status(406).json({
           error: true,
-          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+          mainInfo: "Błąd bazy danych.",
+          secondaryInfo: " Spróbuj ponownie później."
         });
         
       }
-      else return res.status(200).json({mainInfo:'Pomyślnie dodano klienta', result: results})
+      else return res.status(200).json({error: false, mainInfo:'Sukces.', secondaryInfo: 'Pomyślnie dodano klienta', result: results})
     });
 
   })
@@ -270,5 +273,75 @@ module.exports = (app, db) => {
       }
       else return res.status(200).json({mainInfo:'Pomyślnie dodano urządzenie.', result: results})
     });
+  })
+
+  app.get('/employee/coord/ToReceive', (req,res) => {
+    
+    const sqlQuery = "SELECT \
+    `DB_repairs`.*, \
+    `DB_devices`.`Name` AS DeviceName, \
+    `DB_devices`.`Model` AS DeviceModel, \
+    `DB_devices`.`SN` AS DeviceSN, \
+    `DB_devices`.`Type` AS DeviceType, \
+    `DB_clients`.`Id` AS ClientId, \
+    `DB_clients`.`Name` AS ClientName, \
+    `DB_clients`.`Mail` AS ClientMail, \
+    `DB_clients`.`Phone` AS ClientPhone, \
+    `DB_employees`.`Id` AS EmployeeId, \
+    `DB_employees`.`Name` AS EmployeeName, \
+    `DB_employees`.`Surname` AS EmployeeSurname, \
+    `DB_employees`.`Login` AS EmployeeLogin, \
+    `DB_employees`.`Mail` AS EmployeeMail, \
+    `DB_employees`.`Phone` AS EmployeePhone \
+    FROM `DB_repairs` \
+    INNER JOIN `DB_clients` ON `DB_repairs`.`ClientId` like `DB_clients`.`Id` \
+    INNER JOIN `DB_devices` ON `DB_repairs`.`DeviceId` like `DB_devices`.`Id` \
+    INNER JOIN `DB_employees` ON `DB_repairs`.`ServiceId` like `DB_employees`.`Id`\
+    WHERE `DB_repairs`.`IfReceived` = FALSE AND Closed = 1";
+    
+
+    db.query(sqlQuery, (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          message: "Problem z pobraniem bazy napraw."
+        }) 
+      } else {
+        //console.log(result)
+        return res.status(200).json({ 
+          error: false,
+          data: result
+        }); 
+      }
+    })
+
+  })
+
+
+  app.post('/employee/coord/ConfirmReceive', (req,res) => {
+
+    const id = req.body.RepairId;
+
+    const sqlQuery = "UPDATE DB_repairs SET IfReceived = 1, ReceivDate = CURRENT_TIMESTAMP() WHERE Id = (?)"
+
+    db.query(sqlQuery, [id], (err, result) => {
+      if (err) {
+        console.log(err)
+        return res.status(406).json({
+          error: true,
+          mainInfo: "Problem bazy napraw.",
+          secondaryInfo: ""
+        }) 
+      } else {
+        //console.log(result)
+        return res.status(200).json({ 
+          error: false,
+          mainInfo: "Zmieniono status naprawy.",
+          secondaryInfo: ""
+        }); 
+      }
+    })
+
   })
 }

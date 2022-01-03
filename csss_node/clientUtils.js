@@ -10,7 +10,14 @@ function generateToken(user) {
     var u = {
         Id: user.Id,
         Mail: user.Mail,
-        RepairId: user.RepairId
+        Name: user.Name,
+        FirstName: user.FirstName,
+        Surname: user.Surname,
+        Address: user.Address,
+        City: user.City,
+        PostalCode: user.PostalCode,
+        IsCompany: user.IsCompany,
+        Type: "Client"
     };
 
     return jwt.sign(u, process.env.JWT_SECRET, {
@@ -25,7 +32,15 @@ function getCleanUser(user) {
     return {
         Id: user.Id,
         Mail: user.Mail,
-        RepairId: user.RepairId
+        Phone: user.Phone,
+        Name: user.Name,
+        FirstName: user.FirstName,
+        Surname: user.Surname,
+        Address: user.Address,
+        City: user.City,
+        PostalCode: user.PostalCode,
+        IsCompany: user.IsCompany,
+        Type: "Client"
     };
 }
 

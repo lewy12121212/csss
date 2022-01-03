@@ -6,8 +6,9 @@ function StatusBox(props) {
   const [boxStatusClass, setBoxStatusClass] = useState("green")
 
   useEffect(() => {
+    console.log(props.data)
     if(props.data.Status === "Przyjęte"){
-    setBoxStatusClass("green")
+    setBoxStatusClass("black")
     } else if(props.data.Status === "Naprawiane"){
       setBoxStatusClass("blue")
     } else if(props.data.Status === "Oczekujące"){
@@ -16,8 +17,6 @@ function StatusBox(props) {
       setBoxStatusClass("red")
     } else if(props.data.Status === "Zamknięte"){
       setBoxStatusClass("green")
-    } else if(props.data.Status === "Decyzja"){
-      setBoxStatusClass("pink")
     }
   }, [setBoxStatusClass, props.data])
 

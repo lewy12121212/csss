@@ -19,6 +19,7 @@ function ShowRepairService(props) {
 
   const [newRepairStatus, setNewRepairStatus] = useState("");
   const [description, setDescription] = useState("")
+
   const [repairDescription, setRepairDescription] = useState("");
   const [currentStatus, setCurrentStatus] = useState("");
 
@@ -42,6 +43,11 @@ function ShowRepairService(props) {
       setRepairDescription(JSON.parse(response.data.data[0].Description).repair[0].Description)
       setCurrentStatus(JSON.parse(response.data.data[0].Description).repair.at(-1).Status)
       console.log(response.data.data[0])
+/*=======
+      setRepairInfo(response.data.data[0])
+      console.log(response.data.data)
+      console.log(JSON.parse(response.data.data[0].Description))
+>>>>>>> Encrypt*/
       setJsonDescription(JSON.parse(response.data.data[0].Description).repair.reverse())
     }).catch((error) => {
       //setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
@@ -82,6 +88,9 @@ function ShowRepairService(props) {
   const handleAddRepairAction = () => {
     console.log("new status add action" + newRepairStatus)
     axios.post(`https://${dbAddress}:4000/repair/addRepairAction`, {id: repairInfo.Id, status: newRepairStatus, description: description, clientMail: repairInfo.ClientMail, number: repairInfo.ClientPhone}).then(response => {
+/*=======
+    axios.post(`https://${dbAddress}:4000/repair/addRepairAction`, {id: repairInfo.Id, status: newRepairStatus, description: description}).then(response => {
+>>>>>>> Encrypt*/
       setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo})
       setShowInfoAlert(true)
       selectRepair()
@@ -91,6 +100,7 @@ function ShowRepairService(props) {
     });
   }
 
+  
   if(currentStatus !== "Zamknięte")
   {
     return (
@@ -207,7 +217,6 @@ function ShowRepairService(props) {
     </div>
 
     )}
-  
 }
 
 export default ShowRepairService;

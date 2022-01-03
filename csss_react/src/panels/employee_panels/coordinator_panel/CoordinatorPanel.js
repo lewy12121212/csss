@@ -8,11 +8,13 @@ import Chat from '../chat/Chat'
 import AddRepair from './bookmarks/AddRepair'
 import AddClient from './bookmarks/AddClient'
 import Repairs from "../common/ShowRepairsList"
+import ToReceive from './bookmarks/ToReceive';
 
 import LeftMenu from './LeftMenu'
 import UpperMenu from '../common/UpperMenu'
 
 import '../../../index.scss';
+
 
 function CoordinatorPanel(props) {
   const user = getUser();
@@ -54,10 +56,11 @@ function CoordinatorPanel(props) {
         <Switch>
           <Route exact path="/EmployeeDashboard/Coordinator/Settings" render={() => <Settings userData={JSON.stringify(user)} refreshUser={handleRefreshUser} />} />
           <Route path="/EmployeeDashboard/Coordinator/Repairs" render={() => <Repairs path={location} />} />
+          <Route path="/EmployeeDashboard/Coordinator/ToReceive" render={() => <ToReceive />} />
           <Route path="/EmployeeDashboard/Coordinator/AddOrder" render={() => <AddRepair />} />
           <Route path="/EmployeeDashboard/Coordinator/AddClient" render={() => <AddClient />} />
           <Route path="/EmployeeDashboard/Coordinator/Chat" render={() => <Chat />} />
-          <Redirect to="/EmployeeDashboard/Coordinator/Settings" />
+          <Redirect to="/EmployeeDashboard/Coordinator/Repairs" />
         </Switch>
       </div>
     </div>

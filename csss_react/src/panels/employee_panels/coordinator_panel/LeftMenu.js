@@ -23,11 +23,12 @@ function LeftMenu(props) {
             <hr />
           </div>
           <div>
-            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
-            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Repairs" onClick={props.handleClose}>Lista zleceń</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddOrder" onClick={props.handleClose}>Dodaj zlecenie</NavLink>
+            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Repairs" onClick={props.handleClose}>Lista zleceń</NavLink>
+            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/ToReceive" onClick={props.handleClose}>Oczekujące na odbiór</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/AddClient" onClick={props.handleClose}>Dodaj klienta</NavLink>
             <NavLink className="navLink-box col-12" to="/EmployeeDashboard/Coordinator/Chat" onClick={props.handleClose}>Czat</NavLink>
+            <NavLink className="navLink-box col-12" exact to="/EmployeeDashboard/Coordinator/Settings" onClick={props.handleClose}>Ustawienia konta</NavLink>
           </div>
         </Offcanvas.Body>
       </Offcanvas>
