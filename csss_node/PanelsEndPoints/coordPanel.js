@@ -168,7 +168,7 @@ module.exports = (app, db) => {
     db.query(sqlQuery, [name, firstname, surname, address, city, postalcode, mail, passHash, phone, company], (error, results)=>{
       
       if(error)
-      { console.log(error)
+      { console.log("ERROR: " + error)
         if(error.errno == 1062)
         {
           return res.status(400).json({

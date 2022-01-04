@@ -18,7 +18,7 @@ function LeftMenu(props) {
           <div className="offcanvas-info">
             <h5>Panel klienta</h5>
             <hr />
-            Użytkownik: <h3>{props.user.Mail}</h3>
+            Użytkownik: <h5>{props.user.Mail}</h5>
             <hr />
           </div>
           <div>

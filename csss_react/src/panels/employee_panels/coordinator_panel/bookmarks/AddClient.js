@@ -53,9 +53,11 @@ function AddClient(props) {
     axios.post(`https://${dbAddress}:4000/repair/clientValidate`, {ClientData: clientData}).then(response => {
       closeAlert()
       axios.post(`https://${dbAddress}:4000/repair/addNewClient`, {ClientData: clientData}).then(response => {
-        //console.log(props)
-        if(props === {}){
+        //console.log("props" + JSON.stringify(props))
+        if(JSON.stringify(props) === "{}"){
+          console.log("+")
           setAlertMsg({MainInfo: response.data.mainInfo, SecondaryInfo: response.data.secondaryInfo}) //set message alert in parent
+          console.log("++")
           setShowInfoAlert(true)          
         }
         else{
@@ -66,6 +68,7 @@ function AddClient(props) {
         }
         
       }).catch((error) => {
+        //console.log("error:" + error.response.data.mainInfo);
         setAlertMsg({MainInfo: error.response.data.mainInfo, SecondaryInfo: error.response.data.secondaryInfo})
         setShowDangerAlert(true)
       });
