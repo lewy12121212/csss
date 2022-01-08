@@ -14,7 +14,7 @@ import './chat.scss'
 function Chat() {
   const user = getUser();
 	//const didMount = useDidMount();
-	const [ state, setState ] = useState({ message: "", from: user.Login , to: "all"})
+	const [ state, setState ] = useState({ message: "", from: user.Login , to: ""})
 	const [ chat, setChat ] = useState([])
 	const [ employeeList, setEmployeeList ] = useState([])
 	const socketRef = useRef()
@@ -144,8 +144,8 @@ function Chat() {
 				<div className="col-12">
 					Uzytkownik: {user.Login} <br />
 					Wybrany: {state.to} <br />
-					Grupy:
-					<button className="btn btn-primary col-12" key="all" value="all" onClick={choosePearson}>Wszyscy</button>
+					{/*Grupy:
+					<button className="btn btn-primary col-12" key="all" value="all" onClick={choosePearson}>Wszyscy</button>*/}
 					Użytkownicy:
 					{employeeList.map((data) => {
 						if(data.Login !== user.Login){
