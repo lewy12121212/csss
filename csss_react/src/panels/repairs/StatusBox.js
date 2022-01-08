@@ -27,10 +27,9 @@ function StatusBox(props) {
         <div className="status-box" style={{background: boxStatusClass}}></div>
       </div>
 
-      <div className="col-5">Status: {props.data.Status}</div>
-      <div className="col-5">
-        Data: {props.data.Date} : {props.data.Time}
-      </div>
+      <div className="col-2">Status: {props.data.Status}</div>
+      <div className="col-5">Opis: {props.data.Description}</div>
+      <div className="col-3">Data: {props.data.Date} : {props.data.Time}</div>
     </div>
   );
 }
