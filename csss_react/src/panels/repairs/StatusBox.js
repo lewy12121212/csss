@@ -12,7 +12,7 @@ function StatusBox(props) {
       setBoxStatusClass("blue")
     } else if(props.data.Status === "Oczekujące"){
       setBoxStatusClass("yellow")
-    } else if(props.data.Status === "Oczekujące na decyzje") {
+    } else if(props.data.Status === "Oczekujące na decyzję") {
       setBoxStatusClass("red")
     } else if(props.data.Status === "Zamknięte"){
       setBoxStatusClass("green")
@@ -28,7 +28,14 @@ function StatusBox(props) {
       </div>
 
       <div className="col-2">Status: {props.data.Status}</div>
-      <div className="col-5">Opis: {props.data.Description}</div>
+      {
+        props.data.Status!=="Decyzja" &&
+        <div className="col-5">Opis: {props.data.Description}</div>
+      }
+      {
+        props.data.Status==="Decyzja" &&
+        <div className="col-5">Decyzja: {props.data.ClientDecision ? "Zgoda":"Odmowa"}</div>
+      }
       <div className="col-3">Data: {props.data.Date} : {props.data.Time}</div>
     </div>
   );

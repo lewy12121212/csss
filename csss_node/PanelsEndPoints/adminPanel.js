@@ -144,23 +144,43 @@ module.exports = (app, db, employeeUtils) => {
 
   app.post('/employee/admin/reopenRepair', (req,res) => {
 
-    const sqlQuery = "UPDATE DB_repairs SET Closed = 0 WHERE Id = (?);"
+    const sqlQuery = "UPDATE DB_repairs SET Closed = 0, Description = (?), PrivateDescription = (?) WHERE Id = (?);"
+    const sqlQuerySelect = "SELECT Description FROM DB_repairs WHERE Id like (?)"
+
 
     const id = req.body.Id;
 
-    db.query(sqlQuery, [id], (err, result) => {
-      if(err)
-      { 
+    db.query(sqlQuerySelect, [id], (err, result) => {
+      
+      if (err || result.length === 0 || result.length > 1) {
         console.log(err)
         return res.status(406).json({
           error: true,
-          mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
-        });
-        
+          mainInfo: "Problem z edycją opisu.",
+          secondaryInfo: "Spróbuj ponownie później."
+        }) 
+      } else {
+
+        let jsonparse = JSON.parse(result[0].Description);
+        let privateDesc = 'Ponowne otwarcie zlecenia. Opis ostatniej czynności: ' + jsonparse.repair[jsonparse.repair.length-1].Description;
+        jsonparse.repair.pop();
+
+        db.query(sqlQuery, [JSON.stringify(jsonparse), privateDesc, id], (err, result) => {
+          if(err)
+          { 
+            console.log(err)
+            return res.status(406).json({
+              error: true,
+              mainInfo: "Błąd bazy danych. Spróbuj ponownie później."
+            });
+
+          }
+          else return res.status(200).json({mainInfo:`Zlecenie przeniesione do naprawianych.`})
+        })
       }
-      else return res.status(200).json({mainInfo:`Zlecenie przeniesione do naprawianych.`})
     })
   })
+  
 
 
   app.post('/employee/admin/changeReceived', (req,res) => {
